@@ -10,7 +10,7 @@ async function listar(busca) {
 
   if (busca) {
     params.push(`%${busca}%`);
-    sql += " WHERE enunciado ILIKE $1";
+    sql += " WHERE unaccent(LOWER(enunciado)) LIKE unaccent(LOWER($1))";
   }
 
   sql += " ORDER BY id";
@@ -55,7 +55,7 @@ async function listarSemView(busca) {
 
   if (busca) {
     params.push(`%${busca}%`);
-    sql += " WHERE questao.enunciado ILIKE $1";
+    sql += " WHERE unaccent(LOWER(questao.enunciado)) LIKE unaccent(LOWER($1))";
   }
 
   sql += " ORDER BY questao.id, alternativa.letra";
@@ -81,7 +81,7 @@ async function filtrarPorDificuldade(nivel = "base") {
       ON questao.avaliacao_id = avaliacao.id
     INNER JOIN alternativa
       ON questao.id = alternativa.questao_id
-    WHERE avaliacao.nivel = $1
+    WHERE unaccent(LOWER(avaliacao.nivel)) = unaccent(LOWER($1))
     ORDER BY questao.id, alternativa.letra
     `,
     [nivel]
@@ -108,7 +108,7 @@ async function filtrarPorVestibular(vestibular = "ENEM") {
       ON questao.vestibular_id = vestibular.id
     INNER JOIN alternativa
       ON questao.id = alternativa.questao_id
-    WHERE vestibular.nome = $1
+    WHERE unaccent(LOWER(vestibular.nome)) = unaccent(LOWER($1))
     ORDER BY questao.id, alternativa.letra
     `,
     [vestibular]
@@ -134,7 +134,7 @@ async function filtrarPorTopico(topico = "Pir\u00e2mides") {
       ON questao.subtopico_id = subtopico.id
     INNER JOIN alternativa
       ON questao.id = alternativa.questao_id
-    WHERE subtopico.nome = $1
+    WHERE unaccent(LOWER(subtopico.nome)) = unaccent(LOWER($1))
     ORDER BY questao.id, alternativa.letra
     `,
     [topico]

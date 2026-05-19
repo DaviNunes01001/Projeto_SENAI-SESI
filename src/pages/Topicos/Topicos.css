@@ -1,0 +1,9 @@
+.topicos-page .item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.topicos-page .item h2 {
+  margin-bottom: 6px;
+}

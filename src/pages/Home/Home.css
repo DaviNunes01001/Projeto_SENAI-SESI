@@ -1,0 +1,7 @@
+.home-page {
+  animation: pageFade 0.25s ease;
+}
+
+.home-page .card {
+  min-height: 150px;
+}

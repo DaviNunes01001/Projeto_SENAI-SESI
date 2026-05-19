@@ -1,0 +1,11 @@
+.prova-page .toolbar {
+  margin-bottom: 24px;
+}
+
+.prova-page .prova-item {
+  align-items: flex-start;
+}
+
+.prova-page .question-number {
+  flex-shrink: 0;
+}

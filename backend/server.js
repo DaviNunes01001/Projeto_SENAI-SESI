@@ -29,6 +29,15 @@ app.use("/api/prova", provaRoutes);
 app.use("/provas", provaRoutes);
 app.use("/api/provas", provaRoutes);
 
+app.get("/api", (req, res) => {
+  res.json({
+    mensagem: "API de tópicos e questões com PostgreSQL",
+    versao: "2.0",
+    ambiente: process.env.NODE_ENV || "development",
+    banco: "PostgreSQL",
+  });
+});
+
 app.get("/", (req, res) => {
   res.json({
     mensagem: "API de tópicos e questões com PostgreSQL",

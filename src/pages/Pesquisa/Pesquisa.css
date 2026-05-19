@@ -1,0 +1,9 @@
+.pesquisa-page .search-box {
+  max-width: 760px;
+}
+
+.pesquisa-page .item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

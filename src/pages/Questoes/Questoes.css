@@ -1,0 +1,9 @@
+.questoes-page .item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.questoes-page .item h2 {
+  margin-bottom: 4px;
+}

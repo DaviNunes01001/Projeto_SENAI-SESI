@@ -1,0 +1,9 @@
+.not-found-page {
+  min-height: calc(100vh - 76px);
+  display: flex;
+  align-items: center;
+}
+
+.not-found-page .page-hero {
+  width: 100%;
+}

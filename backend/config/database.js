@@ -101,6 +101,8 @@ const criarTabela = async () => {
         texto TEXT NOT NULL,
         correta BOOLEAN DEFAULT false
     );
+
+    CREATE EXTENSION IF NOT EXISTS unaccent;
   `;
 
   try {
