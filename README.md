@@ -1,30 +1,5 @@
 # Projeto SENAI-SESI
 
-Projeto escolar feito em grupo para praticar **React**, **Node.js**, **Express** e **PostgreSQL**.
-
-A ideia do sistema é mostrar e pesquisar questões, tópicos e provas usando uma API conectada ao banco de dados.
-
-## Tecnologias usadas
-
-- React
-- Vite
-- Node.js
-- Express
-- PostgreSQL
-- JavaScript
-- CSS
-
-## O que o projeto faz
-
-- Lista tópicos
-- Lista questões
-- Pesquisa questões
-- Filtra questões por dificuldade
-- Filtra questões por vestibular
-- Filtra questões por tópico
-- Lista provas/questões por ano recente ou antigo
-- Conecta o frontend com o backend usando rotas `/api`
-
 ## Estrutura do projeto
 
 ```txt
