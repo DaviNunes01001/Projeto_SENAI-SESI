@@ -1,9 +1,7 @@
-.questoes-page .item {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.clear-button {
+  background: #334155 !important;
 }
 
-.questoes-page .item h2 {
-  margin-bottom: 4px;
+.clear-button:hover {
+  background: #1e293b !important;
 }
