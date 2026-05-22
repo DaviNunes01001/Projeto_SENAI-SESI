@@ -10,9 +10,9 @@ lerna-debug.log*
 *.env
 *.env.*
 
+# pq vc colocaria aqui?
 backend/.env
 
-node_modules/
 node_modules
 dist
 dist-ssr

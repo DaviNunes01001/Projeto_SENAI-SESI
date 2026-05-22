@@ -1,16 +1,22 @@
-import { useState } from "react";
 import jsPDF from "jspdf";
+import { useState } from "react";
 import useApi from "../../hooks/useApi";
 import styles from "./Questoes.module.css";
 
+function getRespostaCorreta(questao) {
+  return questao.alternativas?.find((alternativa) => alternativa.correta);
+}
+
 export default function Questoes() {
   const [busca, setBusca] = useState("");
+  const [questaoAberta, setQuestaoAberta] = useState(null);
   const { data: questoes, loading, error, reload } = useApi("/api/pesquisa");
 
   function pesquisarQuestoes(event) {
     event.preventDefault();
 
     const termo = busca.trim();
+    setQuestaoAberta(null);
 
     if (!termo) {
       reload("/api/pesquisa");
@@ -22,112 +28,81 @@ export default function Questoes() {
 
   function limparBusca() {
     setBusca("");
+    setQuestaoAberta(null);
     reload("/api/pesquisa");
   }
 
+  function alternarResposta(id) {
+    setQuestaoAberta((atual) => (atual === id ? null : id));
+  }
+
   function gerarPdfQuestao(questao) {
-      const pdf = new jsPDF();
+    const pdf = new jsPDF();
+    const margem = 15;
+    const larguraTexto = 180;
+    let y = 20;
 
-      const margem = 15;
-      const larguraTexto = 180;
-      let y = 20;
-
-      pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(18);
-      pdf.text("Questão de Matemática", margem, y);
-
-      y += 12;
-
-      pdf.setFont("helvetica", "normal");
-      pdf.setFontSize(11);
-
-      if (questao.topico) {
-        pdf.text(`Tópico: ${questao.topico}`, margem, y);
-        y += 7;
-      }
-
-      if (questao.subtopico) {
-        pdf.text(`Subtópico: ${questao.subtopico}`, margem, y);
-        y += 7;
-      }
-
-      if (questao.nivel) {
-        pdf.text(`Nível: ${questao.nivel}`, margem, y);
-        y += 7;
-      }
-
-      if (questao.vestibular) {
-        pdf.text(`Vestibular: ${questao.vestibular}`, margem, y);
-        y += 7;
-      }
-
-      if (questao.ano) {
-        pdf.text(`Ano: ${questao.ano}`, margem, y);
-        y += 7;
-      }
-
-      y += 6;
-
+    function escreverTitulo(texto) {
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(13);
-      pdf.text("Enunciado:", margem, y);
-
+      pdf.text(texto, margem, y);
       y += 8;
+    }
 
+    function escreverTexto(texto) {
       pdf.setFont("helvetica", "normal");
-      pdf.setFontSize(12);
+      pdf.setFontSize(11);
+      const linhas = pdf.splitTextToSize(texto, larguraTexto);
+      pdf.text(linhas, margem, y);
+      y += linhas.length * 7 + 5;
+    }
 
-      const enunciado = pdf.splitTextToSize(
-        questao.enunciado || "Enunciado não informado.",
-        larguraTexto
-      );
-
-      pdf.text(enunciado, margem, y);
-      y += enunciado.length * 7 + 6;
-
-      if (questao.alternativas && questao.alternativas.length > 0) {
-        pdf.setFont("helvetica", "bold");
-        pdf.text("Alternativas:", margem, y);
-        y += 8;
-
-        pdf.setFont("helvetica", "normal");
-
-        questao.alternativas.forEach((alternativa) => {
-          const textoAlternativa = `${alternativa.letra}) ${alternativa.texto}`;
-          const linhas = pdf.splitTextToSize(textoAlternativa, larguraTexto);
-
-          if (y > 270) {
-            pdf.addPage();
-            y = 20;
-          }
-
-          pdf.text(linhas, margem, y);
-          y += linhas.length * 7;
-        });
-
-        y += 6;
+    function garantirEspaco() {
+      if (y > 260) {
+        pdf.addPage();
+        y = 20;
       }
+    }
 
-      if (questao.explicacao) {
-        if (y > 250) {
-          pdf.addPage();
-          y = 20;
-        }
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(18);
+    pdf.text("Questão de Matemática", margem, y);
+    y += 14;
 
-        pdf.setFont("helvetica", "bold");
-        pdf.text("Explicação:", margem, y);
+    escreverTitulo("Vestibular:");
+    escreverTexto(
+      `${questao.vestibular || "Não informado"}${
+        questao.ano ? ` - ${questao.ano}` : ""
+      }`,
+    );
 
-        y += 8;
+    escreverTitulo("Enunciado:");
+    escreverTexto(questao.enunciado || "Enunciado não informado.");
 
-        pdf.setFont("helvetica", "normal");
+    if (questao.alternativas?.length) {
+      escreverTitulo("Alternativas:");
 
-        const explicacao = pdf.splitTextToSize(questao.explicacao, larguraTexto);
-        pdf.text(explicacao, margem, y);
-      }
+      questao.alternativas.forEach((alternativa) => {
+        garantirEspaco();
+        escreverTexto(`${alternativa.letra}) ${alternativa.texto}`);
+      });
+    }
 
-      const nomeArquivo = `questao-${questao.id || "matematica"}.pdf`;
+    garantirEspaco();
+    escreverTitulo("Resposta:");
 
-      pdf.save(nomeArquivo);
+    const respostaCorreta = getRespostaCorreta(questao);
+    escreverTexto(
+      respostaCorreta
+        ? `${respostaCorreta.letra}) ${respostaCorreta.texto}`
+        : "Resposta não cadastrada.",
+    );
+
+    garantirEspaco();
+    escreverTitulo("Explicação:");
+    escreverTexto(questao.explicacao || "Explicação não cadastrada.");
+
+    pdf.save(`questao-${questao.id || "matematica"}.pdf`);
   }
 
   return (
@@ -137,9 +112,7 @@ export default function Questoes() {
 
         <h1>Questões de Matemática</h1>
 
-        <p>
-          Pesquise questões cadastradas no banco de dados pelo enunciado.
-        </p>
+        <p>Pesquise questões cadastradas no banco de dados pelo enunciado.</p>
 
         <form className={styles.searchForm} onSubmit={pesquisarQuestoes}>
           <input
@@ -179,31 +152,77 @@ export default function Questoes() {
 
         {!loading && !error && questoes.length > 0 && (
           <div className={styles.list}>
-            {questoes.map((questao) => (
-              <article className={styles.card} key={questao.id}>
-                <div className={styles.meta}>
-                  {questao.topico && <span>{questao.topico}</span>}
-                  {questao.subtopico && <span>{questao.subtopico}</span>}
-                  {questao.nivel && <span>{questao.nivel}</span>}
-                </div>
+            {questoes.map((questao) => {
+              const respostaCorreta = getRespostaCorreta(questao);
+              const aberta = questaoAberta === questao.id;
 
-                <h3>{questao.enunciado}</h3>
+              return (
+                <article className={styles.card} key={questao.id}>
+                  <div className={styles.vestibular}>
+                    <span>Vestibular</span>
+                    <strong>{questao.vestibular || "Não informado"}</strong>
+                    {questao.ano && <small>{questao.ano}</small>}
+                  </div>
 
-                <div className={styles.details}>
-                  {questao.vestibular && <p>Vestibular: {questao.vestibular}</p>}
-                  {questao.ano && <p>Ano: {questao.ano}</p>}
-                  {questao.explicacao && <p>Explicação: {questao.explicacao}</p>}
-                </div>
+                  <div className={styles.enunciado}>
+                    <span>Enunciado</span>
+                    <h3>{questao.enunciado}</h3>
 
-                <button
-                  type="button"
-                  className={styles.pdfButton}
-                  onClick={() => gerarPdfQuestao(questao)}
-                >
-                  Baixar PDF
-                </button>
-              </article>
-            ))}
+                    {questao.alternativas?.length > 0 && (
+                      <div className={styles.alternativas}>
+                        {questao.alternativas.map((alternativa) => (
+                          <p key={`${questao.id}-${alternativa.letra}`}>
+                            <strong>{alternativa.letra})</strong>{" "}
+                            {alternativa.texto}
+                          </p>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className={styles.actions}>
+                    <button
+                      type="button"
+                      className={styles.answerButton}
+                      onClick={() => alternarResposta(questao.id)}
+                      aria-expanded={aberta}
+                    >
+                      {aberta
+                        ? "Ocultar resposta"
+                        : "Mostrar resposta e explicação"}
+                    </button>
+
+                    <button
+                      type="button"
+                      className={styles.pdfButton}
+                      onClick={() => gerarPdfQuestao(questao)}
+                    >
+                      Baixar PDF
+                    </button>
+                  </div>
+
+                  {aberta && (
+                    <div className={styles.answerBox}>
+                      <div>
+                        <span>Resposta</span>
+                        <p>
+                          {respostaCorreta
+                            ? `${respostaCorreta.letra}) ${respostaCorreta.texto}`
+                            : "Resposta não cadastrada."}
+                        </p>
+                      </div>
+
+                      <div>
+                        <span>Explicação</span>
+                        <p>
+                          {questao.explicacao || "Explicação não cadastrada."}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </article>
+              );
+            })}
           </div>
         )}
       </section>
