@@ -16,31 +16,47 @@ const variaveisAusentes = variaveisObrigatorias.filter((nome) => {
   return typeof valor !== "string" || valor.trim() === "";
 });
 
-if (variaveisAusentes.length > 0) {
-  throw new Error(
-    `Variaveis ausentes no .env: ${variaveisAusentes.join(", ")}`
+const bancoConfigurado = variaveisAusentes.length === 0;
+
+if (!bancoConfigurado) {
+  console.warn(
+    `Banco nao configurado. Variaveis ausentes no .env: ${variaveisAusentes.join(
+      ", ",
+    )}`,
   );
 }
 
-const pool = new Pool({
-  user: process.env.DB_USER, // Lê DB_USER do .env
-  host: process.env.DB_HOST, // Lê DB_HOST do .env
-  database: process.env.DB_NAME, // Lê DB_NAME do .env
-  password: process.env.DB_PASSWORD, // Lê DB_PASSWORD do .env
-  port: parseInt(process.env.DB_PORT), // Lê DB_PORT e converte para número
-});
+const pool = bancoConfigurado
+  ? new Pool({
+      user: process.env.DB_USER,
+      host: process.env.DB_HOST,
+      database: process.env.DB_NAME,
+      password: process.env.DB_PASSWORD,
+      port: parseInt(process.env.DB_PORT, 10),
+    })
+  : {
+      query() {
+        throw new Error(
+          `Banco nao configurado. Crie um .env com: ${variaveisObrigatorias.join(
+            ", ",
+          )}`,
+        );
+      },
+    };
 
-pool.connect((erro, client, release) => {
-  if (erro) {
-    console.error("❌ Erro ao conectar ao PostgreSQL:", erro.message);
-    console.error("💡 Verifique suas credenciais no arquivo .env");
-  } else {
-    console.log("✅ Conectado ao PostgreSQL!");
-    console.log(`📊 Banco: ${process.env.DB_NAME}`);
-    console.log(`🏠 Host: ${process.env.DB_HOST}:${process.env.DB_PORT}`);
-    release(); // Devolver a conexão ao pool
-  }
-});
+if (bancoConfigurado) {
+  pool.connect((erro, client, release) => {
+    if (erro) {
+      console.error("Erro ao conectar ao PostgreSQL:", erro.message);
+      console.error("Verifique suas credenciais no arquivo .env");
+    } else {
+      console.log("Conectado ao PostgreSQL!");
+      console.log(`Banco: ${process.env.DB_NAME}`);
+      console.log(`Host: ${process.env.DB_HOST}:${process.env.DB_PORT}`);
+      release();
+    }
+  });
+}
 
 const criarTabela = async () => {
   const sql = `
@@ -48,7 +64,7 @@ const criarTabela = async () => {
         id SERIAL PRIMARY KEY,
         nome VARCHAR(100) NOT NULL,
         email VARCHAR(150) UNIQUE NOT NULL,
-        senha VARCHAR(8) NOT NULL,
+        senha VARCHAR(255) NOT NULL,
         tipo BOOLEAN,
         criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
@@ -59,7 +75,6 @@ const criarTabela = async () => {
         nivel VARCHAR(20) NOT NULL CHECK (
             nivel IN ('base', 'intermediario', 'avancado')
         ),
-
         descricao TEXT
     );
 
@@ -107,12 +122,14 @@ const criarTabela = async () => {
 
   try {
     await pool.query(sql);
-    console.log("✅ Tabela produtos verificada/criada");
+    console.log("Tabelas verificadas/criadas");
   } catch (erro) {
-    console.error("❌ Erro ao criar tabela:", erro.message);
+    console.error("Erro ao criar tabela:", erro.message);
   }
 };
 
-criarTabela();
+if (bancoConfigurado) {
+  criarTabela();
+}
 
 module.exports = pool;

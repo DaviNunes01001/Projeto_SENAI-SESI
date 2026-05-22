@@ -16,18 +16,18 @@ Projeto_SENAI-SESI/
 │   ├── controllers/
 │   ├── models/
 │   ├── routes/
-│   └── app.js
+│   └── server.js
 ├── package.json
 └── README.md
 ```
 
 ## Como rodar o projeto
-Primeiro, instale as dependencias:
+Primeiro, instale as dependências:
 ```bash
 npm install
 ```
 
-depois, crie um arquivo `.env` na raiz do projeto:
+Depois, crie um arquivo `.env` na raiz do projeto:
 ```env
 PORT=3000
 
@@ -40,7 +40,7 @@ DB_PORT=5432
 
 Rodar o backend:
 
-> nao precisa criar as `tables`, o `database.js` ja vai fazer isso
+> Não precisa criar as `tables`, o `database.js` já vai fazer isso.
 
 ```bash
 npm run backend
@@ -58,19 +58,27 @@ Rotas principais da API:
 GET /
 GET /api
 
-GET /api/topicos
 GET /api/questoes
+GET /api/questoes/primeiroSelect
+GET /api/questoes/segundoSelect/:chave
+GET /api/questoes/terceiroSelect
+GET /api/questoes/topico/:topicoid
+GET /api/questoes/:id
+
+POST /api/questoes
+PUT /api/questoes/:id
+DELETE /api/questoes/:id
 
 GET /api/pesquisa
 GET /api/pesquisa?q=texto
 GET /api/pesquisa/dificuldade
+GET /api/pesquisa/dificuldade/:nivel
 GET /api/pesquisa/vestibular
+GET /api/pesquisa/vestibular/:vestibular
 GET /api/pesquisa/topicos
+GET /api/pesquisa/topicos/:topico
 GET /api/pesquisa/ano/recente
 GET /api/pesquisa/ano/antigo
-
-GET /api/prova
-GET /api/provas
 ```
 
 ## Pesquisa com ou sem acento
