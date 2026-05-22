@@ -1,4 +1,4 @@
-import "./Login.css";
+import styles from "./Login.module.css";
 
 export default function Login() {
   function handleSubmit(event) {
@@ -10,24 +10,18 @@ export default function Login() {
 
     console.log("Email:", email);
     console.log("Senha:", senha);
-
-    // Depois você pode conectar isso com a API/backend.
   }
 
   return (
-    <main className="login-page">
-      <section className="login-card">
-        <div className="login-info">
-          <span className="login-tag">Projeto Final SENAI</span>
-
+    <main className={styles.page}>
+      <section className={styles.card}>
+        <div className={styles.info}>
+          <span>Projeto SENAI SESI</span>
           <h1>Bem-vindo de volta</h1>
-
-          <p>
-            Acesse sua conta para continuar usando o sistema do projeto.
-          </p>
+          <p>Acesse sua conta para continuar usando o sistema.</p>
         </div>
 
-        <form className="login-form" onSubmit={handleSubmit}>
+        <form className={styles.form} onSubmit={handleSubmit}>
           <h2>Login</h2>
 
           <label htmlFor="email">E-mail</label>
@@ -36,7 +30,6 @@ export default function Login() {
             name="email"
             type="email"
             placeholder="Digite seu e-mail"
-            required
           />
 
           <label htmlFor="senha">Senha</label>
@@ -45,23 +38,9 @@ export default function Login() {
             name="senha"
             type="password"
             placeholder="Digite sua senha"
-            required
           />
 
-          <div className="login-options">
-            <label className="remember">
-              <input type="checkbox" />
-              Lembrar de mim
-            </label>
-
-            <a href="#">Esqueci minha senha</a>
-          </div>
-
           <button type="submit">Entrar</button>
-
-          <p className="register-text">
-            Ainda não tem conta? <a href="#">Cadastre-se</a>
-          </p>
         </form>
       </section>
     </main>

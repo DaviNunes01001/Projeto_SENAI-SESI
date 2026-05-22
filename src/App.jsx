@@ -1,12 +1,7 @@
 import { useEffect, useState } from "react";
-
 import "./styles/global.css";
-import "./styles/layout.css";
-import "./styles/components.css";
-import "./styles/pages.css";
 
 import Header from "./components/Header/Header";
-
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import Questoes from "./pages/Questoes/Questoes";
@@ -22,7 +17,6 @@ function App() {
 
   useEffect(() => {
     const handlePopState = () => setCurrentPath(getCurrentPath());
-
     window.addEventListener("popstate", handlePopState);
 
     return () => {
@@ -44,10 +38,10 @@ function App() {
   };
 
   return (
-    <div className="app-shell">
+    <>
       <Header currentPath={currentPath} onNavigate={handleNavigate} />
       {pages[currentPath] || <NotFound />}
-    </div>
+    </>
   );
 }
 
