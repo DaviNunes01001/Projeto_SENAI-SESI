@@ -15,7 +15,7 @@ export default function Header({ currentPath, onNavigate }) {
         className={styles.logo}
         onClick={(event) => onNavigate(event, "/")}
       >
-        SESI SENAI
+        SESI <span className={styles.senai}>SENAI</span>
       </a>
 
       <nav className={styles.nav}>
