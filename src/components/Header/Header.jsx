@@ -1,4 +1,4 @@
-import "./Header.css";
+import styles from "./Header.module.css";
 
 const navItems = [
   { href: "/", label: "Home" },
@@ -7,21 +7,26 @@ const navItems = [
   { href: "/login", label: "Login" },
 ];
 
-function Header({ currentPath, onNavigate }) {
+export default function Header({ currentPath, onNavigate }) {
   return (
-    <header className="header">
-      <a href="/" className="brand" onClick={(e) => onNavigate(e, "/")}>
-        SESI <span>SENAI</span>
+    <header className={styles.header}>
+      <a
+        href="/"
+        className={styles.logo}
+        onClick={(event) => onNavigate(event, "/")}
+      >
+        SESI SENAI
       </a>
 
-      <nav className="nav">
+      <nav className={styles.nav}>
         {navItems.map((item) => (
-  { href: "/questoes", label: "Começar agora" },
           <a
             key={item.href}
             href={item.href}
-            className={currentPath === item.href ? "active" : ""}
-            onClick={(e) => onNavigate(e, item.href)}
+            onClick={(event) => onNavigate(event, item.href)}
+            className={`${styles.navLink} ${
+              currentPath === item.href ? styles.active : ""
+            } ${item.href === "/login" ? styles.loginLink : ""}`}
           >
             {item.label}
           </a>
@@ -30,5 +35,3 @@ function Header({ currentPath, onNavigate }) {
     </header>
   );
 }
-
-export default Header;

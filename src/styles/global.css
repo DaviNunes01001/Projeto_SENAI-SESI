@@ -4,11 +4,14 @@
 
 body {
   margin: 0;
-  background: #f4f7fb;
+  background: #f8fafc;
+  color: #111827;
   font-family: Arial, Helvetica, sans-serif;
 }
 
 button,
-input {
+input,
+textarea,
+select {
   font: inherit;
 }
