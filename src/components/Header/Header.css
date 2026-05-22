@@ -27,6 +27,10 @@
   flex-wrap: wrap;
 }
 
+span {
+    color: red;
+}
+
 .nav a {
   padding: 10px 14px;
   border-radius: 999px;
@@ -35,6 +39,17 @@
   font-weight: 800;
   text-decoration: none;
   transition: 0.2s ease;
+}
+
+.nav a:last-child {
+    background: lightgreen;
+}
+
+.nav a:last-child:hover,
+.nav a:last-child.active {
+  color: #ffffff;
+  background: green;
+  box-shadow: 0 10px 25px rgba(0, 92, 191, 0.22);
 }
 
 .nav a:hover,

@@ -2,21 +2,21 @@ import "./Header.css";
 
 const navItems = [
   { href: "/", label: "Home" },
-  { href: "/topicos", label: "Tópicos" },
+  { href: "/funcionamento", label: "Como funciona" },
   { href: "/questoes", label: "Questões" },
-  { href: "/pesquisa", label: "Pesquisa" },
-  { href: "/prova", label: "Prova" },
+  { href: "/login", label: "Login" },
 ];
 
 function Header({ currentPath, onNavigate }) {
   return (
     <header className="header">
       <a href="/" className="brand" onClick={(e) => onNavigate(e, "/")}>
-        SESI SENAI
+        SESI <span>SENAI</span>
       </a>
 
       <nav className="nav">
         {navItems.map((item) => (
+  { href: "/questoes", label: "Começar agora" },
           <a
             key={item.href}
             href={item.href}

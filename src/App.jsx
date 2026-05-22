@@ -8,10 +8,9 @@ import "./styles/pages.css";
 import Header from "./components/Header/Header";
 
 import Home from "./pages/Home/Home";
-import Topicos from "./pages/Topicos/Topicos";
+import Login from "./pages/Login/Login";
 import Questoes from "./pages/Questoes/Questoes";
-import Pesquisa from "./pages/Pesquisa/Pesquisa";
-import Prova from "./pages/Prova/Prova";
+import ComoFunciona from "./pages/ComoFunciona/ComoFunciona";
 import NotFound from "./pages/404/NotFound";
 
 function getCurrentPath() {
@@ -39,10 +38,9 @@ function App() {
 
   const pages = {
     "/": <Home />,
-    "/topicos": <Topicos />,
+    "/login": <Login />,
     "/questoes": <Questoes />,
-    "/pesquisa": <Pesquisa />,
-    "/prova": <Prova />,
+    "/funcionamento": <ComoFunciona />,
   };
 
   return (

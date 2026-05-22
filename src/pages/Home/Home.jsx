@@ -1,7 +1,7 @@
 import "./Home.css";
 
 import PageHeader from "../../components/PageHeader/PageHeader";
-import useApi from "../../../hooks/useApi";
+import useApi from "../../hooks/useApi";
 
 function Home() {
   const { data, loading, error } = useApi("/api/");
