@@ -4,7 +4,11 @@ function isUndefinedRelation(erro) {
   return erro && erro.code === "42P01";
 }
 
-async function listar(busca) {
+async function listar(busca, nivel) {
+  if (nivel) {
+    return listarSemView(busca, nivel);
+  }
+
   const params = [];
   let sql = "SELECT * FROM view_busca_questao_PES";
 
@@ -24,11 +28,12 @@ async function listar(busca) {
     }
   }
 
-  return listarSemView(busca);
+  return listarSemView(busca, nivel);
 }
 
-async function listarSemView(busca) {
+async function listarSemView(busca, nivel) {
   const params = [];
+  const filtros = [];
   let sql = `
     SELECT
       questao.id,
@@ -55,7 +60,20 @@ async function listarSemView(busca) {
 
   if (busca) {
     params.push(`%${busca}%`);
-    sql += " WHERE unaccent(LOWER(questao.enunciado)) LIKE unaccent(LOWER($1))";
+    filtros.push(
+      `unaccent(LOWER(questao.enunciado)) LIKE unaccent(LOWER($${params.length}))`
+    );
+  }
+
+  if (nivel) {
+    params.push(nivel);
+    filtros.push(
+      `unaccent(LOWER(avaliacao.nivel)) = unaccent(LOWER($${params.length}))`
+    );
+  }
+
+  if (filtros.length > 0) {
+    sql += ` WHERE ${filtros.join(" AND ")}`;
   }
 
   sql += " ORDER BY questao.id, alternativa.letra";

@@ -49,7 +49,9 @@ async function responderPesquisa(res, consulta) {
 }
 
 function listar(req, res) {
-  return responderPesquisa(res, () => pesquisaModel.listar(req.query.q));
+  return responderPesquisa(res, () =>
+    pesquisaModel.listar(req.query.q, req.query.nivel)
+  );
 }
 
 function filtrarPorDificuldade(req, res) {
