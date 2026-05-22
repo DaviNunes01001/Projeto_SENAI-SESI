@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import "./styles/global.css";
 
 import Header from "./components/Header/Header";
+import NotFound from "./pages/404/NotFound";
+import ComoFunciona from "./pages/ComoFunciona/ComoFunciona";
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import Questoes from "./pages/Questoes/Questoes";
-import ComoFunciona from "./pages/ComoFunciona/ComoFunciona";
-import NotFound from "./pages/404/NotFound";
 
 function getCurrentPath() {
   return window.location.pathname || "/";

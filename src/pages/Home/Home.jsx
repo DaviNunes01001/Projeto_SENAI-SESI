@@ -1,4 +1,3 @@
-import PageHeader from "../../components/PageHeader/PageHeader";
 import useApi from "../../hooks/useApi";
 import styles from "./Home.module.css";
 
@@ -7,10 +6,12 @@ export default function Home() {
 
   return (
     <main className={styles.page}>
-      <PageHeader
-        title="Estude Matemática com questões organizadas"
-        subtitle="Projeto SESI SENAI para busca e estudo de questões de matemática."
-      />
+      <section className={styles.hero}>
+        <h1>Estude Matemática com questões organizadas</h1>
+        <p>
+          Projeto SESI SENAI para busca e estudo de questões de matemática.
+        </p>
+      </section>
 
       <section className={styles.section}>
         <article className={styles.backendCard}>
