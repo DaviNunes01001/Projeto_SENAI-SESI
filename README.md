@@ -93,96 +93,79 @@ A pesquisa foi feita para aceitar palavras com acento ou sem acento.
 ## Minimo de dados para o SQL(pgAdmin4), so roda direto
 
 ```SQL
-INSERT INTO avaliacao (titulo, nivel, descricao)
-VALUES
-('Lista básica de Matemática', 'base', 'Questões básicas para estudo de matemática'),
-('Lista intermediária de Matemática', 'intermediario', 'Questões intermediárias para estudo de matemática'),
-('Lista avançada de Matemática', 'avancado', 'Questões avançadas para estudo de matemática');
-
-INSERT INTO vestibular (nome, ano, instituicao)
-VALUES
-('ENEM', 2024, 'INEP'),
-('Fuvest', 2024, 'USP'),
-('Unicamp', 2024, 'UNICAMP');
-
-INSERT INTO subtopico (nome, descricao)
-VALUES
-('Equação do 1º grau', 'Problemas envolvendo equações lineares'),
-('Porcentagem', 'Cálculos com porcentagem, aumento e desconto'),
-('Função do 1º grau', 'Estudo de funções lineares'),
-('Geometria plana', 'Área, perímetro e figuras planas'),
-('Probabilidade', 'Cálculo de chances e eventos');
-
-INSERT INTO questao (
-  avaliacao_id,
-  vestibular_id,
-  subtopico_id,
-  enunciado,
-  tipo,
-  conteudo,
-  bloco,
-  explicacao,
-  comentario_especialista,
-  link_explicacao
+WITH
+av_base AS (
+  INSERT INTO avaliacao (titulo, nivel, descricao)
+  VALUES ('Teste Base', 'base', 'Questao de nivel base')
+  RETURNING id
+),
+av_intermediario AS (
+  INSERT INTO avaliacao (titulo, nivel, descricao)
+  VALUES ('Teste Intermediario', 'intermediario', 'Questao de nivel intermediario')
+  RETURNING id
+),
+av_avancado AS (
+  INSERT INTO avaliacao (titulo, nivel, descricao)
+  VALUES ('Teste Avancado', 'avancado', 'Questao de nivel avancado')
+  RETURNING id
+),
+vest AS (
+  INSERT INTO vestibular (nome, ano, instituicao)
+  VALUES ('ENEM', 2024, 'INEP')
+  RETURNING id
+),
+sub AS (
+  INSERT INTO subtopico (nome, descricao)
+  VALUES ('Geometria', 'Questoes de geometria')
+  RETURNING id
+),
+q_base AS (
+  INSERT INTO questao (
+    avaliacao_id, vestibular_id, subtopico_id,
+    enunciado, tipo, conteudo, explicacao
+  )
+  SELECT av_base.id, vest.id, sub.id,
+    'Qual é a área de um quadrado de lado 5?',
+    'base',
+    'Area do quadrado',
+    'A área do quadrado é lado vezes lado: 5 x 5 = 25.'
+  FROM av_base, vest, sub
+  RETURNING id
+),
+q_inter AS (
+  INSERT INTO questao (
+    avaliacao_id, vestibular_id, subtopico_id,
+    enunciado, tipo, conteudo, explicacao
+  )
+  SELECT av_intermediario.id, vest.id, sub.id,
+    'Um triângulo tem base 10 e altura 6. Qual é sua área?',
+    'base',
+    'Area do triangulo',
+    'A área do triângulo é base vezes altura dividido por 2: 10 x 6 / 2 = 30.'
+  FROM av_intermediario, vest, sub
+  RETURNING id
+),
+q_avanc AS (
+  INSERT INTO questao (
+    avaliacao_id, vestibular_id, subtopico_id,
+    enunciado, tipo, conteudo, explicacao
+  )
+  SELECT av_avancado.id, vest.id, sub.id,
+    'Se o raio de uma circunferência é 3, qual é a área em função de pi?',
+    'base',
+    'Area do circulo',
+    'A área do círculo é pi vezes raio ao quadrado: pi x 3² = 9pi.'
+  FROM av_avancado, vest, sub
+  RETURNING id
 )
-VALUES
-(
-  1,
-  1,
-  1,
-  'Resolva a equação 2x + 6 = 14.',
-  'base',
-  'equacao primeiro grau',
-  'Álgebra',
-  'Subtraindo 6 dos dois lados, temos 2x = 8. Dividindo por 2, x = 4.',
-  'Questão simples para praticar isolamento da incógnita.',
-  NULL
-),
-(
-  1,
-  1,
-  2,
-  'Um produto custava R$ 200,00 e recebeu desconto de 15%. Qual é o novo preço?',
-  'base',
-  'porcentagem desconto',
-  'Matemática financeira',
-  '15% de 200 é 30. Portanto, o novo preço é 200 - 30 = 170.',
-  'Boa questão para revisar desconto percentual.',
-  NULL
-),
-(
-  2,
-  2,
-  3,
-  'Considere a função f(x) = 3x - 2. Qual é o valor de f(5)?',
-  'base',
-  'funcao primeiro grau',
-  'Funções',
-  'Substituindo x por 5: f(5) = 3 · 5 - 2 = 15 - 2 = 13.',
-  'Trabalha substituição direta em função.',
-  NULL
-);
-
 INSERT INTO alternativa (questao_id, letra, texto, correta)
-VALUES
--- Questão 1
-(1, 'A', 'x = 2', false),
-(1, 'B', 'x = 4', true),
-(1, 'C', 'x = 6', false),
-(1, 'D', 'x = 8', false),
-(1, 'E', 'x = 10', false),
-
--- Questão 2
-(2, 'A', 'R$ 150,00', false),
-(2, 'B', 'R$ 160,00', false),
-(2, 'C', 'R$ 170,00', true),
-(2, 'D', 'R$ 180,00', false),
-(2, 'E', 'R$ 185,00', false),
-
--- Questão 3
-(3, 'A', '10', false),
-(3, 'B', '11', false),
-(3, 'C', '12', false),
-(3, 'D', '13', true),
-(3, 'E', '15', false);
+SELECT id, 'A', '20', false FROM q_base
+UNION ALL SELECT id, 'B', '25', true FROM q_base
+UNION ALL SELECT id, 'C', '30', false FROM q_base
+UNION ALL SELECT id, 'A', '30', true FROM q_inter
+UNION ALL SELECT id, 'B', '60', false FROM q_inter
+UNION ALL SELECT id, 'C', '15', false FROM q_inter
+UNION ALL SELECT id, 'A', '6pi', false FROM q_avanc
+UNION ALL SELECT id, 'B', '9pi', true FROM q_avanc
+UNION ALL SELECT id, 'C', '12pi', false FROM q_avanc;
 ```

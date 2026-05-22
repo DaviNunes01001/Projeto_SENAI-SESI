@@ -7,27 +7,37 @@ function getRespostaCorreta(questao) {
   return questao.alternativas?.find((alternativa) => alternativa.correta);
 }
 
+function montarUrlPesquisa(busca, nivel) {
+  const params = new URLSearchParams();
+  const termo = busca.trim();
+
+  if (termo) {
+    params.set("q", termo);
+  }
+
+  if (nivel) {
+    params.set("nivel", nivel);
+  }
+
+  const query = params.toString();
+  return query ? `/api/pesquisa?${query}` : "/api/pesquisa";
+}
+
 export default function Questoes() {
   const [busca, setBusca] = useState("");
+  const [nivel, setNivel] = useState("");
   const [questaoAberta, setQuestaoAberta] = useState(null);
   const { data: questoes, loading, error, reload } = useApi("/api/pesquisa");
 
   function pesquisarQuestoes(event) {
     event.preventDefault();
-
-    const termo = busca.trim();
     setQuestaoAberta(null);
-
-    if (!termo) {
-      reload("/api/pesquisa");
-      return;
-    }
-
-    reload(`/api/pesquisa?q=${encodeURIComponent(termo)}`);
+    reload(montarUrlPesquisa(busca, nivel));
   }
 
   function limparBusca() {
     setBusca("");
+    setNivel("");
     setQuestaoAberta(null);
     reload("/api/pesquisa");
   }
@@ -122,9 +132,22 @@ export default function Questoes() {
             onChange={(event) => setBusca(event.target.value)}
           />
 
+          <label className={styles.levelFilter}>
+            <span>Nível</span>
+            <select
+              value={nivel}
+              onChange={(event) => setNivel(event.target.value)}
+            >
+              <option value="">Todos</option>
+              <option value="base">Base</option>
+              <option value="intermediario">Intermediário</option>
+              <option value="avancado">Avançado</option>
+            </select>
+          </label>
+
           <button type="submit">Buscar</button>
 
-          {busca && (
+          {(busca || nivel) && (
             <button
               type="button"
               className={styles.clearButton}
@@ -162,6 +185,7 @@ export default function Questoes() {
                     <span>Vestibular</span>
                     <strong>{questao.vestibular || "Não informado"}</strong>
                     {questao.ano && <small>{questao.ano}</small>}
+                    {questao.nivel && <small>{questao.nivel}</small>}
                   </div>
 
                   <div className={styles.enunciado}>
