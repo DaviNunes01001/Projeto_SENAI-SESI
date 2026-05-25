@@ -28,8 +28,8 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 
 // Rotas protegidas
-app.use("/api/questoes", authMiddleware, questoesRoutes);
-app.use("/api/pesquisa", authMiddleware, pesquisaRoutes);
+app.use("/api/questoes",  questoesRoutes);
+app.use("/api/pesquisa", pesquisaRoutes);
 
 app.use((req, res) => {
   res.status(404).json({
