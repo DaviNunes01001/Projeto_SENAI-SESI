@@ -5,6 +5,7 @@ const QuestaoController = require("../controllers/questoesControllers");
 
 router.get("/", QuestaoController.listarTodas);
 router.get("/anos", QuestaoController.listarAnos);
+router.get("/ids", QuestaoController.listarIds);
 
 // views
 router.get("/primeiroSelect", QuestaoController.infos_view);

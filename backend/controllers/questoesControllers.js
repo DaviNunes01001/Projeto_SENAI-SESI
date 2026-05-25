@@ -56,18 +56,39 @@ function obterAno(valor) {
   return Number(anoTexto);
 }
 
+function obterId(valor) {
+  if (valor === undefined || valor === null || valor === "") {
+    return null;
+  }
+
+  const idTexto = String(valor).trim();
+
+  if (!/^\d+$/.test(idTexto)) {
+    return null;
+  }
+
+  const id = Number(idTexto);
+  return id > 0 ? id : null;
+}
+
 async function listarTodas(req, res) {
   try {
     const ano = obterAno(req.query.ano);
+    const id = obterId(req.query.id);
 
     if (req.query.ano && !ano) {
       return res.status(400).json({ mensagem: "Ano invalido" });
+    }
+
+    if (req.query.id && !id) {
+      return res.status(400).json({ mensagem: "ID invalido" });
     }
 
     const linhas = await questaoModel.listarTodas({
       busca: req.query.q,
       nivel: req.query.nivel,
       ano,
+      id,
     });
 
     res.status(200).json(agruparAlternativas(linhas));
@@ -86,6 +107,18 @@ async function listarAnos(req, res) {
   } catch (erro) {
     res.status(500).json({
       mensagem: "Erro ao listar anos",
+      erro: erro.message,
+    });
+  }
+}
+
+async function listarIds(req, res) {
+  try {
+    const ids = await questaoModel.listarIds();
+    res.status(200).json(ids);
+  } catch (erro) {
+    res.status(500).json({
+      mensagem: "Erro ao listar ids",
       erro: erro.message,
     });
   }
@@ -263,6 +296,7 @@ module.exports = {
   buscarPorTopico,
   listarTodas,
   listarAnos,
+  listarIds,
   buscarPorId,
   criar,
   atualizar,
