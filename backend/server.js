@@ -4,6 +4,7 @@ require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 const express = require("express");
 const cors = require("cors");
 
+const authRoutes = require("./routes/authRoutes");
 const questoesRoutes = require("./routes/questoesRoutes");
 
 const app = express();
@@ -25,10 +26,11 @@ app.get("/api", (req, res) => {
   res.json({
     mensagem: "API de questões de matemática",
     versao: "1.0",
-    rotas: ["/api/questoes"],
+    rotas: ["/api/auth/login", "/api/questoes"],
   });
 });
 
+app.use("/api/auth", authRoutes);
 app.use("/api/questoes", questoesRoutes);
 
 app.use((req, res) => {
