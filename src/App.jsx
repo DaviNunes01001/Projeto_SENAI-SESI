@@ -7,6 +7,8 @@ import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import Questoes from "./pages/Questoes/Questoes";
 
+import { isAuthenticated } from "./hooks/auth";
+
 function getCurrentPath() {
   return window.location.pathname || "/";
 }
@@ -16,6 +18,7 @@ function App() {
 
   useEffect(() => {
     const handlePopState = () => setCurrentPath(getCurrentPath());
+
     window.addEventListener("popstate", handlePopState);
 
     return () => {
@@ -23,22 +26,49 @@ function App() {
     };
   }, []);
 
+   useEffect(() => {
+    const rotasProtegidas = ["/", "/questoes", "/funcionamento"];
+
+    if (
+      rotasProtegidas.includes(currentPath) &&
+      !isAuthenticated()
+    ) {
+      window.history.pushState({}, "", "/login");
+      setCurrentPath("/login");
+    }
+  }, [currentPath]);
+
   function handleNavigate(event, href) {
     event.preventDefault();
+
+    const rotasProtegidas = ["/", "/questoes", "/funcionamento"];
+
+    if (rotasProtegidas.includes(href) && !isAuthenticated()) {
+      window.history.pushState({}, "", "/login");
+      setCurrentPath("/login");
+      return;
+    }
+
     window.history.pushState({}, "", href);
     setCurrentPath(href);
   }
 
-  const pages = {
+    const pages = {
     "/": <Home />,
-    "/login": <Login />,
+    "/login": <Login setCurrentPath={setCurrentPath} />,
     "/questoes": <Questoes />,
     "/funcionamento": <ComoFunciona />,
   };
 
   return (
     <>
-      <Header currentPath={currentPath} onNavigate={handleNavigate} />
+      {currentPath !== "/login" && (
+        <Header
+          currentPath={currentPath}
+          onNavigate={handleNavigate}
+        />
+      )}
+
       {pages[currentPath] || <NotFound />}
     </>
   );

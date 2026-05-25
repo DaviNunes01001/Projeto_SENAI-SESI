@@ -6,12 +6,15 @@ const cors = require("cors");
 
 const questoesRoutes = require("./routes/questoesRoutes");
 const pesquisaRoutes = require("./routes/pesquisaRoutes");
+const authRoutes = require("./routes/authRoutes");
+const authMiddleware = require("./middlewares/authMiddleware");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+
 
 app.get("/", (req, res) => {
   res.json({
@@ -22,16 +25,11 @@ app.get("/", (req, res) => {
   });
 });
 
-app.get("/api", (req, res) => {
-  res.json({
-    mensagem: "API de questões de matemática",
-    versao: "1.0",
-    rotas: ["/api/questoes", "/api/pesquisa"],
-  });
-});
+app.use("/api/auth", authRoutes);
 
-app.use("/api/questoes", questoesRoutes);
-app.use("/api/pesquisa", pesquisaRoutes);
+// Rotas protegidas
+app.use("/api/questoes", authMiddleware, questoesRoutes);
+app.use("/api/pesquisa", authMiddleware, pesquisaRoutes);
 
 app.use((req, res) => {
   res.status(404).json({
@@ -47,3 +45,4 @@ app.listen(PORT, () => {
   console.log(`Ambiente: ${process.env.NODE_ENV || "development"}`);
   console.log("=".repeat(49));
 });
+
