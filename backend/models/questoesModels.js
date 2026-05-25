@@ -52,6 +52,11 @@ async function listarTodas(filtros = {}) {
     condicoes.push(`vestibular.ano = $${params.length}`);
   }
 
+  if (filtros.id) {
+    params.push(filtros.id);
+    condicoes.push(`q.id = $${params.length}`);
+  }
+
   let sql = `
     SELECT
       q.id,
@@ -105,6 +110,18 @@ async function listarAnos() {
       ON questao.vestibular_id = vestibular.id
     WHERE vestibular.ano IS NOT NULL
     ORDER BY vestibular.ano DESC
+    `
+  );
+
+  return result.rows;
+}
+
+async function listarIds() {
+  const result = await pool.query(
+    `
+    SELECT id
+    FROM questao
+    ORDER BY id
     `
   );
 
@@ -289,6 +306,7 @@ async function deletar(id) {
 module.exports = {
   listarTodas,
   listarAnos,
+  listarIds,
   buscarPorId,
   criar,
   atualizar,

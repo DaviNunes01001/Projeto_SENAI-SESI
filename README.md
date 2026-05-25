@@ -67,6 +67,7 @@ GET /api/questoes
 GET /api/questoes/:id
 
 GET /api/questoes?q=texto
+GET /api/questoes?id=1
 
 GET /api/questoes?nivel=base
 GET /api/questoes?nivel=intermediario
@@ -74,8 +75,9 @@ GET /api/questoes?nivel=avancado
 
 GET /api/questoes?ano=2024
 GET /api/questoes/anos
+GET /api/questoes/ids
 
-GET /api/questoes?q=texto&nivel=base&ano=2024
+GET /api/questoes?q=texto&id=1&nivel=base&ano=2024
 
 GET /api/questoes/primeiroSelect
 GET /api/questoes/segundoSelect/:chave
