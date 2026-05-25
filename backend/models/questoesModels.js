@@ -29,8 +29,85 @@ const questaoSelect = `
     ON q.subtopico_id = subtopico.id
 `;
 
-async function listarTodas() {
-  const result = await pool.query(`${questaoSelect} ORDER BY q.id`);
+async function listarTodas(filtros = {}) {
+  const params = [];
+  const condicoes = [];
+
+  if (filtros.busca) {
+    params.push(`%${filtros.busca}%`);
+    condicoes.push(
+      `unaccent(LOWER(q.enunciado)) LIKE unaccent(LOWER($${params.length}))`
+    );
+  }
+
+  if (filtros.nivel) {
+    params.push(filtros.nivel);
+    condicoes.push(
+      `unaccent(LOWER(avaliacao.nivel)) = unaccent(LOWER($${params.length}))`
+    );
+  }
+
+  if (filtros.ano) {
+    params.push(filtros.ano);
+    condicoes.push(`vestibular.ano = $${params.length}`);
+  }
+
+  let sql = `
+    SELECT
+      q.id,
+      q.id AS idc,
+      q.subtopico_id AS topicoid,
+      q.avaliacao_id,
+      q.vestibular_id,
+      q.subtopico_id,
+      q.enunciado,
+      q.tipo,
+      q.conteudo,
+      q.bloco,
+      q.explicacao,
+      q.comentario_especialista,
+      q.link_explicacao,
+      q.link_explicacao AS link_bib,
+      avaliacao.nivel,
+      vestibular.nome AS vestibular,
+      vestibular.ano,
+      subtopico.nome AS topico,
+      alternativa.letra,
+      alternativa.texto,
+      alternativa.correta
+    FROM questao q
+    LEFT JOIN avaliacao
+      ON q.avaliacao_id = avaliacao.id
+    LEFT JOIN vestibular
+      ON q.vestibular_id = vestibular.id
+    LEFT JOIN subtopico
+      ON q.subtopico_id = subtopico.id
+    LEFT JOIN alternativa
+      ON q.id = alternativa.questao_id
+  `;
+
+  if (condicoes.length > 0) {
+    sql += ` WHERE ${condicoes.join(" AND ")}`;
+  }
+
+  sql += " ORDER BY q.id, alternativa.letra";
+
+  const result = await pool.query(sql, params);
+  return result.rows;
+}
+
+async function listarAnos() {
+  const result = await pool.query(
+    `
+    SELECT DISTINCT vestibular.ano
+    FROM vestibular
+    INNER JOIN questao
+      ON questao.vestibular_id = vestibular.id
+    WHERE vestibular.ano IS NOT NULL
+    ORDER BY vestibular.ano DESC
+    `
+  );
+
   return result.rows;
 }
 
@@ -211,6 +288,7 @@ async function deletar(id) {
 
 module.exports = {
   listarTodas,
+  listarAnos,
   buscarPorId,
   criar,
   atualizar,

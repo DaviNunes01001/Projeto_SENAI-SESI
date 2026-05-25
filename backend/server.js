@@ -5,7 +5,6 @@ const express = require("express");
 const cors = require("cors");
 
 const questoesRoutes = require("./routes/questoesRoutes");
-const pesquisaRoutes = require("./routes/pesquisaRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,12 +25,11 @@ app.get("/api", (req, res) => {
   res.json({
     mensagem: "API de questões de matemática",
     versao: "1.0",
-    rotas: ["/api/questoes", "/api/pesquisa"],
+    rotas: ["/api/questoes"],
   });
 });
 
 app.use("/api/questoes", questoesRoutes);
-app.use("/api/pesquisa", pesquisaRoutes);
 
 app.use((req, res) => {
   res.status(404).json({
