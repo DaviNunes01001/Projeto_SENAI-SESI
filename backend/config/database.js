@@ -71,7 +71,7 @@ const criarTabela = async () => {
 
     CREATE TABLE IF NOT EXISTS avaliacao (
         id SERIAL PRIMARY KEY,
-        titulo VARCHAR(100) NOT NULL,
+        titulo VARCHAR(300) NOT NULL,
         nivel VARCHAR(20) NOT NULL CHECK (
             nivel IN ('base', 'intermediario', 'avancado')
         ),
@@ -80,14 +80,14 @@ const criarTabela = async () => {
 
     CREATE TABLE IF NOT EXISTS vestibular (
         id SERIAL PRIMARY KEY,
-        nome VARCHAR(100) NOT NULL,
+        nome VARCHAR(300) NOT NULL,
         ano INT,
-        instituicao VARCHAR(100)
+        instituicao VARCHAR(300)
     );
 
     CREATE TABLE IF NOT EXISTS subtopico (
         id SERIAL PRIMARY KEY,
-        nome VARCHAR(100) NOT NULL,
+        nome VARCHAR(300) NOT NULL,
         descricao TEXT
     );
 
@@ -97,14 +97,14 @@ const criarTabela = async () => {
         vestibular_id INT REFERENCES vestibular(id),
         subtopico_id INT REFERENCES subtopico(id),
         enunciado TEXT NOT NULL,
-        tipo VARCHAR(20) NOT NULL CHECK (
+        tipo VARCHAR(300) NOT NULL CHECK (
             tipo IN ('base', 'vestibular')
         ),
-        conteudo VARCHAR(100) NOT NULL,
+        conteudo VARCHAR(700) NOT NULL,
         bloco VARCHAR(100),
         explicacao TEXT,
         comentario_especialista TEXT,
-        link_explicacao varchar(100)
+        link_explicacao varchar(500)
     );
 
     CREATE TABLE IF NOT EXISTS alternativa (
