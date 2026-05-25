@@ -5,10 +5,10 @@ export default function ComoFunciona() {
     <main className={styles.page}>
       <section className={styles.hero}>
         <span>Como funciona</span>
-        <h1>O projeto conecta React com uma API de questões.</h1>
+        <h1>O projeto conecta React com uma API de questoes.</h1>
         <p>
-          O frontend usa as rotas do backend para listar e pesquisar questões de
-          matemática cadastradas no PostgreSQL.
+          O frontend usa as rotas do backend para listar e pesquisar questoes de
+          matematica cadastradas no PostgreSQL.
         </p>
       </section>
 
@@ -21,14 +21,14 @@ export default function ComoFunciona() {
 
         <article>
           <strong>02</strong>
-          <h2>Pesquisa</h2>
-          <p>A página de questões consulta a rota /api/pesquisa.</p>
+          <h2>Questoes</h2>
+          <p>A pagina de questoes consulta a rota /api/questoes.</p>
         </article>
 
         <article>
           <strong>03</strong>
           <h2>Estudo</h2>
-          <p>Os alunos visualizam questões de matemática para estudar.</p>
+          <p>Os alunos visualizam questoes de matematica para estudar.</p>
         </article>
       </section>
     </main>

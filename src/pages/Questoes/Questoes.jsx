@@ -7,9 +7,10 @@ function getRespostaCorreta(questao) {
   return questao.alternativas?.find((alternativa) => alternativa.correta);
 }
 
-function montarUrlPesquisa(busca, nivel) {
+function montarUrlQuestoes(busca, nivel, ano) {
   const params = new URLSearchParams();
   const termo = busca.trim();
+  const anoFiltro = ano.trim();
 
   if (termo) {
     params.set("q", termo);
@@ -19,27 +20,37 @@ function montarUrlPesquisa(busca, nivel) {
     params.set("nivel", nivel);
   }
 
+  if (anoFiltro) {
+    params.set("ano", anoFiltro);
+  }
+
   const query = params.toString();
-  return query ? `/api/pesquisa?${query}` : "/api/pesquisa";
+  return query ? `/api/questoes?${query}` : "/api/questoes";
 }
 
 export default function Questoes() {
   const [busca, setBusca] = useState("");
   const [nivel, setNivel] = useState("");
+  const [ano, setAno] = useState("");
   const [questaoAberta, setQuestaoAberta] = useState(null);
-  const { data: questoes, loading, error, reload } = useApi("/api/pesquisa");
+  const { data: questoes, loading, error, reload } = useApi("/api/questoes");
+  const { data: anos } = useApi("/api/questoes/anos");
+  const anosDisponiveis = [
+    ...new Set(anos.map((item) => item.ano).filter(Boolean)),
+  ];
 
   function pesquisarQuestoes(event) {
     event.preventDefault();
     setQuestaoAberta(null);
-    reload(montarUrlPesquisa(busca, nivel));
+    reload(montarUrlQuestoes(busca, nivel, ano));
   }
 
   function limparBusca() {
     setBusca("");
     setNivel("");
+    setAno("");
     setQuestaoAberta(null);
-    reload("/api/pesquisa");
+    reload("/api/questoes");
   }
 
   function alternarResposta(id) {
@@ -81,8 +92,8 @@ export default function Questoes() {
 
     escreverTitulo("Vestibular:");
     escreverTexto(
-      `${questao.vestibular || "Não informado"}${
-        questao.ano ? ` - ${questao.ano}` : ""
+      `${questao.vestibular || " Não informado "}${
+        questao.ano ? ` - ${questao.ano}` : " "
       }`,
     );
 
@@ -145,9 +156,24 @@ export default function Questoes() {
             </select>
           </label>
 
+          <label className={styles.levelFilter}>
+            <span>Ano</span>
+            <select
+              value={ano}
+              onChange={(event) => setAno(event.target.value)}
+            >
+              <option value="">Todos</option>
+              {anosDisponiveis.map((anoDisponivel) => (
+                <option key={anoDisponivel} value={anoDisponivel}>
+                  {anoDisponivel}
+                </option>
+              ))}
+            </select>
+          </label>
+
           <button type="submit">Buscar</button>
 
-          {(busca || nivel) && (
+          {(busca || nivel || ano) && (
             <button
               type="button"
               className={styles.clearButton}

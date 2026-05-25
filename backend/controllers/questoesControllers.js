@@ -1,12 +1,91 @@
 const questaoModel = require("../models/questoesModels");
 
+function agruparAlternativas(linhas) {
+  const questoes = new Map();
+
+  linhas.forEach((linha) => {
+    const questaoExistente = questoes.get(linha.id);
+
+    const questao = questaoExistente || {
+      id: linha.id,
+      idc: linha.idc,
+      topicoid: linha.topicoid,
+      avaliacao_id: linha.avaliacao_id,
+      vestibular_id: linha.vestibular_id,
+      subtopico_id: linha.subtopico_id,
+      enunciado: linha.enunciado,
+      tipo: linha.tipo,
+      conteudo: linha.conteudo,
+      bloco: linha.bloco,
+      explicacao: linha.explicacao,
+      comentario_especialista: linha.comentario_especialista,
+      link_explicacao: linha.link_explicacao,
+      link_bib: linha.link_bib,
+      nivel: linha.nivel,
+      vestibular: linha.vestibular,
+      ano: linha.ano,
+      topico: linha.topico,
+      alternativas: [],
+    };
+
+    if (linha.letra || linha.texto) {
+      questao.alternativas.push({
+        letra: linha.letra,
+        texto: linha.texto,
+        correta: linha.correta,
+      });
+    }
+
+    questoes.set(linha.id, questao);
+  });
+
+  return Array.from(questoes.values());
+}
+
+function obterAno(valor) {
+  if (valor === undefined || valor === null || valor === "") {
+    return null;
+  }
+
+  const anoTexto = String(valor).trim();
+
+  if (!/^\d{4}$/.test(anoTexto)) {
+    return null;
+  }
+
+  return Number(anoTexto);
+}
+
 async function listarTodas(req, res) {
   try {
-    const questoes = await questaoModel.listarTodas();
-    res.status(200).json(questoes);
+    const ano = obterAno(req.query.ano);
+
+    if (req.query.ano && !ano) {
+      return res.status(400).json({ mensagem: "Ano invalido" });
+    }
+
+    const linhas = await questaoModel.listarTodas({
+      busca: req.query.q,
+      nivel: req.query.nivel,
+      ano,
+    });
+
+    res.status(200).json(agruparAlternativas(linhas));
   } catch (erro) {
     res.status(500).json({
       mensagem: "Erro ao listar questoes",
+      erro: erro.message,
+    });
+  }
+}
+
+async function listarAnos(req, res) {
+  try {
+    const anos = await questaoModel.listarAnos();
+    res.status(200).json(anos);
+  } catch (erro) {
+    res.status(500).json({
+      mensagem: "Erro ao listar anos",
       erro: erro.message,
     });
   }
@@ -183,6 +262,7 @@ async function buscarPorTopico(req, res) {
 module.exports = {
   buscarPorTopico,
   listarTodas,
+  listarAnos,
   buscarPorId,
   criar,
   atualizar,

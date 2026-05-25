@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-const QuestaoController = require("../controllers/questoesControllers"); 
+const QuestaoController = require("../controllers/questoesControllers");
 
-router.get("/", QuestaoController.listarTodas); 
+router.get("/", QuestaoController.listarTodas);
+router.get("/anos", QuestaoController.listarAnos);
 
 // views
 router.get("/primeiroSelect", QuestaoController.infos_view);
