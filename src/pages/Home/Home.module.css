@@ -87,7 +87,6 @@
 }
 
 .backendCard h2::before {
-  content: '⚡';
   font-size: 1.4rem;
 }
 
