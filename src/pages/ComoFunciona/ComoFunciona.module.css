@@ -3,11 +3,11 @@
     margin: 24px auto;
     padding: 40px;
     border-radius: 24px;
+    background: #ffffff;
     box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     gap: 24px;
 }
 
@@ -15,10 +15,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     text-align: center;
     margin-bottom: 40px;
-    border-radius: 20px;
 }
 
 .hero span {
@@ -30,8 +28,8 @@
     font-size: 18px;
     color: #fff;
     border-radius: 999px;
-    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
     background-color: #3e6d3a;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
     margin-bottom: 16px;
 }
 
@@ -46,7 +44,7 @@
     font-size: 1.1rem;
     color: #6b7280;
     max-width: 700px;
-    line-height: 1.6;
+    line-height: 1.8;
 }
 
 .steps {
@@ -57,28 +55,30 @@
 }
 
 .steps article {
-    position: relative;
     background: #ffffff;
-    padding: 24px;
     border-radius: 20px;
+    padding: 24px;
+    cursor: pointer;
     box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
     transition: all 0.3s ease;
-    cursor: pointer;
 }
 
-.seta {
-    position: absolute;
-    right: 24px;
-    top: 24px;
-    width: 40px;
-    height: auto;
-    pointer-events: none;
-    transform: rotate(90deg);
-    transition: transform 0.3s ease;
+.steps article:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 35px rgba(15, 23, 42, 0.12);
 }
 
-.setaAberta {
-    transform: rotate(270deg);
+.header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.header h2 {
+    flex: 1;
+    margin: 0;
+    font-size: 1.4rem;
+    color: #1f2937;
 }
 
 .steps strong {
@@ -89,15 +89,18 @@
     justify-content: center;
     border-radius: 50%;
     background-color: #3e6d3a;
-    color: #fff;
+    color: #ffffff;
     font-size: 1.2rem;
-    margin-bottom: 16px;
 }
 
-.steps h2 {
-    font-size: 1.4rem;
-    color: #1f2937;
-    margin-bottom: 12px;
+.seta {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+}
+
+.setaAberta {
+    transform: rotate(180deg);
 }
 
 .conteudo {
@@ -105,19 +108,69 @@
     overflow: hidden;
     opacity: 0;
     transition:
-        max-height 0.4s ease,
-        opacity 0.3s ease,
-        margin-top 0.3s ease;
-    margin-top: 0;
+        max-height 0.5s ease,
+        opacity 0.4s ease,
+        margin-top 0.4s ease;
 }
 
 .aberto {
-    max-height: 600px;
+    max-height: 5000px;
     opacity: 1;
-    margin-top: 16px;
+    margin-top: 24px;
 }
 
 .conteudo p {
-    line-height: 1.7;
-    color: #6b7280;
+    color: #4b5563;
+    line-height: 1.8;
+    font-size: 1rem;
 }
+
+
+.login,
+.busca,
+.filtro,
+.lk,
+.antesr,
+.depoisr,
+.pdf {
+    display: block;
+    width: 100%;
+    max-width: 850px;
+    margin: 24px auto;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+    transition: all 0.3s ease;
+}
+
+.login:hover,
+.busca:hover,
+.filtro:hover,
+.lk:hover,
+.antesr:hover,
+.depoisr:hover,
+.pdf:hover {
+    transform: scale(1.02);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+}
+
+
+.conteudo p strong {
+    color: #1f2937;
+    font-size: 1.05rem;
+    background: #f3f4f6;
+    padding: 4px 10px;
+    border-radius: 8px;
+}
+
+
+.steps article:has(.aberto) {
+    border-left: 6px solid #3e6d3a;
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+
