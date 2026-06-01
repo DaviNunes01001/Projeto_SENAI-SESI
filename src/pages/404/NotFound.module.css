@@ -1,44 +1,44 @@
 .page {
-    min-height: calc(100vh - 96px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 48px 20px;
-    animation: pageFade 0.25s ease;
+  min-height: calc(100vh - 96px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 20px;
+  animation: pageFade 0.25s ease;
 }
 
 .panel {
-    width: min(980px, 100%);
-    display: flex;
-    align-items: center;
-    gap: 36px;
-    padding: 42px;
-    border: 1px solid rgba(148, 163, 184, 0.26);
-    border-radius: 24px;
-    background: rgba(255, 255, 255, 0.76);
-    box-shadow: 0 24px 80px rgba(15, 23, 42, 0.08);
+  width: min(980px, 100%);
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  padding: 42px;
+  border: 1px solid rgba(148, 163, 184, 0.26);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.76);
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.08);
 }
 
 .code {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 1 40%;
-    min-height: 260px;
-    border: 1px solid rgba(0, 92, 191, 0.16);
-    border-radius: 20px;
-    background:
-        linear-gradient(135deg, rgba(0, 92, 191, 0.1), rgba(22, 163, 74, 0.08)),
-        #f8fafc;
-    color: #005cbf;
-    font-size: clamp(4.8rem, 12vw, 8rem);
-    font-weight: 900;
-    line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 1 40%;
+  min-height: 260px;
+  border: 1px solid rgba(0, 92, 191, 0.16);
+  border-radius: 20px;
+  background:
+    linear-gradient(135deg, rgba(0, 92, 191, 0.1), rgba(22, 163, 74, 0.08)),
+    #f8fafc;
+  color: #005cbf;
+  font-size: clamp(4.8rem, 12vw, 8rem);
+  font-weight: 900;
+  line-height: 1;
 }
 
 .content {
-    flex: 1 1 60%;
-    min-width: 0;
+  flex: 1 1 60%;
+  min-width: 0;
 }
 
 .badge {
@@ -116,27 +116,27 @@
 }
 
 @media (max-width: 760px) {
-    .page {
-        min-height: calc(100vh - 72px);
-        padding: 28px 16px;
-    }
+  .page {
+    min-height: calc(100vh - 72px);
+    padding: 28px 16px;
+  }
 
-    .panel {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 24px;
-        padding: 26px;
-    }
+  .panel {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 24px;
+    padding: 26px;
+  }
 
-    .code {
-        min-height: 160px;
-    }
+  .code {
+    min-height: 160px;
+  }
 
-    .actions {
-        flex-direction: column;
-    }
+  .actions {
+    flex-direction: column;
+  }
 
-    .actions button {
-        width: 100%;
-    }
+  .actions button {
+    width: 100%;
+  }
 }
