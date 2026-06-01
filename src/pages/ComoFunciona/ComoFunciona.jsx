@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styles from "./ComoFunciona.module.css";
+import seta from "../../assets/ComoFuncionaImgs/seta.png";
 
 export default function ComoFunciona() {
   const [aberto, setAberto] = useState(null);
@@ -23,81 +24,96 @@ export default function ComoFunciona() {
         <article onClick={() => toggle(1)}>
           <strong>01</strong>
           <h2>Acesso</h2>
+          <img
+            className={`${styles.seta} ${aberto === 1 ? styles.setaAberta : ""}`}
+            src={seta}
+            alt="Seta"
+          />
 
-          {aberto === 1 && (
+          <div className={`${styles.conteudo} ${aberto === 1 ? styles.aberto : ""}`}>
             <p>
               O usuário se autentica no sistema através do login e senha.
             </p>
-          )}
+          </div>
         </article>
 
         <article onClick={() => toggle(2)}>
-  <strong>02</strong>
-  <h2>Questões</h2>
+          <strong>02</strong>
+          <h2>Questões</h2>
+          <img
+            className={`${styles.seta} ${aberto === 2 ? styles.setaAberta : ""}`}
+            src={seta}
+            alt="Seta"
+          />
 
-  {aberto === 2 && (
-    <p>
-       <strong>🔎</strong>
-      <br />
-      Digite palavras-chave do enunciado no campo de pesquisa para encontrar questões específicas rapidamente.
-      <br />
-      <br />
+          <div className={`${styles.conteudo} ${aberto === 2 ? styles.aberto : ""}`}>
+            <p>
+              <strong>🔎</strong>
+              <br />
+              Digite palavras-chave do enunciado no campo de pesquisa para encontrar questões específicas rapidamente.
+              <br />
+              <br />
 
-      <strong>🎯</strong>
-      <br />
-      Filtre os resultados por:
-      <br />
-      • ID da questão
-      <br />
-      • Nível (Base, Intermediário ou Avançado)
-      <br />
-      • Ano da prova
-      <br />
-      <br />
-      Isso ajuda a localizar exatamente o conteúdo desejado.
-      <br />
-      <br />
+              <strong>🎯</strong>
+              <br />
+              Filtre os resultados por:
+              <br />
+              • ID da questão
+              <br />
+              • Nível (Base, Intermediário ou Avançado)
+              <br />
+              • Ano da prova
+              <br />
+              <br />
+              Isso ajuda a localizar exatamente o conteúdo desejado.
+              <br />
+              <br />
 
-       <strong>📚</strong>
-      <br />
-      Após clicar em Buscar, as questões encontradas serão exibidas com:
-      <br />
-      • Vestibular
-      <br />
-      • Ano
-      <br />
-      • Nível
-      <br />
-      • Enunciado
-      <br />
-      • Alternativas
-      <br />
-      <br />
+              <strong>📚</strong>
+              <br />
+              Após clicar em Buscar, as questões encontradas serão exibidas com:
+              <br />
+              • Vestibular
+              <br />
+              • Ano
+              <br />
+              • Nível
+              <br />
+              • Enunciado
+              <br />
+              • Alternativas
+              <br />
+              <br />
 
-       <strong>💡</strong>
-      <br />
-      Clique em Mostrar resposta e explicação para visualizar a alternativa correta e entender a resolução da questão.
-      <br />
-      <br />
+              <strong>💡</strong>
+              <br />
+              Clique em Mostrar resposta e explicação para visualizar a alternativa correta e entender a resolução da questão.
+              <br />
+              <br />
 
-       <strong>📄</strong>
-      <br />
-      Use o botão Baixar PDF para salvar a questão e estudá-la offline quando desejar.
-    </p>
-  )}
-</article>
+              <strong>📄</strong>
+              <br />
+              Use o botão Baixar PDF para salvar a questão e estudá-la offline quando desejar.
+            </p>
+          </div>
+        </article>
 
         <article onClick={() => toggle(3)}>
           <strong>03</strong>
           <h2>Estudo</h2>
+          <img
+            className={`${styles.seta} ${aberto === 3 ? styles.setaAberta : ""}`}
+            src={seta}
+            alt="Seta"
+          />
 
-          {aberto === 3 && (
+          <div className={`${styles.conteudo} ${aberto === 3 ? styles.aberto : ""}`}>
             <p>
               Os alunos podem visualizar as questões disponíveis, praticar os
               conteúdos de matemática e utilizar a plataforma como apoio aos
               estudos.
             </p>
-          )}
+          </div>
         </article>
       </section>
     </main>
