@@ -1,0 +1,536 @@
+.page {
+  width: min(calc(100% - 32px), 1120px);
+  margin: 0 auto;
+  padding: 24px 0 64px;
+}
+
+.hero {
+  padding: 34px 0 30px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 12px;
+  border: 1px solid rgba(0, 100, 0, 0.18);
+  border-radius: 999px;
+  color: #006400;
+  background: #edf8ef;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  max-width: 760px;
+  margin: 18px 0 12px;
+  color: #111827;
+  font-size: 48px;
+  line-height: 1.08;
+}
+
+.hero p {
+  max-width: 640px;
+  margin: 0;
+  color: #4b5563;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.searchForm {
+  margin-top: 28px;
+  padding: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+}
+
+.searchForm input,
+.levelFilter select {
+  height: 48px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  color: #111827;
+  background: #ffffff;
+  outline: none;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.searchForm input {
+  flex: 1 1 300px;
+  min-width: 240px;
+  padding: 0 14px;
+}
+
+.searchForm input::placeholder {
+  color: #9ca3af;
+}
+
+.levelFilter {
+  flex: 0 1 150px;
+  min-width: 128px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.levelFilter span {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.levelFilter select {
+  width: 100%;
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+.searchForm input:focus,
+.levelFilter select:focus {
+  border-color: #006400;
+  box-shadow: 0 0 0 3px rgba(0, 100, 0, 0.14);
+}
+
+.searchForm button,
+.actions button,
+.downloadControls button {
+  min-height: 48px;
+  border: 0;
+  border-radius: 8px;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    background 160ms ease;
+}
+
+.searchForm button {
+  flex: 0 0 auto;
+  padding: 0 22px;
+  color: #ffffff;
+  background: #006400;
+  box-shadow: 0 12px 24px rgba(0, 100, 0, 0.18);
+}
+
+.searchForm button:hover,
+.actions button:hover,
+.downloadControls button:hover {
+  transform: translateY(-1px);
+}
+
+.searchForm button:active,
+.actions button:active,
+.downloadControls button:active {
+  transform: translateY(0);
+}
+
+.clearButton {
+  color: #374151 !important;
+  background: #f3f4f6 !important;
+  box-shadow: none !important;
+}
+
+.clearButton:hover {
+  background: #e5e7eb !important;
+}
+
+.content {
+  margin-top: 10px;
+}
+
+.contentHeader {
+  padding-bottom: 16px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.contentTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.contentHeader h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 28px;
+}
+
+.contentHeader p {
+  margin: 0;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.downloadControls {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.bulkSelect {
+  min-height: 48px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  color: #334155;
+  background: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.bulkSelect input,
+.cardCheckbox input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #006400;
+  cursor: pointer;
+}
+
+.selectedCount {
+  min-height: 48px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  color: #475569;
+  background: #f1f5f9;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.downloadControls button {
+  padding: 0 18px;
+  color: #ffffff;
+  background: #006400;
+  box-shadow: 0 12px 24px rgba(0, 100, 0, 0.16);
+}
+
+.downloadControls button:hover {
+  background: #004d00;
+}
+
+.downloadControls button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.downloadControls button:disabled:hover {
+  background: #006400;
+  transform: none;
+}
+
+.clearSelectionButton {
+  color: #374151 !important;
+  background: #f3f4f6 !important;
+  box-shadow: none !important;
+}
+
+.clearSelectionButton:hover {
+  background: #e5e7eb !important;
+}
+
+.status {
+  margin: 20px 0 0;
+  padding: 18px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  color: #475569;
+  background: #ffffff;
+  font-weight: 700;
+}
+
+.error {
+  border-color: #fecaca;
+  color: #b91c1c;
+  background: #fef2f2;
+}
+
+.list {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  padding: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 20px;
+  border: 1px solid #e5e7eb;
+  border-left: 5px solid #006400;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+}
+
+.selectedCard {
+  border-color: rgba(0, 100, 0, 0.35);
+  background: #f8fff9;
+}
+
+.vestibular {
+  flex: 0 0 180px;
+  min-width: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cardCheckbox {
+  width: max-content;
+  max-width: 100%;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #006400;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.vestibular span,
+.enunciado span,
+.answerBox span {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.cardCheckbox span {
+  color: #006400;
+}
+
+.vestibular strong {
+  color: #111827;
+  font-size: 18px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.vestibular small {
+  width: max-content;
+  max-width: 100%;
+  padding: 5px 9px;
+  border-radius: 999px;
+  color: #334155;
+  background: #f1f5f9;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
+.enunciado {
+  flex: 1 1 420px;
+  min-width: 0;
+}
+
+.enunciado h3 {
+  margin: 8px 0 0;
+  color: #111827;
+  font-size: 20px;
+  line-height: 1.5;
+}
+
+.alternativas {
+  margin-top: 16px;
+  padding-left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-left: 3px solid #e5e7eb;
+}
+
+.alternativas p {
+  margin: 0;
+  color: #374151;
+  line-height: 1.55;
+}
+
+.alternativas strong {
+  color: #006400;
+}
+
+.actions {
+  flex: 0 0 184px;
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.actions button {
+  width: 100%;
+  padding: 10px 14px;
+}
+
+.answerButton {
+  color: #ffffff;
+  background: #006400;
+  box-shadow: 0 12px 24px rgba(0, 100, 0, 0.16);
+}
+
+.answerButton:hover {
+  background: #004d00;
+}
+
+.pdfButton {
+  color: #b91c1c;
+  background: #fef2f2;
+}
+
+.pdfButton:hover {
+  background: #fee2e2;
+}
+
+.answerBox {
+  flex: 1 0 100%;
+  margin-top: 2px;
+  padding-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.answerBox div {
+  padding-left: 14px;
+  border-left: 3px solid #006400;
+}
+
+.answerBox div:nth-child(2) {
+  border-left-color: #dc2626;
+}
+
+.answerBox p {
+  margin: 6px 0 0;
+  color: #374151;
+  line-height: 1.6;
+}
+
+@media (max-width: 800px) {
+  .page {
+    width: min(calc(100% - 24px), 1120px);
+    padding-bottom: 44px;
+  }
+
+  .hero {
+    padding-top: 24px;
+  }
+
+  .hero h1 {
+    font-size: 36px;
+  }
+
+  .searchForm {
+    align-items: stretch;
+  }
+
+  .searchForm input,
+  .levelFilter {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .searchForm button {
+    flex: 1 1 170px;
+  }
+
+  .contentHeader {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .downloadControls {
+    width: 100%;
+  }
+
+  .bulkSelect,
+  .selectedCount,
+  .downloadControls button {
+    flex: 1 1 180px;
+  }
+
+  .card {
+    flex-direction: column;
+  }
+
+  .vestibular,
+  .enunciado,
+  .actions {
+    flex: none;
+    width: 100%;
+  }
+
+  .actions {
+    margin-left: 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .actions button {
+    flex: 1 1 180px;
+  }
+}
+
+@media (max-width: 520px) {
+  .page {
+    width: min(calc(100% - 18px), 1120px);
+  }
+
+  .hero h1 {
+    font-size: 32px;
+  }
+
+  .hero p {
+    font-size: 16px;
+  }
+
+  .searchForm,
+  .card {
+    padding: 16px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .downloadControls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .bulkSelect,
+  .selectedCount,
+  .downloadControls button {
+    flex: none;
+    width: 100%;
+  }
+}

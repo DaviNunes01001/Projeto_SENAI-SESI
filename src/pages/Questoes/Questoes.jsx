@@ -7,6 +7,50 @@ function getRespostaCorreta(questao) {
   return questao.alternativas?.find((alternativa) => alternativa.correta);
 }
 
+function escapeRegExp(texto) {
+  return String(texto).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function getEnunciadoLimpo(questao) {
+  const texto = questao.enunciado?.trim() || "";
+  const alternativas = questao.alternativas || [];
+  const primeiraLetra = alternativas[0]?.letra;
+
+  if (!texto || !primeiraLetra) {
+    return texto;
+  }
+
+  const primeiroMarcador = new RegExp(
+    `\\s+${escapeRegExp(primeiraLetra)}[\\).]\\s+`,
+    "i",
+  );
+  const inicioAlternativas = texto.search(primeiroMarcador);
+
+  if (inicioAlternativas < 0) {
+    return texto;
+  }
+
+  const trechoAlternativas = texto.slice(inicioAlternativas);
+  const totalMarcadores = alternativas.reduce((total, alternativa) => {
+    if (!alternativa.letra) {
+      return total;
+    }
+
+    const marcador = new RegExp(
+      `(^|\\s)${escapeRegExp(alternativa.letra)}[\\).]\\s+`,
+      "i",
+    );
+
+    return marcador.test(trechoAlternativas) ? total + 1 : total;
+  }, 0);
+
+  if (totalMarcadores < Math.min(2, alternativas.length)) {
+    return texto;
+  }
+
+  return texto.slice(0, inicioAlternativas).trim();
+}
+
 function montarUrlQuestoes(busca, nivel, ano, questaoId) {
   const params = new URLSearchParams();
   const termo = busca.trim();
@@ -39,6 +83,7 @@ export default function Questoes() {
   const [nivel, setNivel] = useState("");
   const [ano, setAno] = useState("");
   const [questaoAberta, setQuestaoAberta] = useState(null);
+  const [questoesSelecionadas, setQuestoesSelecionadas] = useState([]);
   const { data: questoes, loading, error, reload } = useApi("/api/questoes");
   const { data: anos } = useApi("/api/questoes/anos");
   const { data: ids } = useApi("/api/questoes/ids");
@@ -46,10 +91,16 @@ export default function Questoes() {
     ...new Set(anos.map((item) => item.ano).filter(Boolean)),
   ];
   const idsDisponiveis = [...new Set(ids.map((item) => item.id))];
+  const questoesSelecionadasVisiveis = questoes.filter((questao) =>
+    questoesSelecionadas.includes(questao.id),
+  );
+  const todasQuestoesSelecionadas =
+    questoes.length > 0 && questoesSelecionadasVisiveis.length === questoes.length;
 
   function pesquisarQuestoes(event) {
     event.preventDefault();
     setQuestaoAberta(null);
+    setQuestoesSelecionadas([]);
     reload(montarUrlQuestoes(busca, nivel, ano, questaoId));
   }
 
@@ -59,11 +110,26 @@ export default function Questoes() {
     setNivel("");
     setAno("");
     setQuestaoAberta(null);
+    setQuestoesSelecionadas([]);
     reload("/api/questoes");
   }
 
   function alternarResposta(id) {
     setQuestaoAberta((atual) => (atual === id ? null : id));
+  }
+
+  function alternarSelecaoQuestao(id) {
+    setQuestoesSelecionadas((atuais) =>
+      atuais.includes(id)
+        ? atuais.filter((questaoIdSelecionada) => questaoIdSelecionada !== id)
+        : [...atuais, id],
+    );
+  }
+
+  function alternarTodasQuestoes() {
+    setQuestoesSelecionadas(
+      todasQuestoesSelecionadas ? [] : questoes.map((questao) => questao.id),
+    );
   }
 
   function gerarPdfQuestao(questao) {
@@ -107,7 +173,7 @@ export default function Questoes() {
     );
 
     escreverTitulo("Enunciado:");
-    escreverTexto(questao.enunciado || "Enunciado não informado.");
+    escreverTexto(getEnunciadoLimpo(questao) || "Enunciado não informado.");
 
     if (questao.alternativas?.length) {
       escreverTitulo("Alternativas:");
@@ -133,6 +199,91 @@ export default function Questoes() {
     escreverTexto(questao.explicacao || "Explicação não cadastrada.");
 
     pdf.save(`questao-${questao.id || "matematica"}.pdf`);
+  }
+
+  function gerarPdfQuestoesSelecionadas() {
+    const questoesParaPdf = questoesSelecionadasVisiveis;
+
+    if (questoesParaPdf.length === 0) {
+      return;
+    }
+
+    const pdf = new jsPDF();
+    const margem = 15;
+    const larguraTexto = 180;
+    let y = 20;
+
+    function garantirEspaco(altura = 14) {
+      if (y + altura > 275) {
+        pdf.addPage();
+        y = 20;
+      }
+    }
+
+    function escreverTitulo(texto) {
+      garantirEspaco(12);
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(13);
+      pdf.text(texto, margem, y);
+      y += 8;
+    }
+
+    function escreverTexto(texto) {
+      pdf.setFont("helvetica", "normal");
+      pdf.setFontSize(11);
+      const linhas = pdf.splitTextToSize(String(texto), larguraTexto);
+      garantirEspaco(linhas.length * 7 + 5);
+      pdf.text(linhas, margem, y);
+      y += linhas.length * 7 + 5;
+    }
+
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(18);
+    pdf.text("Questões de Matemática", margem, y);
+    y += 14;
+
+    questoesParaPdf.forEach((questao, index) => {
+      garantirEspaco(28);
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(15);
+      pdf.text(`Questão ${index + 1} - ID ${questao.id}`, margem, y);
+      y += 10;
+
+      escreverTitulo("Vestibular:");
+      escreverTexto(
+        `${questao.vestibular || "Não informado"}${
+          questao.ano ? ` - ${questao.ano}` : ""
+        }`,
+      );
+
+      escreverTitulo("Enunciado:");
+      escreverTexto(getEnunciadoLimpo(questao) || "Enunciado não informado.");
+
+      if (questao.alternativas?.length) {
+        escreverTitulo("Alternativas:");
+
+        questao.alternativas.forEach((alternativa) => {
+          escreverTexto(`${alternativa.letra}) ${alternativa.texto}`);
+        });
+      }
+
+      const respostaCorreta = getRespostaCorreta(questao);
+      escreverTitulo("Resposta:");
+      escreverTexto(
+        respostaCorreta
+          ? `${respostaCorreta.letra}) ${respostaCorreta.texto}`
+          : "Resposta não cadastrada.",
+      );
+
+      escreverTitulo("Explicação:");
+      escreverTexto(questao.explicacao || "Explicação não cadastrada.");
+
+      if (index < questoesParaPdf.length - 1) {
+        y += 4;
+      }
+    });
+
+    pdf.save(`questoes-matematica-${questoesParaPdf.length}.pdf`);
   }
 
   return (
@@ -211,8 +362,45 @@ export default function Questoes() {
 
       <section className={styles.content}>
         <div className={styles.contentHeader}>
-          <h2>Resultados</h2>
-          <p>{questoes.length} questão(ões)</p>
+          <div className={styles.contentTitle}>
+            <h2>Resultados</h2>
+            <p>{questoes.length} questão(ões)</p>
+          </div>
+
+          {!loading && !error && questoes.length > 0 && (
+            <div className={styles.downloadControls}>
+              <label className={styles.bulkSelect}>
+                <input
+                  type="checkbox"
+                  checked={todasQuestoesSelecionadas}
+                  onChange={alternarTodasQuestoes}
+                />
+                <span>Selecionar todas</span>
+              </label>
+
+              <span className={styles.selectedCount}>
+                {questoesSelecionadasVisiveis.length} selecionada(s)
+              </span>
+
+              <button
+                type="button"
+                onClick={gerarPdfQuestoesSelecionadas}
+                disabled={questoesSelecionadasVisiveis.length === 0}
+              >
+                Baixar selecionadas
+              </button>
+
+              {questoesSelecionadasVisiveis.length > 0 && (
+                <button
+                  type="button"
+                  className={styles.clearSelectionButton}
+                  onClick={() => setQuestoesSelecionadas([])}
+                >
+                  Limpar seleção
+                </button>
+              )}
+            </div>
+          )}
         </div>
 
         {loading && <p className={styles.status}>Carregando...</p>}
@@ -228,10 +416,26 @@ export default function Questoes() {
             {questoes.map((questao) => {
               const respostaCorreta = getRespostaCorreta(questao);
               const aberta = questaoAberta === questao.id;
+              const selecionada = questoesSelecionadas.includes(questao.id);
 
               return (
-                <article className={styles.card} key={questao.id}>
+                <article
+                  className={`${styles.card} ${
+                    selecionada ? styles.selectedCard : ""
+                  }`}
+                  key={questao.id}
+                >
                   <div className={styles.vestibular}>
+                    <label className={styles.cardCheckbox}>
+                      <input
+                        type="checkbox"
+                        checked={selecionada}
+                        onChange={() => alternarSelecaoQuestao(questao.id)}
+                        aria-label={`Selecionar questão ${questao.id}`}
+                      />
+                      <span>Selecionar</span>
+                    </label>
+
                     <span>Vestibular</span>
                     <strong>{questao.vestibular || "Não informado"}</strong>
                     {questao.ano && <small>{questao.ano}</small>}
@@ -240,7 +444,9 @@ export default function Questoes() {
 
                   <div className={styles.enunciado}>
                     <span>Enunciado</span>
-                    <h3>{questao.enunciado}</h3>
+                    <h3>
+                      {getEnunciadoLimpo(questao) || "Enunciado não informado."}
+                    </h3>
 
                     {questao.alternativas?.length > 0 && (
                       <div className={styles.alternativas}>
