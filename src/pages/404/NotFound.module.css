@@ -1,15 +1,15 @@
 .page {
   min-height: calc(100vh - 96px);
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 48px 20px;
   animation: pageFade 0.25s ease;
 }
 
 .panel {
   width: min(980px, 100%);
-  display: grid;
-  grid-template-columns: 0.8fr 1.2fr;
+  display: flex;
   align-items: center;
   gap: 36px;
   padding: 42px;
@@ -20,8 +20,10 @@
 }
 
 .code {
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 1 40%;
   min-height: 260px;
   border: 1px solid rgba(0, 92, 191, 0.16);
   border-radius: 20px;
@@ -35,6 +37,7 @@
 }
 
 .content {
+  flex: 1 1 60%;
   min-width: 0;
 }
 
@@ -119,7 +122,8 @@
   }
 
   .panel {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: stretch;
     gap: 24px;
     padding: 26px;
   }
