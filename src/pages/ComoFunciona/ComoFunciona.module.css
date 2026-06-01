@@ -64,9 +64,6 @@
     transition: transform 0.3s ease;
 }
 
-.steps article:hover {
-    transform: translateY(-5px);
-}
 
 .steps strong {
     display: inline-flex;
@@ -90,5 +87,41 @@
 .steps p {
     color: #6b7280;
     line-height: 1.6;
+}
+
+.steps article {
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.steps article p {
+    margin-top: 16px;
+    animation: aparecer 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.conteudo {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition:
+        max-height 0.4s ease,
+        opacity 0.3s ease,
+        margin-top 0.3s ease;
+    margin-top: 0;
+}
+
+.aberto {
+    max-height: 600px;
+    opacity: 1;
+    margin-top: 16px;
+}
+
+.conteudo p {
+    line-height: 1.7;
 }
 
