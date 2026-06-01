@@ -1,5 +1,7 @@
 import { useState } from "react";
 import styles from "./ComoFunciona.module.css";
+import seta from "../../assets/ComoFuncionaImgs/seta.png";
+
 
 export default function ComoFunciona() {
   const [aberto, setAberto] = useState(null);
@@ -23,6 +25,11 @@ export default function ComoFunciona() {
         <article onClick={() => toggle(1)}>
           <strong>01</strong>
           <h2>Acesso</h2>
+          <img
+            className={`${styles.seta} ${aberto === 1 ? styles.aberto : ""}`}
+            src={seta}
+            alt="Seta"
+          />
 
           {aberto === 1 && (
             <p>
@@ -34,6 +41,11 @@ export default function ComoFunciona() {
         <article onClick={() => toggle(2)}>
   <strong>02</strong>
   <h2>Questões</h2>
+  <img
+    className={`${styles.seta} ${aberto === 2 ? styles.aberto : ""}`}
+    src={seta}
+    alt="Seta"
+  />
 
   {aberto === 2 && (
     <p>
@@ -90,6 +102,11 @@ export default function ComoFunciona() {
         <article onClick={() => toggle(3)}>
           <strong>03</strong>
           <h2>Estudo</h2>
+          <img
+            className={`${styles.seta} ${aberto === 3 ? styles.aberto : ""}`}
+            src={seta}
+            alt="Seta"
+          />
 
           {aberto === 3 && (
             <p>
