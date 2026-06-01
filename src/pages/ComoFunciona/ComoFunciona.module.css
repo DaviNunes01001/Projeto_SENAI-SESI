@@ -57,13 +57,29 @@
 }
 
 .steps article {
+    position: relative;
     background: #ffffff;
     padding: 24px;
     border-radius: 20px;
     box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.steps .seta {
+    position: absolute;
+    right: 24px;
+    top: 24px;
+    width: 40px;
+    height: auto;
+    pointer-events: none;
+    transform: rotate(90deg);
     transition: transform 0.3s ease;
 }
 
+.steps .seta.aberto {
+    transform: rotate(270deg);
+}
 
 .steps strong {
     display: inline-flex;
@@ -89,15 +105,6 @@
     line-height: 1.6;
 }
 
-.steps article {
-    background: #ffffff;
-    padding: 24px;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
 .steps article p {
     margin-top: 16px;
     animation: aparecer 0.3s ease;
@@ -115,7 +122,7 @@
     margin-top: 0;
 }
 
-.aberto {
+.conteudo.aberto {
     max-height: 600px;
     opacity: 1;
     margin-top: 16px;
@@ -125,3 +132,11 @@
     line-height: 1.7;
 }
 
+@keyframes aparecer {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
