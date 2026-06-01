@@ -42,77 +42,77 @@
 }
 
 .badge {
-  display: inline-flex;
-  width: fit-content;
-  margin-bottom: 12px;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: rgba(0, 92, 191, 0.1);
-  color: #005cbf;
-  font-size: 0.78rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+    display: inline-flex;
+    width: fit-content;
+    margin-bottom: 12px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(0, 92, 191, 0.1);
+    color: #005cbf;
+    font-size: 0.78rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
 }
 
 .content h1 {
-  margin: 0;
-  color: #0f172a;
-  font-size: clamp(2.1rem, 5vw, 4rem);
-  line-height: 1;
+    margin: 0;
+    color: #0f172a;
+    font-size: clamp(2.1rem, 5vw, 4rem);
+    line-height: 1;
 }
 
 .content p {
-  max-width: 720px;
-  margin: 18px 0 0;
-  color: #526071;
-  font-size: 1.05rem;
-  line-height: 1.7;
+    max-width: 720px;
+    margin: 18px 0 0;
+    color: #526071;
+    font-size: 1.05rem;
+    line-height: 1.7;
 }
 
 .actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
 }
 
 .actions button {
-  min-height: 44px;
-  padding: 0 18px;
-  border: 0;
-  border-radius: 8px;
-  background: #005cbf;
-  color: #ffffff;
-  font: inherit;
-  font-weight: 800;
-  cursor: pointer;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    background 0.2s ease;
+    min-height: 44px;
+    padding: 0 18px;
+    border: 0;
+    border-radius: 8px;
+    background: #005cbf;
+    color: #ffffff;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
 }
 
 .actions button:hover {
-  transform: translateY(-1px);
-  background: #004b9c;
-  box-shadow: 0 12px 24px rgba(0, 92, 191, 0.18);
+    transform: translateY(-1px);
+    background: #004b9c;
+    box-shadow: 0 12px 24px rgba(0, 92, 191, 0.18);
 }
 
 .actions button:focus-visible {
-  outline: 3px solid rgba(0, 92, 191, 0.28);
-  outline-offset: 3px;
+    outline: 3px solid rgba(0, 92, 191, 0.28);
+    outline-offset: 3px;
 }
 
 .actions .secondary {
-  border: 1px solid rgba(148, 163, 184, 0.34);
-  background: #ffffff;
-  color: #0f172a;
+    border: 1px solid rgba(148, 163, 184, 0.34);
+    background: #ffffff;
+    color: #0f172a;
 }
 
 .actions .secondary:hover {
-  background: #f8fafc;
-  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+    background: #f8fafc;
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
 }
 
 @media (max-width: 760px) {
