@@ -75,6 +75,9 @@ async function listarTodas(req, res) {
   try {
     const ano = obterAno(req.query.ano);
     const id = obterId(req.query.id);
+    const vestibularId = obterId(req.query.vestibular_id);
+    const vestibular =
+      typeof req.query.vestibular === "string" ? req.query.vestibular.trim() : "";
 
     if (req.query.ano && !ano) {
       return res.status(400).json({ mensagem: "Ano invalido" });
@@ -84,11 +87,17 @@ async function listarTodas(req, res) {
       return res.status(400).json({ mensagem: "ID invalido" });
     }
 
+    if (req.query.vestibular_id && !vestibularId) {
+      return res.status(400).json({ mensagem: "Vestibular invalido" });
+    }
+
     const linhas = await questaoModel.listarTodas({
       busca: req.query.q,
       nivel: req.query.nivel,
       ano,
       id,
+      vestibularId,
+      vestibular,
     });
 
     res.status(200).json(agruparAlternativas(linhas));
@@ -119,6 +128,18 @@ async function listarIds(req, res) {
   } catch (erro) {
     res.status(500).json({
       mensagem: "Erro ao listar ids",
+      erro: erro.message,
+    });
+  }
+}
+
+async function listarVestibulares(req, res) {
+  try {
+    const vestibulares = await questaoModel.listarVestibulares();
+    res.status(200).json(vestibulares);
+  } catch (erro) {
+    res.status(500).json({
+      mensagem: "Erro ao listar vestibulares",
       erro: erro.message,
     });
   }
@@ -297,6 +318,7 @@ module.exports = {
   listarTodas,
   listarAnos,
   listarIds,
+  listarVestibulares,
   buscarPorId,
   criar,
   atualizar,

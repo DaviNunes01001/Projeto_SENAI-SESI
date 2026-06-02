@@ -51,11 +51,12 @@ function getEnunciadoLimpo(questao) {
   return texto.slice(0, inicioAlternativas).trim();
 }
 
-function montarUrlQuestoes(busca, nivel, ano, questaoId) {
+function montarUrlQuestoes(busca, nivel, ano, questaoId, vestibularId) {
   const params = new URLSearchParams();
   const termo = busca.trim();
   const anoFiltro = ano.trim();
   const idFiltro = questaoId.trim();
+  const vestibularFiltro = vestibularId.trim();
 
   if (termo) {
     params.set("q", termo);
@@ -73,13 +74,23 @@ function montarUrlQuestoes(busca, nivel, ano, questaoId) {
     params.set("id", idFiltro);
   }
 
+  if (vestibularFiltro) {
+    params.set("vestibular_id", vestibularFiltro);
+  }
+
   const query = params.toString();
   return query ? `/api/questoes?${query}` : "/api/questoes";
+}
+
+function formatarVestibular(vestibular) {
+  const partes = [vestibular.nome, vestibular.ano].filter(Boolean);
+  return partes.length ? partes.join(" - ") : `Vestibular ${vestibular.id}`;
 }
 
 export default function Questoes() {
   const [busca, setBusca] = useState("");
   const [questaoId, setQuestaoId] = useState("");
+  const [vestibularId, setVestibularId] = useState("");
   const [nivel, setNivel] = useState("");
   const [ano, setAno] = useState("");
   const [questaoAberta, setQuestaoAberta] = useState(null);
@@ -87,10 +98,14 @@ export default function Questoes() {
   const { data: questoes, loading, error, reload } = useApi("/api/questoes");
   const { data: anos } = useApi("/api/questoes/anos");
   const { data: ids } = useApi("/api/questoes/ids");
+  const { data: vestibulares } = useApi("/api/questoes/vestibulares");
   const anosDisponiveis = [
     ...new Set(anos.map((item) => item.ano).filter(Boolean)),
   ];
   const idsDisponiveis = [...new Set(ids.map((item) => item.id))];
+  const vestibularesDisponiveis = vestibulares.filter(
+    (vestibular) => vestibular.id && vestibular.nome,
+  );
   const questoesSelecionadasVisiveis = questoes.filter((questao) =>
     questoesSelecionadas.includes(questao.id),
   );
@@ -101,12 +116,13 @@ export default function Questoes() {
     event.preventDefault();
     setQuestaoAberta(null);
     setQuestoesSelecionadas([]);
-    reload(montarUrlQuestoes(busca, nivel, ano, questaoId));
+    reload(montarUrlQuestoes(busca, nivel, ano, questaoId, vestibularId));
   }
 
   function limparBusca() {
     setBusca("");
     setQuestaoId("");
+    setVestibularId("");
     setNivel("");
     setAno("");
     setQuestaoAberta(null);
@@ -293,7 +309,7 @@ export default function Questoes() {
 
         <h1>Questões de Matemática</h1>
 
-        <p>Pesquise questões cadastradas no banco de dados pelo enunciado.</p>
+        <p>Pesquise questões cadastradas no banco de dados pelo enunciado, vestibular, ano ou nível.</p>
 
         <form className={styles.searchForm} onSubmit={pesquisarQuestoes}>
           <input
@@ -313,6 +329,21 @@ export default function Questoes() {
               {idsDisponiveis.map((idDisponivel) => (
                 <option key={idDisponivel} value={idDisponivel}>
                   {idDisponivel}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className={styles.levelFilter}>
+            <span>Vestibular</span>
+            <select
+              value={vestibularId}
+              onChange={(event) => setVestibularId(event.target.value)}
+            >
+              <option value="">Todos</option>
+              {vestibularesDisponiveis.map((vestibular) => (
+                <option key={vestibular.id} value={vestibular.id}>
+                  {formatarVestibular(vestibular)}
                 </option>
               ))}
             </select>
@@ -348,7 +379,7 @@ export default function Questoes() {
 
           <button type="submit">Buscar</button>
 
-          {(busca || questaoId || nivel || ano) && (
+          {(busca || questaoId || vestibularId || nivel || ano) && (
             <button
               type="button"
               className={styles.clearButton}
