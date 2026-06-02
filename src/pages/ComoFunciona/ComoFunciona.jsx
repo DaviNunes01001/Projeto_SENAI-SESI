@@ -1,6 +1,13 @@
 import { useState } from "react";
 import styles from "./ComoFunciona.module.css";
 import seta from "../../assets/ComoFuncionaImgs/seta.png";
+import login from "../../assets/ComoFuncionaImgs/login.png";
+import busca from "../../assets/ComoFuncionaImgs/busca.png";
+import filtro from "../../assets/ComoFuncionaImgs/filtro.png";
+import lk from "../../assets/ComoFuncionaImgs/ok.png";
+import antesr from "../../assets/ComoFuncionaImgs/antesR.png";
+import depoisr from "../../assets/ComoFuncionaImgs/depoisR.png";
+import pdf from "../../assets/ComoFuncionaImgs/pdf.png";
 
 export default function ComoFunciona() {
   const [aberto, setAberto] = useState(null);
@@ -21,36 +28,81 @@ export default function ComoFunciona() {
       </section>
 
       <section className={styles.steps}>
-        <article onClick={() => toggle(1)}>
-          <strong>01</strong>
-          <h2>Acesso</h2>
-          <img
-            className={`${styles.seta} ${aberto === 1 ? styles.setaAberta : ""}`}
-            src={seta}
-            alt="Seta"
-          />
 
-          <div className={`${styles.conteudo} ${aberto === 1 ? styles.aberto : ""}`}>
+        <article onClick={() => toggle(1)}>
+          <div className={styles.header}>
+            <strong>01</strong>
+            <h2>Acesso</h2>
+
+            <img
+              className={`${styles.seta} ${
+                aberto === 1 ? styles.setaAberta : ""
+              }`}
+              src={seta}
+              alt="Seta"
+            />
+          </div>
+
+          <div
+            className={`${styles.conteudo} ${
+              aberto === 1 ? styles.aberto : ""
+            }`}
+          >
             <p>
-              O usuário se autentica no sistema através do login e senha.
+              O usuário usa seu login e senha para se autenticar e acessar a
+              plataforma.
+              <br />
+              <br />
+              Após o login, todas as funcionalidades do sistema ficam
+              disponíveis para consulta e estudo.
             </p>
+
+            <img
+              className={styles.login}
+              src={login}
+              alt="Tela de login"
+            />
           </div>
         </article>
 
         <article onClick={() => toggle(2)}>
-          <strong>02</strong>
-          <h2>Questões</h2>
-          <img
-            className={`${styles.seta} ${aberto === 2 ? styles.setaAberta : ""}`}
-            src={seta}
-            alt="Seta"
-          />
+          <div className={styles.header}>
+            <strong>02</strong>
+            <h2>Questões</h2>
 
-          <div className={`${styles.conteudo} ${aberto === 2 ? styles.aberto : ""}`}>
+            <img
+              className={`${styles.seta} ${
+                aberto === 2 ? styles.setaAberta : ""
+              }`}
+              src={seta}
+              alt="Seta"
+            />
+          </div>
+
+          <div
+            className={`${styles.conteudo} ${
+              aberto === 2 ? styles.aberto : ""
+            }`}
+          >
             <p>
+              <strong>🤖</strong>
+              <br />
+              O principal sistema da plataforma permite pesquisar questões por
+              palavras-chave e aplicar filtros específicos.
+             
+              <br />
+              <br />
+
               <strong>🔎</strong>
               <br />
-              Digite palavras-chave do enunciado no campo de pesquisa para encontrar questões específicas rapidamente.
+              Digite palavras-chave do enunciado no campo de pesquisa para
+              encontrar questões específicas rapidamente.
+
+              <img
+              className={styles.busca}
+              src={busca}
+              alt="Tela de busca"
+            />
               <br />
               <br />
 
@@ -66,6 +118,12 @@ export default function ComoFunciona() {
               <br />
               <br />
               Isso ajuda a localizar exatamente o conteúdo desejado.
+
+              <img
+              className={styles.filtro}
+              src={filtro}
+              alt="Tela de filtro"
+            />
               <br />
               <br />
 
@@ -82,36 +140,77 @@ export default function ComoFunciona() {
               • Enunciado
               <br />
               • Alternativas
+
+              <img
+              className={styles.lk}
+              src={lk}
+              alt="Tela de ok"
+            />
               <br />
               <br />
 
               <strong>💡</strong>
               <br />
-              Clique em Mostrar resposta e explicação para visualizar a alternativa correta e entender a resolução da questão.
+              Clique em Mostrar resposta e explicação para visualizar a resposta
+              correta e entender a resolução da questão.
+              <img
+              className={styles.antesr}
+              src={antesr}
+              alt="Tela de antes da resposta"
+            />
+
+            e depois de clicar:
+            <img
+              className={styles.depoisr}
+              src={depoisr}
+              alt="Tela de depois da resposta"
+            />
+              
               <br />
               <br />
 
               <strong>📄</strong>
               <br />
-              Use o botão Baixar PDF para salvar a questão e estudá-la offline quando desejar.
+              Use o botão Baixar PDF para salvar a questão e estudá-la offline
+              quando desejar.
+
+              <img
+              className={styles.pdf}
+              src={pdf}
+              alt="Tela de pdf"
+            />
             </p>
           </div>
         </article>
 
-        <article onClick={() => toggle(3)}>
-          <strong>03</strong>
-          <h2>Estudo</h2>
-          <img
-            className={`${styles.seta} ${aberto === 3 ? styles.setaAberta : ""}`}
-            src={seta}
-            alt="Seta"
-          />
 
-          <div className={`${styles.conteudo} ${aberto === 3 ? styles.aberto : ""}`}>
+        <article onClick={() => toggle(3)}>
+          <div className={styles.header}>
+            <strong>03</strong>
+            <h2>Estudo</h2>
+
+            <img
+              className={`${styles.seta} ${
+                aberto === 3 ? styles.setaAberta : ""
+              }`}
+              src={seta}
+              alt="Seta"
+            />
+          </div>
+
+          <div
+            className={`${styles.conteudo} ${
+              aberto === 3 ? styles.aberto : ""
+            }`}
+          >
             <p>
               Os alunos podem visualizar as questões disponíveis, praticar os
               conteúdos de matemática e utilizar a plataforma como apoio aos
               estudos.
+              <br />
+              <br />
+              O sistema foi desenvolvido para facilitar a preparação para provas,
+              vestibulares e atividades escolares.
             </p>
           </div>
         </article>
