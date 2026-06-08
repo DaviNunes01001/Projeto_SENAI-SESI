@@ -3,24 +3,40 @@ const express = require("express");
 
 const router = express.Router();
 
-const usuarios = [
-  {
-    id: 1,
-    email: "aluno@gmail.com",
-    senha: "12345",
-    perfil: "aluno",
-  },
-  {
-    id: 2,
-    email: "professor@gmail.com",
-    senha: "12345",
-    perfil: "professor",
-  },
-];
+function criarUsuarioPorEnv(prefixo, id) {
+  const email = process.env[`${prefixo}_EMAIL`];
+  const senha = process.env[`${prefixo}_SENHA`];
+  const perfil = process.env[`${prefixo}_PERFIL`];
+
+  if (!email || !senha || !perfil) {
+    return null;
+  }
+
+  return {
+    id,
+    email,
+    senha,
+    perfil,
+  };
+}
+
+function listarUsuarios() {
+  return [
+    criarUsuarioPorEnv("ALUNO", 1),
+    criarUsuarioPorEnv("PROFESSOR", 2),
+  ].filter(Boolean);
+}
 
 router.post("/login", (req, res) => {
   const { email, senha } = req.body;
-  const usuario = usuarios.find((item) => item.email === email);
+  const usuariosConfigurados = listarUsuarios();
+  const usuario = usuariosConfigurados.find((item) => item.email === email);
+
+  if (usuariosConfigurados.length === 0) {
+    return res.status(500).json({
+      mensagem: "Usuarios nao configurados no .env",
+    });
+  }
 
   if (!usuario) {
     return res.status(401).json({

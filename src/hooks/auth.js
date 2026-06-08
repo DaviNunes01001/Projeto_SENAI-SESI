@@ -1,7 +1,7 @@
 export function isAuthenticated() {
   const token = localStorage.getItem("token");
 
-  return !!token;
+  return !!token && !!getUsuarioLogado();
 }
 
 export function getUsuarioLogado() {
@@ -25,6 +25,4 @@ export function isProfessor() {
 export function logout() {
   localStorage.removeItem("token");
   localStorage.removeItem("usuario");
-
-  window.location.href = "/login";
 }
