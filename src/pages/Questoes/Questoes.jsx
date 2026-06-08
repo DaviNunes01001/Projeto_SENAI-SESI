@@ -1,132 +1,66 @@
-import jsPDF from "jspdf";
 import { useState } from "react";
 import useApi from "../../hooks/useApi";
 import styles from "./Questoes.module.css";
+import {
+  alternarItemSelecionado,
+  formatarVestibular,
+  gerarPdfQuestao,
+  gerarPdfQuestoesSelecionadas,
+  getAnosDisponiveis,
+  getEnunciadoLimpo,
+  getIdsDisponiveis,
+  getQuestoesSelecionadasVisiveis,
+  getRespostaCorreta,
+  getVestibularesDisponiveis,
+  montarUrlQuestoes,
+  selecionarTodasQuestoes,
+} from "./QuestoesFuncoes";
 
-function getRespostaCorreta(questao) {
-  return questao.alternativas?.find((alternativa) => alternativa.correta);
-}
-
-function escapeRegExp(texto) {
-  return String(texto).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-function getEnunciadoLimpo(questao) {
-  const texto = questao.enunciado?.trim() || "";
-  const alternativas = questao.alternativas || [];
-  const primeiraLetra = alternativas[0]?.letra;
-
-  if (!texto || !primeiraLetra) {
-    return texto;
-  }
-
-  const primeiroMarcador = new RegExp(
-    `\\s+${escapeRegExp(primeiraLetra)}[\\).]\\s+`,
-    "i",
-  );
-  const inicioAlternativas = texto.search(primeiroMarcador);
-
-  if (inicioAlternativas < 0) {
-    return texto;
-  }
-
-  const trechoAlternativas = texto.slice(inicioAlternativas);
-  const totalMarcadores = alternativas.reduce((total, alternativa) => {
-    if (!alternativa.letra) {
-      return total;
-    }
-
-    const marcador = new RegExp(
-      `(^|\\s)${escapeRegExp(alternativa.letra)}[\\).]\\s+`,
-      "i",
-    );
-
-    return marcador.test(trechoAlternativas) ? total + 1 : total;
-  }, 0);
-
-  if (totalMarcadores < Math.min(2, alternativas.length)) {
-    return texto;
-  }
-
-  return texto.slice(0, inicioAlternativas).trim();
-}
-
-function montarUrlQuestoes(busca, nivel, ano, questaoId, vestibularId) {
-  const params = new URLSearchParams();
-  const termo = busca.trim();
-  const anoFiltro = ano.trim();
-  const idFiltro = questaoId.trim();
-  const vestibularFiltro = vestibularId.trim();
-
-  if (termo) {
-    params.set("q", termo);
-  }
-
-  if (nivel) {
-    params.set("nivel", nivel);
-  }
-
-  if (anoFiltro) {
-    params.set("ano", anoFiltro);
-  }
-
-  if (idFiltro) {
-    params.set("id", idFiltro);
-  }
-
-  if (vestibularFiltro) {
-    params.set("vestibular_id", vestibularFiltro);
-  }
-
-  const query = params.toString();
-  return query ? `/api/questoes?${query}` : "/api/questoes";
-}
-
-function formatarVestibular(vestibular) {
-  const partes = [vestibular.nome, vestibular.ano].filter(Boolean);
-  return partes.length ? partes.join(" - ") : `Vestibular ${vestibular.id}`;
-}
+const filtrosIniciais = {
+  busca: "",
+  questaoId: "",
+  vestibularId: "",
+  nivel: "",
+  ano: "",
+};
 
 export default function Questoes() {
-  const [busca, setBusca] = useState("");
-  const [questaoId, setQuestaoId] = useState("");
-  const [vestibularId, setVestibularId] = useState("");
-  const [nivel, setNivel] = useState("");
-  const [ano, setAno] = useState("");
+  const [filtros, setFiltros] = useState(filtrosIniciais);
   const [questaoAberta, setQuestaoAberta] = useState(null);
   const [questoesSelecionadas, setQuestoesSelecionadas] = useState([]);
   const { data: questoes, loading, error, reload } = useApi("/api/questoes");
   const { data: anos } = useApi("/api/questoes/anos");
   const { data: ids } = useApi("/api/questoes/ids");
   const { data: vestibulares } = useApi("/api/questoes/vestibulares");
-  const anosDisponiveis = [
-    ...new Set(anos.map((item) => item.ano).filter(Boolean)),
-  ];
-  const idsDisponiveis = [...new Set(ids.map((item) => item.id))];
-  const vestibularesDisponiveis = vestibulares.filter(
-    (vestibular) => vestibular.id && vestibular.nome,
-  );
-  const questoesSelecionadasVisiveis = questoes.filter((questao) =>
-    questoesSelecionadas.includes(questao.id),
+  const anosDisponiveis = getAnosDisponiveis(anos);
+  const idsDisponiveis = getIdsDisponiveis(ids);
+  const vestibularesDisponiveis = getVestibularesDisponiveis(vestibulares);
+  const questoesSelecionadasVisiveis = getQuestoesSelecionadasVisiveis(
+    questoes,
+    questoesSelecionadas,
   );
   const todasQuestoesSelecionadas =
     questoes.length > 0 && questoesSelecionadasVisiveis.length === questoes.length;
+  const temFiltroAtivo = Object.values(filtros).some(Boolean);
+
+  function atualizarFiltro(nome, valor) {
+    setFiltros((atuais) => ({ ...atuais, [nome]: valor }));
+  }
+
+  function limparResultadoAtual() {
+    setQuestaoAberta(null);
+    setQuestoesSelecionadas([]);
+  }
 
   function pesquisarQuestoes(event) {
     event.preventDefault();
-    setQuestaoAberta(null);
-    setQuestoesSelecionadas([]);
-    reload(montarUrlQuestoes(busca, nivel, ano, questaoId, vestibularId));
+    limparResultadoAtual();
+    reload(montarUrlQuestoes(filtros));
   }
 
   function limparBusca() {
-    setBusca("");
-    setQuestaoId("");
-    setVestibularId("");
-    setNivel("");
-    setAno("");
-    setQuestaoAberta(null);
-    setQuestoesSelecionadas([]);
+    setFiltros(filtrosIniciais);
+    limparResultadoAtual();
     reload("/api/questoes");
   }
 
@@ -135,171 +69,13 @@ export default function Questoes() {
   }
 
   function alternarSelecaoQuestao(id) {
-    setQuestoesSelecionadas((atuais) =>
-      atuais.includes(id)
-        ? atuais.filter((questaoIdSelecionada) => questaoIdSelecionada !== id)
-        : [...atuais, id],
-    );
+    setQuestoesSelecionadas((atuais) => alternarItemSelecionado(atuais, id));
   }
 
   function alternarTodasQuestoes() {
     setQuestoesSelecionadas(
-      todasQuestoesSelecionadas ? [] : questoes.map((questao) => questao.id),
+      selecionarTodasQuestoes(questoes, todasQuestoesSelecionadas),
     );
-  }
-
-  function gerarPdfQuestao(questao) {
-    const pdf = new jsPDF();
-    const margem = 15;
-    const larguraTexto = 180;
-    let y = 20;
-
-    function escreverTitulo(texto) {
-      pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(13);
-      pdf.text(texto, margem, y);
-      y += 8;
-    }
-
-    function escreverTexto(texto) {
-      pdf.setFont("helvetica", "normal");
-      pdf.setFontSize(11);
-      const linhas = pdf.splitTextToSize(texto, larguraTexto);
-      pdf.text(linhas, margem, y);
-      y += linhas.length * 7 + 5;
-    }
-
-    function garantirEspaco() {
-      if (y > 260) {
-        pdf.addPage();
-        y = 20;
-      }
-    }
-
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(18);
-    pdf.text("Questão de Matemática", margem, y);
-    y += 14;
-
-    escreverTitulo("Vestibular:");
-    escreverTexto(
-      `${questao.vestibular || " Não informado "}${
-        questao.ano ? ` - ${questao.ano}` : " "
-      }`,
-    );
-
-    escreverTitulo("Enunciado:");
-    escreverTexto(getEnunciadoLimpo(questao) || "Enunciado não informado.");
-
-    if (questao.alternativas?.length) {
-      escreverTitulo("Alternativas:");
-
-      questao.alternativas.forEach((alternativa) => {
-        garantirEspaco();
-        escreverTexto(`${alternativa.letra}) ${alternativa.texto}`);
-      });
-    }
-
-    garantirEspaco();
-    escreverTitulo("Resposta:");
-
-    const respostaCorreta = getRespostaCorreta(questao);
-    escreverTexto(
-      respostaCorreta
-        ? `${respostaCorreta.letra}) ${respostaCorreta.texto}`
-        : "Resposta não cadastrada.",
-    );
-
-    garantirEspaco();
-    escreverTitulo("Explicação:");
-    escreverTexto(questao.explicacao || "Explicação não cadastrada.");
-
-    pdf.save(`questao-${questao.id || "matematica"}.pdf`);
-  }
-
-  function gerarPdfQuestoesSelecionadas() {
-    const questoesParaPdf = questoesSelecionadasVisiveis;
-
-    if (questoesParaPdf.length === 0) {
-      return;
-    }
-
-    const pdf = new jsPDF();
-    const margem = 15;
-    const larguraTexto = 180;
-    let y = 20;
-
-    function garantirEspaco(altura = 14) {
-      if (y + altura > 275) {
-        pdf.addPage();
-        y = 20;
-      }
-    }
-
-    function escreverTitulo(texto) {
-      garantirEspaco(12);
-      pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(13);
-      pdf.text(texto, margem, y);
-      y += 8;
-    }
-
-    function escreverTexto(texto) {
-      pdf.setFont("helvetica", "normal");
-      pdf.setFontSize(11);
-      const linhas = pdf.splitTextToSize(String(texto), larguraTexto);
-      garantirEspaco(linhas.length * 7 + 5);
-      pdf.text(linhas, margem, y);
-      y += linhas.length * 7 + 5;
-    }
-
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(18);
-    pdf.text("Questões de Matemática", margem, y);
-    y += 14;
-
-    questoesParaPdf.forEach((questao, index) => {
-      garantirEspaco(28);
-      pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(15);
-      pdf.text(`Questão ${index + 1} - ID ${questao.id}`, margem, y);
-      y += 10;
-
-      escreverTitulo("Vestibular:");
-      escreverTexto(
-        `${questao.vestibular || "Não informado"}${
-          questao.ano ? ` - ${questao.ano}` : ""
-        }`,
-      );
-
-      escreverTitulo("Enunciado:");
-      escreverTexto(getEnunciadoLimpo(questao) || "Enunciado não informado.");
-
-      if (questao.alternativas?.length) {
-        escreverTitulo("Alternativas:");
-
-        questao.alternativas.forEach((alternativa) => {
-          escreverTexto(`${alternativa.letra}) ${alternativa.texto}`);
-        });
-      }
-
-      const respostaCorreta = getRespostaCorreta(questao);
-      escreverTitulo("Resposta:");
-      escreverTexto(
-        respostaCorreta
-          ? `${respostaCorreta.letra}) ${respostaCorreta.texto}`
-          : "Resposta não cadastrada.",
-      );
-
-      escreverTitulo("Explicação:");
-      escreverTexto(questao.explicacao || "Explicação não cadastrada.");
-
-      if (index < questoesParaPdf.length - 1) {
-        y += 4;
-      }
-    });
-
-    pdf.save(`questoes-matematica-${questoesParaPdf.length}.pdf`);
   }
 
   return (
@@ -315,15 +91,15 @@ export default function Questoes() {
           <input
             type="text"
             placeholder="Pesquisar por enunciado..."
-            value={busca}
-            onChange={(event) => setBusca(event.target.value)}
+            value={filtros.busca}
+            onChange={(event) => atualizarFiltro("busca", event.target.value)}
           />
 
           <label className={styles.levelFilter}>
             <span>ID</span>
             <select
-              value={questaoId}
-              onChange={(event) => setQuestaoId(event.target.value)}
+              value={filtros.questaoId}
+              onChange={(event) => atualizarFiltro("questaoId", event.target.value)}
             >
               <option value="">Todos</option>
               {idsDisponiveis.map((idDisponivel) => (
@@ -337,8 +113,10 @@ export default function Questoes() {
           <label className={styles.levelFilter}>
             <span>Vestibular</span>
             <select
-              value={vestibularId}
-              onChange={(event) => setVestibularId(event.target.value)}
+              value={filtros.vestibularId}
+              onChange={(event) =>
+                atualizarFiltro("vestibularId", event.target.value)
+              }
             >
               <option value="">Todos</option>
               {vestibularesDisponiveis.map((vestibular) => (
@@ -352,8 +130,8 @@ export default function Questoes() {
           <label className={styles.levelFilter}>
             <span>Nível</span>
             <select
-              value={nivel}
-              onChange={(event) => setNivel(event.target.value)}
+              value={filtros.nivel}
+              onChange={(event) => atualizarFiltro("nivel", event.target.value)}
             >
               <option value="">Todos</option>
               <option value="base">Base</option>
@@ -365,8 +143,8 @@ export default function Questoes() {
           <label className={styles.levelFilter}>
             <span>Ano</span>
             <select
-              value={ano}
-              onChange={(event) => setAno(event.target.value)}
+              value={filtros.ano}
+              onChange={(event) => atualizarFiltro("ano", event.target.value)}
             >
               <option value="">Todos</option>
               {anosDisponiveis.map((anoDisponivel) => (
@@ -379,7 +157,7 @@ export default function Questoes() {
 
           <button type="submit">Buscar</button>
 
-          {(busca || questaoId || vestibularId || nivel || ano) && (
+          {temFiltroAtivo && (
             <button
               type="button"
               className={styles.clearButton}
@@ -415,7 +193,9 @@ export default function Questoes() {
 
               <button
                 type="button"
-                onClick={gerarPdfQuestoesSelecionadas}
+                onClick={() =>
+                  gerarPdfQuestoesSelecionadas(questoesSelecionadasVisiveis)
+                }
                 disabled={questoesSelecionadasVisiveis.length === 0}
               >
                 Baixar selecionadas
