@@ -32,6 +32,7 @@ export default function Login({ setCurrentPath }) {
       }
 
       localStorage.setItem("token", data.token);
+      localStorage.setItem("usuario", JSON.stringify(data.usuario));
 
       window.history.pushState({}, "", "/");
       setCurrentPath("/");

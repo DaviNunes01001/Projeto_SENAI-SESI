@@ -330,8 +330,22 @@ async function atualizar(id, dados) {
 }
 
 async function deletar(id) {
-  const result = await pool.query("DELETE FROM questao WHERE id = $1", [id]);
-  return result.rowCount > 0;
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+    await client.query("DELETE FROM alternativa WHERE questao_id = $1", [id]);
+
+    const result = await client.query("DELETE FROM questao WHERE id = $1", [id]);
+
+    await client.query("COMMIT");
+    return result.rowCount > 0;
+  } catch (erro) {
+    await client.query("ROLLBACK");
+    throw erro;
+  } finally {
+    client.release();
+  }
 }
 
 module.exports = {

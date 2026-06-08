@@ -108,6 +108,110 @@ export function selecionarTodasQuestoes(questoes, todasSelecionadas) {
   return todasSelecionadas ? [] : questoes.map((questao) => questao.id);
 }
 
+export function getFormularioQuestaoVazio() {
+  return {
+    id: "",
+    enunciado: "",
+    explicacao: "",
+    subtopico_id: "1",
+    vestibular_id: "1",
+    avaliacao_id: "1",
+    tipo: "base",
+    conteudo: "",
+  };
+}
+
+export function montarFormularioQuestao(questao) {
+  return {
+    id: String(questao.id || ""),
+    enunciado: questao.enunciado || "",
+    explicacao: questao.explicacao || "",
+    subtopico_id: String(questao.subtopico_id || questao.topicoid || "1"),
+    vestibular_id: String(questao.vestibular_id || "1"),
+    avaliacao_id: String(questao.avaliacao_id || "1"),
+    tipo: questao.tipo || "base",
+    conteudo: questao.conteudo || "",
+  };
+}
+
+function limparTexto(valor) {
+  const texto = String(valor || "").trim();
+  return texto || undefined;
+}
+
+function limparNumero(valor) {
+  const numero = Number(valor);
+  return Number.isInteger(numero) && numero > 0 ? numero : undefined;
+}
+
+function montarDadosFormularioQuestao(formulario) {
+  const enunciado = limparTexto(formulario.enunciado);
+
+  return {
+    enunciado,
+    explicacao: limparTexto(formulario.explicacao),
+    subtopico_id: limparNumero(formulario.subtopico_id),
+    vestibular_id: limparNumero(formulario.vestibular_id),
+    avaliacao_id: limparNumero(formulario.avaliacao_id),
+    tipo: limparTexto(formulario.tipo),
+    conteudo: limparTexto(formulario.conteudo) || enunciado,
+  };
+}
+
+async function lerResposta(response) {
+  try {
+    return await response.json();
+  } catch {
+    return {};
+  }
+}
+
+export async function salvarQuestaoProfessor(modo, formulario) {
+  const editando = modo === "atualizar";
+  const id = limparNumero(formulario.id);
+  const dados = montarDadosFormularioQuestao(formulario);
+
+  if (editando && !id) {
+    throw new Error("ID da questão inválido.");
+  }
+
+  if (!editando && !dados.enunciado) {
+    throw new Error("Informe o enunciado da questão.");
+  }
+
+  if (!editando && !dados.subtopico_id) {
+    throw new Error("Informe o ID do subtópico.");
+  }
+
+  const response = await fetch(editando ? `/api/questoes/${id}` : "/api/questoes", {
+    method: editando ? "PUT" : "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(dados),
+  });
+  const resultado = await lerResposta(response);
+
+  if (!response.ok) {
+    throw new Error(resultado.mensagem || "Não foi possível salvar a questão.");
+  }
+
+  return resultado;
+}
+
+export async function deletarQuestaoProfessor(id) {
+  const response = await fetch(`/api/questoes/${id}`, {
+    method: "DELETE",
+  });
+  const resultado = await lerResposta(response);
+
+  if (!response.ok) {
+    throw new Error(resultado.mensagem || "Não foi possível deletar a questão.");
+  }
+
+  return resultado;
+}
+
 function criarEscritorPdf(titulo) {
   const pdf = new jsPDF();
   let y = Y_INICIAL;

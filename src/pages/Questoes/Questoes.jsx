@@ -1,18 +1,23 @@
 import { useState } from "react";
+import { isProfessor } from "../../hooks/auth";
 import useApi from "../../hooks/useApi";
 import styles from "./Questoes.module.css";
 import {
   alternarItemSelecionado,
+  deletarQuestaoProfessor,
   formatarVestibular,
   gerarPdfQuestao,
   gerarPdfQuestoesSelecionadas,
   getAnosDisponiveis,
   getEnunciadoLimpo,
+  getFormularioQuestaoVazio,
   getIdsDisponiveis,
   getQuestoesSelecionadasVisiveis,
   getRespostaCorreta,
   getVestibularesDisponiveis,
+  montarFormularioQuestao,
   montarUrlQuestoes,
+  salvarQuestaoProfessor,
   selecionarTodasQuestoes,
 } from "./QuestoesFuncoes";
 
@@ -28,10 +33,17 @@ export default function Questoes() {
   const [filtros, setFiltros] = useState(filtrosIniciais);
   const [questaoAberta, setQuestaoAberta] = useState(null);
   const [questoesSelecionadas, setQuestoesSelecionadas] = useState([]);
+  const [modoFormulario, setModoFormulario] = useState("");
+  const [formularioQuestao, setFormularioQuestao] = useState(
+    getFormularioQuestaoVazio,
+  );
+  const [salvandoQuestao, setSalvandoQuestao] = useState(false);
   const { data: questoes, loading, error, reload } = useApi("/api/questoes");
-  const { data: anos } = useApi("/api/questoes/anos");
-  const { data: ids } = useApi("/api/questoes/ids");
-  const { data: vestibulares } = useApi("/api/questoes/vestibulares");
+  const { data: anos, reload: reloadAnos } = useApi("/api/questoes/anos");
+  const { data: ids, reload: reloadIds } = useApi("/api/questoes/ids");
+  const { data: vestibulares, reload: reloadVestibulares } = useApi(
+    "/api/questoes/vestibulares",
+  );
   const anosDisponiveis = getAnosDisponiveis(anos);
   const idsDisponiveis = getIdsDisponiveis(ids);
   const vestibularesDisponiveis = getVestibularesDisponiveis(vestibulares);
@@ -42,6 +54,7 @@ export default function Questoes() {
   const todasQuestoesSelecionadas =
     questoes.length > 0 && questoesSelecionadasVisiveis.length === questoes.length;
   const temFiltroAtivo = Object.values(filtros).some(Boolean);
+  const professor = isProfessor();
 
   function atualizarFiltro(nome, valor) {
     setFiltros((atuais) => ({ ...atuais, [nome]: valor }));
@@ -76,6 +89,74 @@ export default function Questoes() {
     setQuestoesSelecionadas(
       selecionarTodasQuestoes(questoes, todasQuestoesSelecionadas),
     );
+  }
+
+  function atualizarCampoQuestao(nome, valor) {
+    setFormularioQuestao((atual) => ({ ...atual, [nome]: valor }));
+  }
+
+  function abrirFormularioAdicionar() {
+    setModoFormulario("adicionar");
+    setFormularioQuestao(getFormularioQuestaoVazio());
+  }
+
+  function abrirFormularioAtualizar(questao) {
+    setModoFormulario("atualizar");
+    setFormularioQuestao(montarFormularioQuestao(questao));
+  }
+
+  function fecharFormularioQuestao() {
+    setModoFormulario("");
+    setFormularioQuestao(getFormularioQuestaoVazio());
+  }
+
+  async function recarregarDadosQuestoes() {
+    await Promise.all([
+      reload(montarUrlQuestoes(filtros)),
+      reloadAnos(),
+      reloadIds(),
+      reloadVestibulares(),
+    ]);
+  }
+
+  async function salvarFormularioQuestao(event) {
+    event.preventDefault();
+    setSalvandoQuestao(true);
+
+    try {
+      await salvarQuestaoProfessor(modoFormulario, formularioQuestao);
+      await recarregarDadosQuestoes();
+      fecharFormularioQuestao();
+      alert("Questão salva com sucesso.");
+    } catch (erro) {
+      alert(erro.message);
+    } finally {
+      setSalvandoQuestao(false);
+    }
+  }
+
+  async function deletarQuestao(questao) {
+    const confirmou = window.confirm(`Deseja deletar a questão ${questao.id}?`);
+
+    if (!confirmou) {
+      return;
+    }
+
+    setSalvandoQuestao(true);
+
+    try {
+      await deletarQuestaoProfessor(questao.id);
+      setQuestaoAberta((atual) => (atual === questao.id ? null : atual));
+      setQuestoesSelecionadas((atuais) =>
+        atuais.filter((id) => id !== questao.id),
+      );
+      await recarregarDadosQuestoes();
+      alert("Questão deletada com sucesso.");
+    } catch (erro) {
+      alert(erro.message);
+    } finally {
+      setSalvandoQuestao(false);
+    }
   }
 
   return (
@@ -167,6 +248,150 @@ export default function Questoes() {
             </button>
           )}
         </form>
+
+        {professor && (
+          <section className={styles.professorPanel}>
+            <div className={styles.professorPanelHeader}>
+              <div>
+                <span>Área do professor</span>
+                <h2>Gerenciar questões</h2>
+              </div>
+
+              <button type="button" onClick={abrirFormularioAdicionar}>
+                Adicionar questão
+              </button>
+            </div>
+
+            {modoFormulario && (
+              <form
+                className={styles.professorForm}
+                onSubmit={salvarFormularioQuestao}
+              >
+                <div className={styles.professorFormHeader}>
+                  <h3>
+                    {modoFormulario === "adicionar"
+                      ? "Adicionar questão"
+                      : `Atualizar questão ${formularioQuestao.id}`}
+                  </h3>
+
+                  <button
+                    type="button"
+                    className={styles.secondaryButton}
+                    onClick={fecharFormularioQuestao}
+                  >
+                    Fechar
+                  </button>
+                </div>
+
+                {modoFormulario === "atualizar" && (
+                  <label className={styles.formField}>
+                    <span>ID</span>
+                    <input type="number" value={formularioQuestao.id} disabled />
+                  </label>
+                )}
+
+                <label className={styles.formField}>
+                  <span>Enunciado</span>
+                  <textarea
+                    value={formularioQuestao.enunciado}
+                    onChange={(event) =>
+                      atualizarCampoQuestao("enunciado", event.target.value)
+                    }
+                    required={modoFormulario === "adicionar"}
+                  />
+                </label>
+
+                <label className={styles.formField}>
+                  <span>Explicação</span>
+                  <textarea
+                    value={formularioQuestao.explicacao}
+                    onChange={(event) =>
+                      atualizarCampoQuestao("explicacao", event.target.value)
+                    }
+                  />
+                </label>
+
+                <div className={styles.formGrid}>
+                  <label className={styles.formField}>
+                    <span>Subtópico ID</span>
+                    <input
+                      type="number"
+                      min="1"
+                      value={formularioQuestao.subtopico_id}
+                      onChange={(event) =>
+                        atualizarCampoQuestao("subtopico_id", event.target.value)
+                      }
+                      required={modoFormulario === "adicionar"}
+                    />
+                  </label>
+
+                  <label className={styles.formField}>
+                    <span>Vestibular ID</span>
+                    <input
+                      type="number"
+                      min="1"
+                      value={formularioQuestao.vestibular_id}
+                      onChange={(event) =>
+                        atualizarCampoQuestao("vestibular_id", event.target.value)
+                      }
+                    />
+                  </label>
+
+                  <label className={styles.formField}>
+                    <span>Avaliação ID</span>
+                    <input
+                      type="number"
+                      min="1"
+                      value={formularioQuestao.avaliacao_id}
+                      onChange={(event) =>
+                        atualizarCampoQuestao("avaliacao_id", event.target.value)
+                      }
+                    />
+                  </label>
+
+                  <label className={styles.formField}>
+                    <span>Tipo</span>
+                    <select
+                      value={formularioQuestao.tipo}
+                      onChange={(event) =>
+                        atualizarCampoQuestao("tipo", event.target.value)
+                      }
+                    >
+                      <option value="base">Base</option>
+                      <option value="vestibular">Vestibular</option>
+                    </select>
+                  </label>
+                </div>
+
+                <label className={styles.formField}>
+                  <span>Conteúdo</span>
+                  <input
+                    type="text"
+                    value={formularioQuestao.conteudo}
+                    onChange={(event) =>
+                      atualizarCampoQuestao("conteudo", event.target.value)
+                    }
+                    placeholder="Opcional"
+                  />
+                </label>
+
+                <div className={styles.professorFormActions}>
+                  <button type="submit" disabled={salvandoQuestao}>
+                    {salvandoQuestao ? "Salvando..." : "Salvar questão"}
+                  </button>
+
+                  <button
+                    type="button"
+                    className={styles.secondaryButton}
+                    onClick={fecharFormularioQuestao}
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </form>
+            )}
+          </section>
+        )}
       </section>
 
       <section className={styles.content}>
@@ -290,6 +515,27 @@ export default function Questoes() {
                     >
                       Baixar PDF
                     </button>
+
+                    {professor && (
+                      <>
+                        <button
+                          type="button"
+                          className={styles.editButton}
+                          onClick={() => abrirFormularioAtualizar(questao)}
+                        >
+                          Atualizar
+                        </button>
+
+                        <button
+                          type="button"
+                          className={styles.deleteButton}
+                          onClick={() => deletarQuestao(questao)}
+                          disabled={salvandoQuestao}
+                        >
+                          Deletar
+                        </button>
+                      </>
+                    )}
                   </div>
 
                   {aberta && (
