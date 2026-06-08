@@ -1,13 +1,17 @@
 import { useState } from "react";
 import styles from "./ComoFunciona.module.css";
 import seta from "../../assets/ComoFuncionaImgs/seta.png";
-import login from "../../assets/ComoFuncionaImgs/login.png";
+import login from "../../assets/ComoFuncionaImgs/home.png";
 import busca from "../../assets/ComoFuncionaImgs/busca.png";
 import filtro from "../../assets/ComoFuncionaImgs/filtro.png";
 import lk from "../../assets/ComoFuncionaImgs/ok.png";
 import antesr from "../../assets/ComoFuncionaImgs/antesR.png";
 import depoisr from "../../assets/ComoFuncionaImgs/depoisR.png";
 import pdf from "../../assets/ComoFuncionaImgs/pdf.png";
+import indi from "../../assets/ComoFuncionaImgs/selecionar.png";
+import selet from "../../assets/ComoFuncionaImgs/selecrionar_td.png";
+import limpa from "../../assets/ComoFuncionaImgs/limpa.png";
+
 
 export default function ComoFunciona() {
   const [aberto, setAberto] = useState(null);
@@ -32,7 +36,7 @@ export default function ComoFunciona() {
         <article onClick={() => toggle(1)}>
           <div className={styles.header}>
             <strong>01</strong>
-            <h2>Acesso</h2>
+            <h2>Home</h2>
 
             <img
               className={`${styles.seta} ${
@@ -49,13 +53,46 @@ export default function ComoFunciona() {
             }`}
           >
             <p>
-              O usuário usa seu login e senha para se autenticar e acessar a
-              plataforma.
-              <br />
-              <br />
-              Após o login, todas as funcionalidades do sistema ficam
-              disponíveis para consulta e estudo.
-            </p>
+  Ao acessar a plataforma, o usuário visualiza uma mensagem de boas-vindas
+  apresentando o sistema de estudos de matemática desenvolvido no projeto
+  SESI SENAI.
+
+  <br />
+  <br />
+
+  A página realiza automaticamente a verificação da conexão com o backend,
+  exibindo mensagens de carregamento, sucesso ou erro na comunicação com a API.
+
+  <br />
+  <br />
+
+  O usuário também encontra uma área com informações sobre os principais
+  recursos disponíveis na plataforma.
+
+  <br />
+  <br />
+
+  Tópicos permite visualizar os conteúdos matemáticos
+  cadastrados no banco de dados.
+
+  <br />
+  <br />
+
+  Questões possibilita consultar as questões de matemática
+  disponíveis através da API.
+
+  <br />
+  <br />
+
+  Pesquisa e Prova oferece ferramentas para filtrar questões
+  e criar listas de estudo personalizadas.
+
+  <br />
+  <br />
+
+  Dessa forma, a tela inicial funciona como um painel de acesso rápido às
+  principais funcionalidades do sistema.
+</p>
 
             <img
               className={styles.login}
@@ -179,7 +216,71 @@ export default function ComoFunciona() {
               src={pdf}
               alt="Tela de pdf"
             />
-            </p>
+
+            <br />
+<br />
+
+<strong>✅</strong>
+<br />
+O usuário pode selecionar individualmente as questões através das caixas de seleção presentes em cada card.
+
+<img
+  className={styles.indi}
+  src={indi}
+  alt="Selecionar questão individual"
+/>
+
+<br />
+<br />
+
+<strong>☑️</strong>
+<br />
+Também é possível utilizar a opção Selecionar Todas para marcar automaticamente todas as questões exibidas nos resultados da pesquisa.
+
+<img
+  className={styles.selet}
+  src={selet}
+  alt="Selecionar todas as questões"
+/>
+
+<br />
+<br />
+
+<strong>📑</strong>
+<br />
+Após selecionar uma ou mais questões, o sistema permite gerar um único arquivo PDF contendo todas as questões escolhidas.
+
+<img
+  className={styles.pdf}
+  src={pdf}
+  alt="Baixar questões selecionadas"
+/>
+
+<br />
+<br />
+
+<strong>🗑️</strong>
+<br />
+Caso necessário, o usuário pode utilizar a opção Limpar Seleção para desmarcar rapidamente todas as questões selecionadas.
+
+<img
+  className={styles.limpa}
+  src={limpa}
+  alt="Limpar seleção"
+/>
+
+<br />
+<br />
+
+<strong>🔄</strong>
+<br />
+O botão Limpar remove todos os filtros aplicados e restaura a listagem completa de questões cadastradas na plataforma.
+
+<img
+  className={styles.limpa}
+  src={limpa}
+  alt="Limpar filtros"
+/>  </p>
           </div>
         </article>
 

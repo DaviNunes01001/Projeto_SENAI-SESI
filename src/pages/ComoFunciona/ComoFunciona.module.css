@@ -68,6 +68,10 @@
     box-shadow: 0 18px 35px rgba(15, 23, 42, 0.12);
 }
 
+.steps article:has(.aberto) {
+    border-left: 6px solid #3e6d3a;
+}
+
 .header {
     display: flex;
     align-items: center;
@@ -114,47 +118,18 @@
 }
 
 .aberto {
-    max-height: 5000px;
+    max-height: 10000px;
     opacity: 1;
     margin-top: 24px;
 }
 
 .conteudo p {
     color: #4b5563;
-    line-height: 1.8;
+    line-height: 1.9;
     font-size: 1rem;
+    max-width: 950px;
+    margin: 0 auto;
 }
-
-
-.login,
-.busca,
-.filtro,
-.lk,
-.antesr,
-.depoisr,
-.pdf {
-    display: block;
-    width: 100%;
-    max-width: 850px;
-    margin: 24px auto;
-    border-radius: 16px;
-    border: 1px solid #e5e7eb;
-    background: #ffffff;
-    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
-    transition: all 0.3s ease;
-}
-
-.login:hover,
-.busca:hover,
-.filtro:hover,
-.lk:hover,
-.antesr:hover,
-.depoisr:hover,
-.pdf:hover {
-    transform: scale(1.02);
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
-}
-
 
 .conteudo p strong {
     color: #1f2937;
@@ -164,13 +139,147 @@
     border-radius: 8px;
 }
 
+/* Todas as imagens */
 
-.steps article:has(.aberto) {
-    border-left: 6px solid #3e6d3a;
+.login,
+.busca,
+.filtro,
+.lk,
+.antesr,
+.depoisr,
+.pdf,
+.indi,
+.selet,
+.limpa {
+    display: block;
+    width: 100%;
+    max-width: 900px;
+    margin: 24px auto;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+    transition: all 0.3s ease;
+    object-fit: contain;
 }
 
+.login:hover,
+.busca:hover,
+.filtro:hover,
+.lk:hover,
+.antesr:hover,
+.depoisr:hover,
+.pdf:hover,
+.indi:hover,
+.selet:hover,
+.limpa:hover {
+    transform: scale(1.02);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+}
 
 html {
     scroll-behavior: smooth;
 }
 
+/* Responsividade */
+
+@media (max-width: 1024px) {
+    .page {
+        padding: 30px;
+    }
+
+    .hero h1 {
+        font-size: 2.2rem;
+    }
+
+    .header h2 {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .page {
+        width: calc(100% - 20px);
+        padding: 20px;
+        border-radius: 16px;
+    }
+
+    .hero {
+        margin-bottom: 24px;
+    }
+
+    .hero span {
+        width: 150px;
+        height: 36px;
+        font-size: 16px;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+
+    .header {
+        gap: 12px;
+    }
+
+    .header h2 {
+        font-size: 1.1rem;
+    }
+
+    .steps strong {
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+    }
+
+    .steps article {
+        padding: 18px;
+    }
+
+    .login,
+    .busca,
+    .filtro,
+    .lk,
+    .antesr,
+    .depoisr,
+    .pdf,
+    .indi,
+    .selet,
+    .limpa {
+        max-width: 100%;
+        margin: 16px auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .page {
+        padding: 16px;
+    }
+
+    .hero h1 {
+        font-size: 1.7rem;
+    }
+
+    .hero p {
+        font-size: 0.95rem;
+    }
+
+    .header h2 {
+        font-size: 1rem;
+    }
+
+    .steps strong {
+        width: 40px;
+        height: 40px;
+        font-size: 0.9rem;
+    }
+
+    .conteudo p {
+        font-size: 0.95rem;
+        line-height: 1.8;
+    }
+}
