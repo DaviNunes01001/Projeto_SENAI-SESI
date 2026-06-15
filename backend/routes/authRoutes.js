@@ -1,5 +1,5 @@
-const crypto = require("crypto");
 const express = require("express");
+const jwt = require("jsonwebtoken");
 
 const router = express.Router();
 
@@ -50,10 +50,15 @@ router.post("/login", (req, res) => {
     });
   }
 
-  const token = crypto
-    .createHash("sha256")
-    .update(`${usuario.id}:${usuario.email}:${Date.now()}`)
-    .digest("hex");
+  const token = jwt.sign(
+    {
+      id: usuario.id,
+      email: usuario.email,
+      perfil: usuario.perfil,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" },
+  );
 
   return res.json({
     mensagem: "Login realizado com sucesso",
