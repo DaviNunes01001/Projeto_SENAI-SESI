@@ -13,15 +13,25 @@ import selet from "../../assets/ComoFuncionaImgs/selecrionar_td.png";
 import limpa from "../../assets/ComoFuncionaImgs/limpa.png";
 
 
+// Componente: ComoFunciona - Página de tutorial/documentação interativa
+// O que faz: Exibe guia em accordion sobre como usar a plataforma
+// Como: Renderiza seções expansíveis com imagens e texto descritivo
+// Por que: Ajuda novos usuários a entender funcionalidades da plataforma
 export default function ComoFunciona() {
+  // Estado: Qual accordion está aberto (null se nenhum, 1/2/3 para cada seção)
   const [aberto, setAberto] = useState(null);
 
+  // Função: Alterna abertura de uma seção accordion
+  // O que faz: Se seção está aberta, fecha; se está fechada, abre
+  // Como: Compara id com estado, seta null ou o id
+  // Por que: Implementa accordion interativo sem biblioteca
   const toggle = (id) => {
     setAberto(aberto === id ? null : id);
   };
 
   return (
     <main className={styles.page}>
+      {/* Seção hero com título e descrição */}
       <section className={styles.hero}>
         <span>Como funciona</span>
         <h1>O projeto conecta React com uma API de questões.</h1>
@@ -31,8 +41,10 @@ export default function ComoFunciona() {
         </p>
       </section>
 
+      {/* Seção com itens accordion */}
       <section className={styles.steps}>
 
+        {/* Item 1: Home */}
         <article onClick={() => toggle(1)}>
           <div className={styles.header}>
             <strong>01</strong>
@@ -47,52 +59,53 @@ export default function ComoFunciona() {
             />
           </div>
 
+          {/* Conteúdo expansível - só aparece se aberto === 1 */}
           <div
             className={`${styles.conteudo} ${
               aberto === 1 ? styles.aberto : ""
             }`}
           >
             <p>
-  Ao acessar a plataforma, o usuário visualiza uma mensagem de boas-vindas
-  apresentando o sistema de estudos de matemática desenvolvido no projeto
-  SESI SENAI.
+              Ao acessar a plataforma, o usuário visualiza uma mensagem de boas-vindas
+              apresentando o sistema de estudos de matemática desenvolvido no projeto
+              SESI SENAI.
 
-  <br />
-  <br />
+              <br />
+              <br />
 
-  A página realiza automaticamente a verificação da conexão com o backend,
-  exibindo mensagens de carregamento, sucesso ou erro na comunicação com a API.
+              A página realiza automaticamente a verificação da conexão com o backend,
+              exibindo mensagens de carregamento, sucesso ou erro na comunicação com a API.
 
-  <br />
-  <br />
+              <br />
+              <br />
 
-  O usuário também encontra uma área com informações sobre os principais
-  recursos disponíveis na plataforma.
+              O usuário também encontra uma área com informações sobre os principais
+              recursos disponíveis na plataforma.
 
-  <br />
-  <br />
+              <br />
+              <br />
 
-  Tópicos permite visualizar os conteúdos matemáticos
-  cadastrados no banco de dados.
+              Tópicos permite visualizar os conteúdos matemáticos
+              cadastrados no banco de dados.
 
-  <br />
-  <br />
+              <br />
+              <br />
 
-  Questões possibilita consultar as questões de matemática
-  disponíveis através da API.
+              Questões possibilita consultar as questões de matemática
+              disponíveis através da API.
 
-  <br />
-  <br />
+              <br />
+              <br />
 
-  Pesquisa e Prova oferece ferramentas para filtrar questões
-  e criar listas de estudo personalizadas.
+              Pesquisa e Prova oferece ferramentas para filtrar questões
+              e criar listas de estudo personalizadas.
 
-  <br />
-  <br />
+              <br />
+              <br />
 
-  Dessa forma, a tela inicial funciona como um painel de acesso rápido às
-  principais funcionalidades do sistema.
-</p>
+              Dessa forma, a tela inicial funciona como um painel de acesso rápido às
+              principais funcionalidades do sistema.
+            </p>
 
             <img
               className={styles.login}
@@ -102,6 +115,7 @@ export default function ComoFunciona() {
           </div>
         </article>
 
+        {/* Item 2: Questões */}
         <article onClick={() => toggle(2)}>
           <div className={styles.header}>
             <strong>02</strong>
@@ -116,6 +130,7 @@ export default function ComoFunciona() {
             />
           </div>
 
+          {/* Conteúdo expansível - só aparece se aberto === 2 */}
           <div
             className={`${styles.conteudo} ${
               aberto === 2 ? styles.aberto : ""
@@ -126,7 +141,7 @@ export default function ComoFunciona() {
               <br />
               O principal sistema da plataforma permite pesquisar questões por
               palavras-chave e aplicar filtros específicos.
-             
+
               <br />
               <br />
 
@@ -136,10 +151,10 @@ export default function ComoFunciona() {
               encontrar questões específicas rapidamente.
 
               <img
-              className={styles.busca}
-              src={busca}
-              alt="Tela de busca"
-            />
+                className={styles.busca}
+                src={busca}
+                alt="Tela de busca"
+              />
               <br />
               <br />
 
@@ -157,10 +172,10 @@ export default function ComoFunciona() {
               Isso ajuda a localizar exatamente o conteúdo desejado.
 
               <img
-              className={styles.filtro}
-              src={filtro}
-              alt="Tela de filtro"
-            />
+                className={styles.filtro}
+                src={filtro}
+                alt="Tela de filtro"
+              />
               <br />
               <br />
 
@@ -179,10 +194,10 @@ export default function ComoFunciona() {
               • Alternativas
 
               <img
-              className={styles.lk}
-              src={lk}
-              alt="Tela de ok"
-            />
+                className={styles.lk}
+                src={lk}
+                alt="Tela de ok"
+              />
               <br />
               <br />
 
@@ -191,18 +206,18 @@ export default function ComoFunciona() {
               Clique em Mostrar resposta e explicação para visualizar a resposta
               correta e entender a resolução da questão.
               <img
-              className={styles.antesr}
-              src={antesr}
-              alt="Tela de antes da resposta"
-            />
+                className={styles.antesr}
+                src={antesr}
+                alt="Tela de antes da resposta"
+              />
 
-            e depois de clicar:
-            <img
-              className={styles.depoisr}
-              src={depoisr}
-              alt="Tela de depois da resposta"
-            />
-              
+              e depois de clicar:
+              <img
+                className={styles.depoisr}
+                src={depoisr}
+                alt="Tela de depois da resposta"
+              />
+
               <br />
               <br />
 
@@ -212,79 +227,81 @@ export default function ComoFunciona() {
               quando desejar.
 
               <img
-              className={styles.pdf}
-              src={pdf}
-              alt="Tela de pdf"
-            />
+                className={styles.pdf}
+                src={pdf}
+                alt="Tela de pdf"
+              />
 
-            <br />
-<br />
+              <br />
+              <br />
 
-<strong>✅</strong>
-<br />
-O usuário pode selecionar individualmente as questões através das caixas de seleção presentes em cada card.
+              <strong>✅</strong>
+              <br />
+              O usuário pode selecionar individualmente as questões através das caixas de seleção presentes em cada card.
 
-<img
-  className={styles.indi}
-  src={indi}
-  alt="Selecionar questão individual"
-/>
+              <img
+                className={styles.indi}
+                src={indi}
+                alt="Selecionar questão individual"
+              />
 
-<br />
-<br />
+              <br />
+              <br />
 
-<strong>☑️</strong>
-<br />
-Também é possível utilizar a opção Selecionar Todas para marcar automaticamente todas as questões exibidas nos resultados da pesquisa.
+              <strong>☑️</strong>
+              <br />
+              Também é possível utilizar a opção Selecionar Todas para marcar automaticamente todas as questões exibidas nos resultados da pesquisa.
 
-<img
-  className={styles.selet}
-  src={selet}
-  alt="Selecionar todas as questões"
-/>
+              <img
+                className={styles.selet}
+                src={selet}
+                alt="Selecionar todas as questões"
+              />
 
-<br />
-<br />
+              <br />
+              <br />
 
-<strong>📑</strong>
-<br />
-Após selecionar uma ou mais questões, o sistema permite gerar um único arquivo PDF contendo todas as questões escolhidas.
+              <strong>📑</strong>
+              <br />
+              Após selecionar uma ou mais questões, o sistema permite gerar um único arquivo PDF contendo todas as questões escolhidas.
 
-<img
-  className={styles.pdf}
-  src={pdf}
-  alt="Baixar questões selecionadas"
-/>
+              <img
+                className={styles.pdf}
+                src={pdf}
+                alt="Baixar questões selecionadas"
+              />
 
-<br />
-<br />
+              <br />
+              <br />
 
-<strong>🗑️</strong>
-<br />
-Caso necessário, o usuário pode utilizar a opção Limpar Seleção para desmarcar rapidamente todas as questões selecionadas.
+              <strong>🗑️</strong>
+              <br />
+              Caso necessário, o usuário pode utilizar a opção Limpar Seleção para desmarcar rapidamente todas as questões selecionadas.
 
-<img
-  className={styles.limpa}
-  src={limpa}
-  alt="Limpar seleção"
-/>
+              <img
+                className={styles.limpa}
+                src={limpa}
+                alt="Limpar seleção"
+              />
 
-<br />
-<br />
+              <br />
+              <br />
 
-<strong>🔄</strong>
-<br />
-O botão Limpar remove todos os filtros aplicados e restaura a listagem completa de questões cadastradas na plataforma.
+              <strong>🔄</strong>
+              <br />
+              O botão Limpar remove todos os filtros aplicados e restaura a listagem completa de questões cadastradas na plataforma.
 
-<img
-  className={styles.limpa}
-  src={limpa}
-  alt="Limpar filtros"
-/>  </p>
+              <img
+                className={styles.limpa}
+                src={limpa}
+                alt="Limpar filtros"
+              />
+            </p>
           </div>
         </article>
 
 
+        {/* Item 3: Estudo */}
         <article onClick={() => toggle(3)}>
           <div className={styles.header}>
             <strong>03</strong>
@@ -299,6 +316,7 @@ O botão Limpar remove todos os filtros aplicados e restaura a listagem completa
             />
           </div>
 
+          {/* Conteúdo expansível - só aparece se aberto === 3 */}
           <div
             className={`${styles.conteudo} ${
               aberto === 3 ? styles.aberto : ""

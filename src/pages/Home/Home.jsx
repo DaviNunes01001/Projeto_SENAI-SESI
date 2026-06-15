@@ -1,11 +1,15 @@
 
 import styles from "./Home.module.css";
 
+// Componente: Home - Página inicial/landing page
+// O que faz: Exibe apresentação do projeto, principais recursos e características
+// Como: Renderiza seção hero com descritivo e grid de cards informativos
+// Por que: Primeira página que usuário vê, apresenta valor do projeto
 export default function Home() {
-
 
   return (
     <main className={styles.page}>
+      {/* Seção hero com title e descrição principal */}
       <section className={styles.hero}>
         <h1>Estude Matemática com questões organizadas</h1>
         <p>
@@ -13,37 +17,41 @@ export default function Home() {
         </p>
       </section>
 
+      {/* Seção com grid de cards sobre funcionalidades */}
       <section className={styles.section}>
 
-
         <div className={styles.grid}>
+          {/* Card: Tópicos */}
           <article className={styles.card}>
             <h2>Tópicos</h2>
             <p>O site tem como tematica central, o estudo de geometria espacial com foco em pirâmides, assim como cobrado no ENEM e em outros vestibulares.</p>
           </article>
 
+          {/* Card: Questões */}
           <article className={styles.card}>
             <h2>Questões</h2>
             <p>Consulte nossa aba de questões disponíveis pela API, com mais de 30 questôes sobre geometria!</p>
           </article>
 
+          {/* Card: Pesquisa e prova */}
           <article className={styles.card}>
             <h2>Pesquisa e prova</h2>
             <p>Filtre questões e monte listas de estudo.</p>
           </article>
 
-          
+          {/* Card: Vantagem */}
           <article className={styles.card}>
             <h2>Vantagem</h2>
             <p>Melhore, aprenda e se destaque!</p>
           </article>
-          
-          
+
+          {/* Card: Profissionais */}
           <article className={styles.card}>
             <h2>Profissionais</h2>
             <p>Veja as questões corrigidas passo a passo, com comentários detalhados feitos por nossos profissionais.</p>
           </article>
 
+          {/* Card: Facilidade */}
           <article className={styles.card}>
             <h2>Facilidade</h2>
             <p>Um site simples e de fácil utilização para todos!.</p>
