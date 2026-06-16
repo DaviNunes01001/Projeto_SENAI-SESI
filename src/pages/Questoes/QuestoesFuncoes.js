@@ -4,6 +4,7 @@ const MARGEM = 15;
 const LARGURA_TEXTO = 180;
 const Y_INICIAL = 20;
 const LIMITE_PAGINA = 275;
+const ANO_INICIAL_FILTRO = 2010;
 
 export function getRespostaCorreta(questao) {
   return questao.alternativas?.find((alternativa) => alternativa.correta) || null;
@@ -77,7 +78,17 @@ export function formatarVestibular(vestibular) {
 }
 
 export function getAnosDisponiveis(anos) {
-  return [...new Set(anos.map((item) => item.ano).filter(Boolean))];
+  const anoAtual = new Date().getFullYear();
+  const totalAnosPadrao = Math.max(0, anoAtual - ANO_INICIAL_FILTRO + 1);
+  const anosPadrao = Array.from(
+    { length: totalAnosPadrao },
+    (_, index) => anoAtual - index,
+  );
+  const anosApi = anos
+    .map((item) => Number(item.ano))
+    .filter((ano) => Number.isInteger(ano) && ano > 0);
+
+  return [...new Set([...anosApi, ...anosPadrao])].sort((a, b) => b - a);
 }
 
 export function getIdsDisponiveis(ids) {
@@ -114,7 +125,8 @@ export function getFormularioQuestaoVazio() {
     enunciado: "",
     explicacao: "",
     subtopico_id: "1",
-    vestibular_id: "1",
+    vestibular_id: "",
+    ano: "",
     avaliacao_id: "1",
     tipo: "base",
     conteudo: "",
@@ -127,7 +139,8 @@ export function montarFormularioQuestao(questao) {
     enunciado: questao.enunciado || "",
     explicacao: questao.explicacao || "",
     subtopico_id: String(questao.subtopico_id || questao.topicoid || "1"),
-    vestibular_id: String(questao.vestibular_id || "1"),
+    vestibular_id: String(questao.vestibular_id || ""),
+    ano: String(questao.ano || ""),
     avaliacao_id: String(questao.avaliacao_id || "1"),
     tipo: questao.tipo || "base",
     conteudo: questao.conteudo || "",
@@ -152,6 +165,7 @@ function montarDadosFormularioQuestao(formulario) {
     explicacao: limparTexto(formulario.explicacao),
     subtopico_id: limparNumero(formulario.subtopico_id),
     vestibular_id: limparNumero(formulario.vestibular_id),
+    ano: limparNumero(formulario.ano),
     avaliacao_id: limparNumero(formulario.avaliacao_id),
     tipo: limparTexto(formulario.tipo),
     conteudo: limparTexto(formulario.conteudo) || enunciado,
