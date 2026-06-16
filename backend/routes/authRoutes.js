@@ -57,7 +57,6 @@ router.post("/login", (req, res) => {
       perfil: usuario.perfil,
     },
     process.env.JWT_SECRET,
-    { expiresIn: "1h" },
   );
 
   return res.json({
