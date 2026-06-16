@@ -1,8 +1,8 @@
-import useApi from "../../hooks/useApi";
+
 import styles from "./Home.module.css";
 
 export default function Home() {
-  const { data, loading, error } = useApi("/api/");
+
 
   return (
     <main className={styles.page}>
@@ -14,31 +14,39 @@ export default function Home() {
       </section>
 
       <section className={styles.section}>
-        <article className={styles.backendCard}>
-          <h2>Status do backend</h2>
 
-          {loading && <p>Conectando...</p>}
-          {error && <p className={styles.error}>{error}</p>}
-
-          {!loading && !error && (
-            <p>{data[0]?.mensagem || "Backend conectado com sucesso."}</p>
-          )}
-        </article>
 
         <div className={styles.grid}>
           <article className={styles.card}>
             <h2>Tópicos</h2>
-            <p>Veja conteúdos matemáticos cadastrados no banco de dados.</p>
+            <p>O site tem como tematica central, o estudo de geometria espacial com foco em pirâmides, assim como cobrado no ENEM e em outros vestibulares.</p>
           </article>
 
           <article className={styles.card}>
             <h2>Questões</h2>
-            <p>Consulte questões disponíveis pela API.</p>
+            <p>Consulte nossa aba de questões disponíveis pela API, com mais de 30 questôes sobre geometria!</p>
           </article>
 
           <article className={styles.card}>
             <h2>Pesquisa e prova</h2>
             <p>Filtre questões e monte listas de estudo.</p>
+          </article>
+
+          
+          <article className={styles.card}>
+            <h2>Vantagem</h2>
+            <p>Melhore, aprenda e se destaque!</p>
+          </article>
+          
+          
+          <article className={styles.card}>
+            <h2>Profissionais</h2>
+            <p>Veja as questões corrigidas passo a passo, com comentários detalhados feitos por nossos profissionais.</p>
+          </article>
+
+          <article className={styles.card}>
+            <h2>Facilidade</h2>
+            <p>Um site simples e de fácil utilização para todos!.</p>
           </article>
         </div>
       </section>

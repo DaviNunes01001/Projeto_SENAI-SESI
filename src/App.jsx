@@ -7,7 +7,9 @@ import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import Questoes from "./pages/Questoes/Questoes";
 
-import { isAuthenticated } from "./hooks/auth";
+import { isAuthenticated, logout } from "./hooks/auth";
+
+const rotasProtegidas = ["/", "/questoes", "/funcionamento"];
 
 function getCurrentPath() {
   return window.location.pathname || "/";
@@ -15,6 +17,7 @@ function getCurrentPath() {
 
 function App() {
   const [currentPath, setCurrentPath] = useState(getCurrentPath);
+  const [usuarioLogado, setUsuarioLogado] = useState(isAuthenticated);
 
   useEffect(() => {
     const handlePopState = () => setCurrentPath(getCurrentPath());
@@ -26,24 +29,16 @@ function App() {
     };
   }, []);
 
-   useEffect(() => {
-    const rotasProtegidas = ["/", "/questoes", "/funcionamento"];
-
-    if (
-      rotasProtegidas.includes(currentPath) &&
-      !isAuthenticated()
-    ) {
-      window.history.pushState({}, "", "/login");
-      setCurrentPath("/login");
+  useEffect(() => {
+    if (rotasProtegidas.includes(currentPath) && !usuarioLogado) {
+      window.history.replaceState({}, "", "/login");
     }
-  }, [currentPath]);
+  }, [currentPath, usuarioLogado]);
 
   function handleNavigate(event, href) {
     event.preventDefault();
 
-    const rotasProtegidas = ["/", "/questoes", "/funcionamento"];
-
-    if (rotasProtegidas.includes(href) && !isAuthenticated()) {
+    if (rotasProtegidas.includes(href) && !usuarioLogado) {
       window.history.pushState({}, "", "/login");
       setCurrentPath("/login");
       return;
@@ -53,23 +48,44 @@ function App() {
     setCurrentPath(href);
   }
 
-    const pages = {
+  function handleLogin() {
+    setUsuarioLogado(true);
+    window.history.pushState({}, "", "/");
+    setCurrentPath("/");
+  }
+
+  function handleLogout(event) {
+    event.preventDefault();
+    logout();
+    setUsuarioLogado(false);
+    window.history.pushState({}, "", "/login");
+    setCurrentPath("/login");
+  }
+
+  const pathPermitido =
+    rotasProtegidas.includes(currentPath) && !usuarioLogado
+      ? "/login"
+      : currentPath;
+
+  const pages = {
     "/": <Home />,
-    "/login": <Login setCurrentPath={setCurrentPath} />,
+    "/login": <Login onLogin={handleLogin} />,
     "/questoes": <Questoes />,
     "/funcionamento": <ComoFunciona />,
   };
 
   return (
     <>
-      {currentPath !== "/login" && (
+      {pathPermitido !== "/login" && (
         <Header
-          currentPath={currentPath}
+          currentPath={pathPermitido}
+          isLoggedIn={usuarioLogado}
+          onLogout={handleLogout}
           onNavigate={handleNavigate}
         />
       )}
 
-      {pages[currentPath] || <NotFound />}
+      {pages[pathPermitido] || <NotFound />}
     </>
   );
 }

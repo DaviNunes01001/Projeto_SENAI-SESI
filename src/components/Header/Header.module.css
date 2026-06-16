@@ -49,13 +49,13 @@
     padding: 10px 18px;
     border-radius: 999px;
     color: #ffffff;
-    background: #006400;
+    background: #e10000;
 }
 
 .loginLink:hover,
 .loginLink.active {
     color: #ffffff;
-    background: #004d00;
+    background: #b40000;
 }
 
 @media (max-width: 720px) {

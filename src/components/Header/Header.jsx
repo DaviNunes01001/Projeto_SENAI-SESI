@@ -4,10 +4,12 @@ const navItems = [
   { href: "/", label: "Home" },
   { href: "/funcionamento", label: "Como funciona" },
   { href: "/questoes", label: "Questões" },
-  { href: "/login", label: "Login" },
 ];
 
-export default function Header({ currentPath, onNavigate }) {
+export default function Header({ currentPath, isLoggedIn, onLogout, onNavigate }) {
+  const authLabel = isLoggedIn ? "Sair" : "Login";
+  const handleAuthClick = isLoggedIn ? onLogout : onNavigate;
+
   return (
     <header className={styles.header}>
       <a
@@ -26,11 +28,21 @@ export default function Header({ currentPath, onNavigate }) {
             onClick={(event) => onNavigate(event, item.href)}
             className={`${styles.navLink} ${
               currentPath === item.href ? styles.active : ""
-            } ${item.href === "/login" ? styles.loginLink : ""}`}
+            }`}
           >
             {item.label}
           </a>
         ))}
+
+        <a
+          href="/login"
+          onClick={(event) => handleAuthClick(event, "/login")}
+          className={`${styles.navLink} ${styles.loginLink} ${
+            currentPath === "/login" && !isLoggedIn ? styles.active : ""
+          }`}
+        >
+          {authLabel}
+        </a>
       </nav>
     </header>
   );

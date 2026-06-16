@@ -1,116 +1,79 @@
-import jsPDF from "jspdf";
 import { useState } from "react";
+import { isProfessor } from "../../hooks/auth";
 import useApi from "../../hooks/useApi";
 import styles from "./Questoes.module.css";
+import {
+  alternarItemSelecionado,
+  deletarQuestaoProfessor,
+  formatarVestibular,
+  gerarPdfQuestao,
+  gerarPdfQuestoesSelecionadas,
+  getAnosDisponiveis,
+  getEnunciadoLimpo,
+  getFormularioQuestaoVazio,
+  getIdsDisponiveis,
+  getQuestoesSelecionadasVisiveis,
+  getRespostaCorreta,
+  getVestibularesDisponiveis,
+  montarFormularioQuestao,
+  montarUrlQuestoes,
+  salvarQuestaoProfessor,
+  selecionarTodasQuestoes,
+} from "./QuestoesFuncoes";
 
-function getRespostaCorreta(questao) {
-  return questao.alternativas?.find((alternativa) => alternativa.correta);
-}
-
-function escapeRegExp(texto) {
-  return String(texto).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-function getEnunciadoLimpo(questao) {
-  const texto = questao.enunciado?.trim() || "";
-  const alternativas = questao.alternativas || [];
-  const primeiraLetra = alternativas[0]?.letra;
-
-  if (!texto || !primeiraLetra) {
-    return texto;
-  }
-
-  const primeiroMarcador = new RegExp(
-    `\\s+${escapeRegExp(primeiraLetra)}[\\).]\\s+`,
-    "i",
-  );
-  const inicioAlternativas = texto.search(primeiroMarcador);
-
-  if (inicioAlternativas < 0) {
-    return texto;
-  }
-
-  const trechoAlternativas = texto.slice(inicioAlternativas);
-  const totalMarcadores = alternativas.reduce((total, alternativa) => {
-    if (!alternativa.letra) {
-      return total;
-    }
-
-    const marcador = new RegExp(
-      `(^|\\s)${escapeRegExp(alternativa.letra)}[\\).]\\s+`,
-      "i",
-    );
-
-    return marcador.test(trechoAlternativas) ? total + 1 : total;
-  }, 0);
-
-  if (totalMarcadores < Math.min(2, alternativas.length)) {
-    return texto;
-  }
-
-  return texto.slice(0, inicioAlternativas).trim();
-}
-
-function montarUrlQuestoes(busca, nivel, ano, questaoId) {
-  const params = new URLSearchParams();
-  const termo = busca.trim();
-  const anoFiltro = ano.trim();
-  const idFiltro = questaoId.trim();
-
-  if (termo) {
-    params.set("q", termo);
-  }
-
-  if (nivel) {
-    params.set("nivel", nivel);
-  }
-
-  if (anoFiltro) {
-    params.set("ano", anoFiltro);
-  }
-
-  if (idFiltro) {
-    params.set("id", idFiltro);
-  }
-
-  const query = params.toString();
-  return query ? `/api/questoes?${query}` : "/api/questoes";
-}
+const filtrosIniciais = {
+  busca: "",
+  questaoId: "",
+  vestibularId: "",
+  nivel: "",
+  ano: "",
+};
 
 export default function Questoes() {
-  const [busca, setBusca] = useState("");
-  const [questaoId, setQuestaoId] = useState("");
-  const [nivel, setNivel] = useState("");
-  const [ano, setAno] = useState("");
+  const [filtros, setFiltros] = useState(filtrosIniciais);
   const [questaoAberta, setQuestaoAberta] = useState(null);
   const [questoesSelecionadas, setQuestoesSelecionadas] = useState([]);
+  const [modoFormulario, setModoFormulario] = useState("");
+  const [formularioQuestao, setFormularioQuestao] = useState(
+    getFormularioQuestaoVazio,
+  );
+  const [salvandoQuestao, setSalvandoQuestao] = useState(false);
   const { data: questoes, loading, error, reload } = useApi("/api/questoes");
-  const { data: anos } = useApi("/api/questoes/anos");
-  const { data: ids } = useApi("/api/questoes/ids");
-  const anosDisponiveis = [
-    ...new Set(anos.map((item) => item.ano).filter(Boolean)),
-  ];
-  const idsDisponiveis = [...new Set(ids.map((item) => item.id))];
-  const questoesSelecionadasVisiveis = questoes.filter((questao) =>
-    questoesSelecionadas.includes(questao.id),
+  const { data: anos, reload: reloadAnos } = useApi("/api/questoes/anos");
+  const { data: ids, reload: reloadIds } = useApi("/api/questoes/ids");
+  const { data: vestibulares, reload: reloadVestibulares } = useApi(
+    "/api/questoes/vestibulares",
+  );
+  const anosDisponiveis = getAnosDisponiveis(anos);
+  const idsDisponiveis = getIdsDisponiveis(ids);
+  const vestibularesDisponiveis = getVestibularesDisponiveis(vestibulares);
+  const questoesSelecionadasVisiveis = getQuestoesSelecionadasVisiveis(
+    questoes,
+    questoesSelecionadas,
   );
   const todasQuestoesSelecionadas =
     questoes.length > 0 && questoesSelecionadasVisiveis.length === questoes.length;
+  const temFiltroAtivo = Object.values(filtros).some(Boolean);
+  const professor = isProfessor();
+
+  function atualizarFiltro(nome, valor) {
+    setFiltros((atuais) => ({ ...atuais, [nome]: valor }));
+  }
+
+  function limparResultadoAtual() {
+    setQuestaoAberta(null);
+    setQuestoesSelecionadas([]);
+  }
 
   function pesquisarQuestoes(event) {
     event.preventDefault();
-    setQuestaoAberta(null);
-    setQuestoesSelecionadas([]);
-    reload(montarUrlQuestoes(busca, nivel, ano, questaoId));
+    limparResultadoAtual();
+    reload(montarUrlQuestoes(filtros));
   }
 
   function limparBusca() {
-    setBusca("");
-    setQuestaoId("");
-    setNivel("");
-    setAno("");
-    setQuestaoAberta(null);
-    setQuestoesSelecionadas([]);
+    setFiltros(filtrosIniciais);
+    limparResultadoAtual();
     reload("/api/questoes");
   }
 
@@ -119,171 +82,81 @@ export default function Questoes() {
   }
 
   function alternarSelecaoQuestao(id) {
-    setQuestoesSelecionadas((atuais) =>
-      atuais.includes(id)
-        ? atuais.filter((questaoIdSelecionada) => questaoIdSelecionada !== id)
-        : [...atuais, id],
-    );
+    setQuestoesSelecionadas((atuais) => alternarItemSelecionado(atuais, id));
   }
 
   function alternarTodasQuestoes() {
     setQuestoesSelecionadas(
-      todasQuestoesSelecionadas ? [] : questoes.map((questao) => questao.id),
+      selecionarTodasQuestoes(questoes, todasQuestoesSelecionadas),
     );
   }
 
-  function gerarPdfQuestao(questao) {
-    const pdf = new jsPDF();
-    const margem = 15;
-    const larguraTexto = 180;
-    let y = 20;
-
-    function escreverTitulo(texto) {
-      pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(13);
-      pdf.text(texto, margem, y);
-      y += 8;
-    }
-
-    function escreverTexto(texto) {
-      pdf.setFont("helvetica", "normal");
-      pdf.setFontSize(11);
-      const linhas = pdf.splitTextToSize(texto, larguraTexto);
-      pdf.text(linhas, margem, y);
-      y += linhas.length * 7 + 5;
-    }
-
-    function garantirEspaco() {
-      if (y > 260) {
-        pdf.addPage();
-        y = 20;
-      }
-    }
-
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(18);
-    pdf.text("Questão de Matemática", margem, y);
-    y += 14;
-
-    escreverTitulo("Vestibular:");
-    escreverTexto(
-      `${questao.vestibular || " Não informado "}${
-        questao.ano ? ` - ${questao.ano}` : " "
-      }`,
-    );
-
-    escreverTitulo("Enunciado:");
-    escreverTexto(getEnunciadoLimpo(questao) || "Enunciado não informado.");
-
-    if (questao.alternativas?.length) {
-      escreverTitulo("Alternativas:");
-
-      questao.alternativas.forEach((alternativa) => {
-        garantirEspaco();
-        escreverTexto(`${alternativa.letra}) ${alternativa.texto}`);
-      });
-    }
-
-    garantirEspaco();
-    escreverTitulo("Resposta:");
-
-    const respostaCorreta = getRespostaCorreta(questao);
-    escreverTexto(
-      respostaCorreta
-        ? `${respostaCorreta.letra}) ${respostaCorreta.texto}`
-        : "Resposta não cadastrada.",
-    );
-
-    garantirEspaco();
-    escreverTitulo("Explicação:");
-    escreverTexto(questao.explicacao || "Explicação não cadastrada.");
-
-    pdf.save(`questao-${questao.id || "matematica"}.pdf`);
+  function atualizarCampoQuestao(nome, valor) {
+    setFormularioQuestao((atual) => ({ ...atual, [nome]: valor }));
   }
 
-  function gerarPdfQuestoesSelecionadas() {
-    const questoesParaPdf = questoesSelecionadasVisiveis;
+  function abrirFormularioAdicionar() {
+    setModoFormulario("adicionar");
+    setFormularioQuestao(getFormularioQuestaoVazio());
+  }
 
-    if (questoesParaPdf.length === 0) {
+  function abrirFormularioAtualizar(questao) {
+    setModoFormulario("atualizar");
+    setFormularioQuestao(montarFormularioQuestao(questao));
+  }
+
+  function fecharFormularioQuestao() {
+    setModoFormulario("");
+    setFormularioQuestao(getFormularioQuestaoVazio());
+  }
+
+  async function recarregarDadosQuestoes() {
+    await Promise.all([
+      reload(montarUrlQuestoes(filtros)),
+      reloadAnos(),
+      reloadIds(),
+      reloadVestibulares(),
+    ]);
+  }
+
+  async function salvarFormularioQuestao(event) {
+    event.preventDefault();
+    setSalvandoQuestao(true);
+
+    try {
+      await salvarQuestaoProfessor(modoFormulario, formularioQuestao);
+      await recarregarDadosQuestoes();
+      fecharFormularioQuestao();
+      alert("Questão salva com sucesso.");
+    } catch (erro) {
+      alert(erro.message);
+    } finally {
+      setSalvandoQuestao(false);
+    }
+  }
+
+  async function deletarQuestao(questao) {
+    const confirmou = window.confirm(`Deseja deletar a questão ${questao.id}?`);
+
+    if (!confirmou) {
       return;
     }
 
-    const pdf = new jsPDF();
-    const margem = 15;
-    const larguraTexto = 180;
-    let y = 20;
+    setSalvandoQuestao(true);
 
-    function garantirEspaco(altura = 14) {
-      if (y + altura > 275) {
-        pdf.addPage();
-        y = 20;
-      }
-    }
-
-    function escreverTitulo(texto) {
-      garantirEspaco(12);
-      pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(13);
-      pdf.text(texto, margem, y);
-      y += 8;
-    }
-
-    function escreverTexto(texto) {
-      pdf.setFont("helvetica", "normal");
-      pdf.setFontSize(11);
-      const linhas = pdf.splitTextToSize(String(texto), larguraTexto);
-      garantirEspaco(linhas.length * 7 + 5);
-      pdf.text(linhas, margem, y);
-      y += linhas.length * 7 + 5;
-    }
-
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(18);
-    pdf.text("Questões de Matemática", margem, y);
-    y += 14;
-
-    questoesParaPdf.forEach((questao, index) => {
-      garantirEspaco(28);
-      pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(15);
-      pdf.text(`Questão ${index + 1} - ID ${questao.id}`, margem, y);
-      y += 10;
-
-      escreverTitulo("Vestibular:");
-      escreverTexto(
-        `${questao.vestibular || "Não informado"}${
-          questao.ano ? ` - ${questao.ano}` : ""
-        }`,
+    try {
+      await deletarQuestaoProfessor(questao.id);
+      setQuestaoAberta((atual) => (atual === questao.id ? null : atual));
+      setQuestoesSelecionadas((atuais) =>
+        atuais.filter((id) => id !== questao.id),
       );
-
-      escreverTitulo("Enunciado:");
-      escreverTexto(getEnunciadoLimpo(questao) || "Enunciado não informado.");
-
-      if (questao.alternativas?.length) {
-        escreverTitulo("Alternativas:");
-
-        questao.alternativas.forEach((alternativa) => {
-          escreverTexto(`${alternativa.letra}) ${alternativa.texto}`);
-        });
-      }
-
-      const respostaCorreta = getRespostaCorreta(questao);
-      escreverTitulo("Resposta:");
-      escreverTexto(
-        respostaCorreta
-          ? `${respostaCorreta.letra}) ${respostaCorreta.texto}`
-          : "Resposta não cadastrada.",
-      );
-
-      escreverTitulo("Explicação:");
-      escreverTexto(questao.explicacao || "Explicação não cadastrada.");
-
-      if (index < questoesParaPdf.length - 1) {
-        y += 4;
-      }
-    });
-
-    pdf.save(`questoes-matematica-${questoesParaPdf.length}.pdf`);
+      await recarregarDadosQuestoes();
+      alert("Questão deletada com sucesso.");
+    } catch (erro) {
+      alert(erro.message);
+    } finally {
+      setSalvandoQuestao(false);
+    }
   }
 
   return (
@@ -293,21 +166,21 @@ export default function Questoes() {
 
         <h1>Questões de Matemática</h1>
 
-        <p>Pesquise questões cadastradas no banco de dados pelo enunciado.</p>
+        <p>Pesquise questões cadastradas no banco de dados pelo enunciado, vestibular, ano ou nível.</p>
 
         <form className={styles.searchForm} onSubmit={pesquisarQuestoes}>
           <input
             type="text"
             placeholder="Pesquisar por enunciado..."
-            value={busca}
-            onChange={(event) => setBusca(event.target.value)}
+            value={filtros.busca}
+            onChange={(event) => atualizarFiltro("busca", event.target.value)}
           />
 
           <label className={styles.levelFilter}>
             <span>ID</span>
             <select
-              value={questaoId}
-              onChange={(event) => setQuestaoId(event.target.value)}
+              value={filtros.questaoId}
+              onChange={(event) => atualizarFiltro("questaoId", event.target.value)}
             >
               <option value="">Todos</option>
               {idsDisponiveis.map((idDisponivel) => (
@@ -319,10 +192,27 @@ export default function Questoes() {
           </label>
 
           <label className={styles.levelFilter}>
+            <span>Vestibular</span>
+            <select
+              value={filtros.vestibularId}
+              onChange={(event) =>
+                atualizarFiltro("vestibularId", event.target.value)
+              }
+            >
+              <option value="">Todos</option>
+              {vestibularesDisponiveis.map((vestibular) => (
+                <option key={vestibular.id} value={vestibular.id}>
+                  {formatarVestibular(vestibular)}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className={styles.levelFilter}>
             <span>Nível</span>
             <select
-              value={nivel}
-              onChange={(event) => setNivel(event.target.value)}
+              value={filtros.nivel}
+              onChange={(event) => atualizarFiltro("nivel", event.target.value)}
             >
               <option value="">Todos</option>
               <option value="base">Base</option>
@@ -334,8 +224,8 @@ export default function Questoes() {
           <label className={styles.levelFilter}>
             <span>Ano</span>
             <select
-              value={ano}
-              onChange={(event) => setAno(event.target.value)}
+              value={filtros.ano}
+              onChange={(event) => atualizarFiltro("ano", event.target.value)}
             >
               <option value="">Todos</option>
               {anosDisponiveis.map((anoDisponivel) => (
@@ -348,7 +238,7 @@ export default function Questoes() {
 
           <button type="submit">Buscar</button>
 
-          {(busca || questaoId || nivel || ano) && (
+          {temFiltroAtivo && (
             <button
               type="button"
               className={styles.clearButton}
@@ -358,6 +248,150 @@ export default function Questoes() {
             </button>
           )}
         </form>
+
+        {professor && (
+          <section className={styles.professorPanel}>
+            <div className={styles.professorPanelHeader}>
+              <div>
+                <span>Área do professor</span>
+                <h2>Gerenciar questões</h2>
+              </div>
+
+              <button type="button" onClick={abrirFormularioAdicionar}>
+                Adicionar questão
+              </button>
+            </div>
+
+            {modoFormulario && (
+              <form
+                className={styles.professorForm}
+                onSubmit={salvarFormularioQuestao}
+              >
+                <div className={styles.professorFormHeader}>
+                  <h3>
+                    {modoFormulario === "adicionar"
+                      ? "Adicionar questão"
+                      : `Atualizar questão ${formularioQuestao.id}`}
+                  </h3>
+
+                  <button
+                    type="button"
+                    className={styles.secondaryButton}
+                    onClick={fecharFormularioQuestao}
+                  >
+                    Fechar
+                  </button>
+                </div>
+
+                {modoFormulario === "atualizar" && (
+                  <label className={styles.formField}>
+                    <span>ID</span>
+                    <input type="number" value={formularioQuestao.id} disabled />
+                  </label>
+                )}
+
+                <label className={styles.formField}>
+                  <span>Enunciado</span>
+                  <textarea
+                    value={formularioQuestao.enunciado}
+                    onChange={(event) =>
+                      atualizarCampoQuestao("enunciado", event.target.value)
+                    }
+                    required={modoFormulario === "adicionar"}
+                  />
+                </label>
+
+                <label className={styles.formField}>
+                  <span>Explicação</span>
+                  <textarea
+                    value={formularioQuestao.explicacao}
+                    onChange={(event) =>
+                      atualizarCampoQuestao("explicacao", event.target.value)
+                    }
+                  />
+                </label>
+
+                <div className={styles.formGrid}>
+                  <label className={styles.formField}>
+                    <span>Subtópico ID</span>
+                    <input
+                      type="number"
+                      min="1"
+                      value={formularioQuestao.subtopico_id}
+                      onChange={(event) =>
+                        atualizarCampoQuestao("subtopico_id", event.target.value)
+                      }
+                      required={modoFormulario === "adicionar"}
+                    />
+                  </label>
+
+                  <label className={styles.formField}>
+                    <span>Vestibular ID</span>
+                    <input
+                      type="number"
+                      min="1"
+                      value={formularioQuestao.vestibular_id}
+                      onChange={(event) =>
+                        atualizarCampoQuestao("vestibular_id", event.target.value)
+                      }
+                    />
+                  </label>
+
+                  <label className={styles.formField}>
+                    <span>Avaliação ID</span>
+                    <input
+                      type="number"
+                      min="1"
+                      value={formularioQuestao.avaliacao_id}
+                      onChange={(event) =>
+                        atualizarCampoQuestao("avaliacao_id", event.target.value)
+                      }
+                    />
+                  </label>
+
+                  <label className={styles.formField}>
+                    <span>Tipo</span>
+                    <select
+                      value={formularioQuestao.tipo}
+                      onChange={(event) =>
+                        atualizarCampoQuestao("tipo", event.target.value)
+                      }
+                    >
+                      <option value="base">Base</option>
+                      <option value="vestibular">Vestibular</option>
+                    </select>
+                  </label>
+                </div>
+
+                <label className={styles.formField}>
+                  <span>Conteúdo</span>
+                  <input
+                    type="text"
+                    value={formularioQuestao.conteudo}
+                    onChange={(event) =>
+                      atualizarCampoQuestao("conteudo", event.target.value)
+                    }
+                    placeholder="Opcional"
+                  />
+                </label>
+
+                <div className={styles.professorFormActions}>
+                  <button type="submit" disabled={salvandoQuestao}>
+                    {salvandoQuestao ? "Salvando..." : "Salvar questão"}
+                  </button>
+
+                  <button
+                    type="button"
+                    className={styles.secondaryButton}
+                    onClick={fecharFormularioQuestao}
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </form>
+            )}
+          </section>
+        )}
       </section>
 
       <section className={styles.content}>
@@ -384,7 +418,9 @@ export default function Questoes() {
 
               <button
                 type="button"
-                onClick={gerarPdfQuestoesSelecionadas}
+                onClick={() =>
+                  gerarPdfQuestoesSelecionadas(questoesSelecionadasVisiveis)
+                }
                 disabled={questoesSelecionadasVisiveis.length === 0}
               >
                 Baixar selecionadas
@@ -479,6 +515,27 @@ export default function Questoes() {
                     >
                       Baixar PDF
                     </button>
+
+                    {professor && (
+                      <>
+                        <button
+                          type="button"
+                          className={styles.editButton}
+                          onClick={() => abrirFormularioAtualizar(questao)}
+                        >
+                          Atualizar
+                        </button>
+
+                        <button
+                          type="button"
+                          className={styles.deleteButton}
+                          onClick={() => deletarQuestao(questao)}
+                          disabled={salvandoQuestao}
+                        >
+                          Deletar
+                        </button>
+                      </>
+                    )}
                   </div>
 
                   {aberta && (

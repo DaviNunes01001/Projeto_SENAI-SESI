@@ -1,6 +1,6 @@
 import styles from "./Login.module.css";
 
-export default function Login({ setCurrentPath }) {
+export default function Login({ onLogin }) {
   async function handleSubmit(event) {
     event.preventDefault();
 
@@ -32,9 +32,9 @@ export default function Login({ setCurrentPath }) {
       }
 
       localStorage.setItem("token", data.token);
+      localStorage.setItem("usuario", JSON.stringify(data.usuario));
 
-      window.history.pushState({}, "", "/");
-      setCurrentPath("/");
+      onLogin();
     } catch (error) {
       console.error(error);
 

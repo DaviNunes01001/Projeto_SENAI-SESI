@@ -145,6 +145,135 @@
   background: #e5e7eb !important;
 }
 
+.professorPanel {
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid rgba(0, 100, 0, 0.2);
+  border-radius: 8px;
+  background: #f8fff9;
+}
+
+.professorPanelHeader,
+.professorFormHeader,
+.professorFormActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.professorPanelHeader span {
+  color: #006400;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.professorPanelHeader h2,
+.professorFormHeader h3 {
+  margin: 4px 0 0;
+  color: #111827;
+}
+
+.professorPanelHeader button,
+.professorFormActions button {
+  min-height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 8px;
+  color: #ffffff;
+  background: #006400;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    background 160ms ease;
+}
+
+.professorPanelHeader button:hover,
+.professorFormActions button:hover {
+  background: #004d00;
+  transform: translateY(-1px);
+}
+
+.professorForm {
+  margin-top: 16px;
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-top: 1px solid rgba(0, 100, 0, 0.16);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formField span {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.formField input,
+.formField select,
+.formField textarea {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  color: #111827;
+  background: #ffffff;
+  font: inherit;
+  outline: none;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.formField input,
+.formField select {
+  height: 44px;
+  padding: 0 12px;
+}
+
+.formField textarea {
+  min-height: 92px;
+  padding: 12px;
+  resize: vertical;
+}
+
+.formField input:focus,
+.formField select:focus,
+.formField textarea:focus {
+  border-color: #006400;
+  box-shadow: 0 0 0 3px rgba(0, 100, 0, 0.14);
+}
+
+.formField input:disabled {
+  color: #64748b;
+  background: #f1f5f9;
+  cursor: not-allowed;
+}
+
+.secondaryButton {
+  color: #374151 !important;
+  background: #f3f4f6 !important;
+  box-shadow: none !important;
+}
+
+.secondaryButton:hover {
+  background: #e5e7eb !important;
+}
+
 .content {
   margin-top: 10px;
 }
@@ -409,6 +538,35 @@
   background: #fee2e2;
 }
 
+.editButton {
+  color: #075985;
+  background: #e0f2fe;
+}
+
+.editButton:hover {
+  background: #bae6fd;
+}
+
+.deleteButton {
+  color: #ffffff;
+  background: #b91c1c;
+}
+
+.deleteButton:hover {
+  background: #991b1b;
+}
+
+.actions button:disabled,
+.professorFormActions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.actions button:disabled:hover,
+.professorFormActions button:disabled:hover {
+  transform: none;
+}
+
 .answerBox {
   flex: 1 0 100%;
   margin-top: 2px;
@@ -472,6 +630,22 @@
     width: 100%;
   }
 
+  .professorPanelHeader,
+  .professorFormHeader,
+  .professorFormActions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .professorPanelHeader button,
+  .professorFormActions button {
+    width: 100%;
+  }
+
+  .formGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .bulkSelect,
   .selectedCount,
   .downloadControls button {
@@ -525,6 +699,10 @@
   .downloadControls {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
   }
 
   .bulkSelect,

@@ -52,6 +52,18 @@ async function listarTodas(filtros = {}) {
     condicoes.push(`vestibular.ano = $${params.length}`);
   }
 
+  if (filtros.vestibularId) {
+    params.push(filtros.vestibularId);
+    condicoes.push(`q.vestibular_id = $${params.length}`);
+  }
+
+  if (filtros.vestibular) {
+    params.push(`%${filtros.vestibular}%`);
+    condicoes.push(
+      `unaccent(LOWER(vestibular.nome)) LIKE unaccent(LOWER($${params.length}))`
+    );
+  }
+
   if (filtros.id) {
     params.push(filtros.id);
     condicoes.push(`q.id = $${params.length}`);
@@ -122,6 +134,25 @@ async function listarIds() {
     SELECT id
     FROM questao
     ORDER BY id
+    `
+  );
+
+  return result.rows;
+}
+
+async function listarVestibulares() {
+  const result = await pool.query(
+    `
+    SELECT DISTINCT
+      vestibular.id,
+      vestibular.nome,
+      vestibular.ano,
+      vestibular.instituicao
+    FROM vestibular
+    INNER JOIN questao
+      ON questao.vestibular_id = vestibular.id
+    WHERE vestibular.nome IS NOT NULL
+    ORDER BY vestibular.nome ASC, vestibular.ano DESC, vestibular.id ASC
     `
   );
 
@@ -299,14 +330,29 @@ async function atualizar(id, dados) {
 }
 
 async function deletar(id) {
-  const result = await pool.query("DELETE FROM questao WHERE id = $1", [id]);
-  return result.rowCount > 0;
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+    await client.query("DELETE FROM alternativa WHERE questao_id = $1", [id]);
+
+    const result = await client.query("DELETE FROM questao WHERE id = $1", [id]);
+
+    await client.query("COMMIT");
+    return result.rowCount > 0;
+  } catch (erro) {
+    await client.query("ROLLBACK");
+    throw erro;
+  } finally {
+    client.release();
+  }
 }
 
 module.exports = {
   listarTodas,
   listarAnos,
   listarIds,
+  listarVestibulares,
   buscarPorId,
   criar,
   atualizar,

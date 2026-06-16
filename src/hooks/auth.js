@@ -1,11 +1,28 @@
 export function isAuthenticated() {
   const token = localStorage.getItem("token");
 
-  return !!token;
+  return !!token && !!getUsuarioLogado();
+}
+
+export function getUsuarioLogado() {
+  const usuario = localStorage.getItem("usuario");
+
+  if (!usuario) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(usuario);
+  } catch {
+    return null;
+  }
+}
+
+export function isProfessor() {
+  return getUsuarioLogado()?.perfil === "professor";
 }
 
 export function logout() {
   localStorage.removeItem("token");
-
-  window.location.href = "/login";
+  localStorage.removeItem("usuario");
 }
