@@ -326,15 +326,37 @@ export default function Questoes() {
                   </label>
 
                   <label className={styles.formField}>
-                    <span>Vestibular ID</span>
-                    <input
-                      type="number"
-                      min="1"
+                    <span>Vestibular</span>
+                    <select
                       value={formularioQuestao.vestibular_id}
                       onChange={(event) =>
                         atualizarCampoQuestao("vestibular_id", event.target.value)
                       }
-                    />
+                    >
+                      <option value="">Não informado</option>
+                      {vestibularesDisponiveis.map((vestibular) => (
+                        <option key={vestibular.id} value={vestibular.id}>
+                          {formatarVestibular(vestibular)}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className={styles.formField}>
+                    <span>Ano</span>
+                    <select
+                      value={formularioQuestao.ano}
+                      onChange={(event) =>
+                        atualizarCampoQuestao("ano", event.target.value)
+                      }
+                    >
+                      <option value="">Não informado</option>
+                      {anosDisponiveis.map((anoDisponivel) => (
+                        <option key={anoDisponivel} value={anoDisponivel}>
+                          {anoDisponivel}
+                        </option>
+                      ))}
+                    </select>
                   </label>
 
                   <label className={styles.formField}>

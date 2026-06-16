@@ -71,6 +71,10 @@ function obterId(valor) {
   return id > 0 ? id : null;
 }
 
+function temValor(valor) {
+  return valor !== undefined && valor !== null && String(valor).trim() !== "";
+}
+
 async function listarTodas(req, res) {
   try {
     const ano = obterAno(req.query.ano);
@@ -209,6 +213,7 @@ function montarDadosQuestao(body) {
   return {
     avaliacao_id: body.avaliacao_id,
     vestibular_id: body.vestibular_id,
+    ano: obterAno(body.ano),
     subtopico_id: body.subtopico_id,
     topicoid: body.topicoid,
     enunciado: body.enunciado,
@@ -225,6 +230,10 @@ function montarDadosQuestao(body) {
 async function criar(req, res) {
   try {
     const dados = montarDadosQuestao(req.body);
+
+    if (temValor(req.body.ano) && !dados.ano) {
+      return res.status(400).json({ mensagem: "Ano invalido" });
+    }
 
     if (!dados.enunciado || (!dados.subtopico_id && !dados.topicoid)) {
       return res.status(400).json({
@@ -245,15 +254,17 @@ async function criar(req, res) {
 async function atualizar(req, res) {
   try {
     const id = parseInt(req.params.id);
+    const dados = montarDadosQuestao(req.body);
 
     if (isNaN(id)) {
       return res.status(400).json({ mensagem: "ID invalido" });
     }
 
-    const atualizada = await questaoModel.atualizar(
-      id,
-      montarDadosQuestao(req.body)
-    );
+    if (temValor(req.body.ano) && !dados.ano) {
+      return res.status(400).json({ mensagem: "Ano invalido" });
+    }
+
+    const atualizada = await questaoModel.atualizar(id, dados);
 
     if (atualizada) {
       res.status(200).json(atualizada);
