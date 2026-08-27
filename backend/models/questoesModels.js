@@ -70,7 +70,37 @@ async function listarTodas(filtros = {}) {
   }
 
   let sql = `
-    select * from sqlBase
+    SELECT
+      q.id,
+      q.id AS idc,
+      q.subtopico_id AS topicoid,
+      q.avaliacao_id,
+      q.vestibular_id,
+      q.subtopico_id,
+      q.enunciado,
+      q.tipo,
+      q.conteudo,
+      q.bloco,
+      q.explicacao,
+      q.comentario_especialista,
+      q.link_explicacao,
+      q.link_explicacao AS link_bib,
+      avaliacao.nivel,
+      vestibular.nome AS vestibular,
+      vestibular.ano,
+      subtopico.nome AS topico,
+      alternativa.letra,
+      alternativa.texto,
+      alternativa.correta
+    FROM questao q
+    LEFT JOIN avaliacao
+      ON q.avaliacao_id = avaliacao.id
+    LEFT JOIN vestibular
+      ON q.vestibular_id = vestibular.id
+    LEFT JOIN subtopico
+      ON q.subtopico_id = subtopico.id
+    LEFT JOIN alternativa
+      ON q.id = alternativa.questao_id
   `;
 
   if (condicoes.length > 0) {
