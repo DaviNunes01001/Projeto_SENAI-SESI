@@ -36,14 +36,14 @@ async function listarTodas(filtros = {}) {
   if (filtros.busca) {
     params.push(`%${filtros.busca}%`);
     condicoes.push(
-      `unaccent(LOWER(q.enunciado)) LIKE unaccent(LOWER($${params.length}))`,
+      `unaccent(LOWER(q.enunciado)) LIKE unaccent(LOWER($${params.length}))`
     );
   }
 
   if (filtros.nivel) {
     params.push(filtros.nivel);
     condicoes.push(
-      `unaccent(LOWER(avaliacao.nivel)) = unaccent(LOWER($${params.length}))`,
+      `unaccent(LOWER(avaliacao.nivel)) = unaccent(LOWER($${params.length}))`
     );
   }
 
@@ -60,7 +60,7 @@ async function listarTodas(filtros = {}) {
   if (filtros.vestibular) {
     params.push(`%${filtros.vestibular}%`);
     condicoes.push(
-      `unaccent(LOWER(vestibular.nome)) LIKE unaccent(LOWER($${params.length}))`,
+      `unaccent(LOWER(vestibular.nome)) LIKE unaccent(LOWER($${params.length}))`
     );
   }
 
@@ -70,7 +70,37 @@ async function listarTodas(filtros = {}) {
   }
 
   let sql = `
-    select * from sqlBase
+    SELECT
+      q.id,
+      q.id AS idc,
+      q.subtopico_id AS topicoid,
+      q.avaliacao_id,
+      q.vestibular_id,
+      q.subtopico_id,
+      q.enunciado,
+      q.tipo,
+      q.conteudo,
+      q.bloco,
+      q.explicacao,
+      q.comentario_especialista,
+      q.link_explicacao,
+      q.link_explicacao AS link_bib,
+      avaliacao.nivel,
+      vestibular.nome AS vestibular,
+      vestibular.ano,
+      subtopico.nome AS topico,
+      alternativa.letra,
+      alternativa.texto,
+      alternativa.correta
+    FROM questao q
+    LEFT JOIN avaliacao
+      ON q.avaliacao_id = avaliacao.id
+    LEFT JOIN vestibular
+      ON q.vestibular_id = vestibular.id
+    LEFT JOIN subtopico
+      ON q.subtopico_id = subtopico.id
+    LEFT JOIN alternativa
+      ON q.id = alternativa.questao_id
   `;
 
   if (condicoes.length > 0) {
@@ -92,7 +122,7 @@ async function listarAnos() {
       ON questao.vestibular_id = vestibular.id
     WHERE vestibular.ano IS NOT NULL
     ORDER BY vestibular.ano DESC
-    `,
+    `
   );
 
   return result.rows;
@@ -104,7 +134,7 @@ async function listarIds() {
     SELECT id
     FROM questao
     ORDER BY id
-    `,
+    `
   );
 
   return result.rows;
@@ -123,7 +153,7 @@ async function listarVestibulares() {
       ON questao.vestibular_id = vestibular.id
     WHERE vestibular.nome IS NOT NULL
     ORDER BY vestibular.nome ASC, vestibular.ano DESC, vestibular.id ASC
-    `,
+    `
   );
 
   return result.rows;
@@ -144,7 +174,7 @@ async function buscarVestibularPorId(id, client) {
     FROM vestibular
     WHERE id = $1
     `,
-    [id],
+    [id]
   );
 
   return result.rows[0] || null;
@@ -165,7 +195,7 @@ async function buscarVestibularPorAno(ano, referencia, client) {
     ORDER BY id
     LIMIT 1
     `,
-    [nome, ano, instituicao],
+    [nome, ano, instituicao]
   );
 
   return result.rows[0] || null;
@@ -186,7 +216,7 @@ async function criarVestibularParaAno(ano, referencia, client) {
     VALUES ($1, $2, $3)
     RETURNING id
     `,
-    [nome, ano, instituicao],
+    [nome, ano, instituicao]
   );
 
   return result.rows[0].id;
@@ -229,7 +259,7 @@ async function infos_view() {
       ON q.subtopico_id = subtopico.id
     WHERE q.subtopico_id = 1
     ORDER BY q.id
-    `,
+    `
   );
 
   return result.rows;
@@ -248,7 +278,7 @@ async function res(chave) {
     WHERE q.enunciado ILIKE $1
     ORDER BY q.id
     `,
-    [`%${chave}%`],
+    [`%${chave}%`]
   );
 
   return result.rows;
@@ -267,7 +297,7 @@ async function vw_questoes_com_topicos() {
     INNER JOIN subtopico
       ON q.subtopico_id = subtopico.id
     ORDER BY q.id
-    `,
+    `
   );
 
   return result.rows;
@@ -281,7 +311,7 @@ async function buscarPorId(id) {
 async function buscarPorTopico(topicoid) {
   const result = await pool.query(
     `${questaoSelect} WHERE q.subtopico_id = $1 ORDER BY q.id`,
-    [topicoid],
+    [topicoid]
   );
 
   return result.rows;
@@ -311,7 +341,7 @@ async function criar(dados) {
 
     const vestibularId = await resolverVestibularId(
       { vestibular_id, ano },
-      client,
+      client
     );
     const result = await client.query(
       `
@@ -341,7 +371,7 @@ async function criar(dados) {
         explicacao || null,
         comentario_especialista || null,
         link_explicacao || link_bib || null,
-      ],
+      ]
     );
 
     await client.query("COMMIT");
@@ -383,7 +413,7 @@ async function atualizar(id, dados) {
       FROM questao
       WHERE id = $1
       `,
-      [id],
+      [id]
     );
 
     if (questaoAtual.rowCount === 0) {
@@ -394,10 +424,7 @@ async function atualizar(id, dados) {
     const vestibularBase =
       vestibular_id || (ano ? questaoAtual.rows[0].vestibular_id : null);
     const vestibularId = deveAtualizarVestibular
-      ? await resolverVestibularId(
-          { vestibular_id: vestibularBase, ano },
-          client,
-        )
+      ? await resolverVestibularId({ vestibular_id: vestibularBase, ano }, client)
       : null;
     const result = await client.query(
       `
@@ -427,7 +454,7 @@ async function atualizar(id, dados) {
         comentario_especialista || null,
         link_explicacao || link_bib || null,
         id,
-      ],
+      ]
     );
 
     await client.query("COMMIT");
@@ -447,9 +474,7 @@ async function deletar(id) {
     await client.query("BEGIN");
     await client.query("DELETE FROM alternativa WHERE questao_id = $1", [id]);
 
-    const result = await client.query("DELETE FROM questao WHERE id = $1", [
-      id,
-    ]);
+    const result = await client.query("DELETE FROM questao WHERE id = $1", [id]);
 
     await client.query("COMMIT");
     return result.rowCount > 0;

@@ -4,6 +4,7 @@ const MARGEM = 15;
 const LARGURA_TEXTO = 180;
 const Y_INICIAL = 20;
 const LIMITE_PAGINA = 275;
+const ANO_INICIAL_FILTRO = 2010;
 
 export function getRespostaCorreta(questao) {
   return questao.alternativas?.find((alternativa) => alternativa.correta) || null;
@@ -77,13 +78,17 @@ export function formatarVestibular(vestibular) {
 }
 
 export function getAnosDisponiveis(anos) {
-  return [
-    ...new Set(
-      anos
-        .map((item) => Number(item.ano))
-        .filter((ano) => Number.isInteger(ano) && ano > 0),
-    ),
-  ].sort((a, b) => b - a);
+  const anoAtual = new Date().getFullYear();
+  const totalAnosPadrao = Math.max(0, anoAtual - ANO_INICIAL_FILTRO + 1);
+  const anosPadrao = Array.from(
+    { length: totalAnosPadrao },
+    (_, index) => anoAtual - index,
+  );
+  const anosApi = anos
+    .map((item) => Number(item.ano))
+    .filter((ano) => Number.isInteger(ano) && ano > 0);
+
+  return [...new Set([...anosApi, ...anosPadrao])].sort((a, b) => b - a);
 }
 
 export function getIdsDisponiveis(ids) {
