@@ -1,5 +1,7 @@
 import jsPDF from "jspdf";
 
+import { apiFetch } from "../../services/api";
+
 const MARGEM = 15;
 const LARGURA_TEXTO = 180;
 const Y_INICIAL = 20;
@@ -197,7 +199,7 @@ export async function salvarQuestaoProfessor(modo, formulario) {
     throw new Error("Informe o ID do subtópico.");
   }
 
-  const response = await fetch(editando ? `/api/questoes/${id}` : "/api/questoes", {
+  const response = await apiFetch(editando ? `/api/questoes/${id}` : "/api/questoes", {
     method: editando ? "PUT" : "POST",
     headers: {
       "Content-Type": "application/json",
@@ -214,7 +216,7 @@ export async function salvarQuestaoProfessor(modo, formulario) {
 }
 
 export async function deletarQuestaoProfessor(id) {
-  const response = await fetch(`/api/questoes/${id}`, {
+  const response = await apiFetch(`/api/questoes/${id}`, {
     method: "DELETE",
   });
   const resultado = await lerResposta(response);

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import { apiFetch } from "../services/api";
+
 function useApi(endpoint) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10,7 +12,7 @@ function useApi(endpoint) {
       setLoading(true);
       setError("");
 
-      const response = await fetch(url);
+      const response = await apiFetch(url);
 
       if (!response.ok) {
         throw new Error("Não foi possível carregar os dados.");

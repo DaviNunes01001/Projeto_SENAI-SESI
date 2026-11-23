@@ -57,6 +57,26 @@ Em outro terminal:
 npm run dev
 ```
 
+## Publicar o frontend na Vercel
+
+Na Vercel, use a raiz do repositório como diretório do projeto. O Vite já
+define o comando de build (`npm run build`) e o diretório de saída (`dist`).
+
+Configure a variável de ambiente:
+
+```env
+VITE_API_URL=https://seu-backend.exemplo.com
+```
+
+`VITE_API_URL` deve ser a URL pública do backend, sem uma barra (`/`) no final.
+Em desenvolvimento, deixe essa variável ausente para usar o proxy local do
+Vite em `http://localhost:3000`.
+
+O backend precisa ser publicado separadamente em um serviço que execute Node.js
+e tenha as variáveis `DB_*`, `JWT_SECRET` e as credenciais de acesso
+configuradas. A Vercel hospeda o frontend estático deste projeto; ela não
+inicia o comando `npm run backend` automaticamente.
+
 Rotas da API:
 
 ```

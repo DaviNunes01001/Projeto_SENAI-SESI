@@ -1,4 +1,5 @@
 import styles from "./Login.module.css";
+import { apiFetch } from "../../services/api";
 
 export default function Login({ onLogin }) {
   async function handleSubmit(event) {
@@ -10,19 +11,16 @@ export default function Login({ onLogin }) {
     const senha = formData.get("senha");
 
     try {
-      const response = await fetch(
-        "http://localhost:3000/api/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            senha,
-          }),
-                  }
-      );
+      const response = await apiFetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          senha,
+        }),
+      });
 
       const data = await response.json();
 
