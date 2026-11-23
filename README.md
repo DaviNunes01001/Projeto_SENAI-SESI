@@ -74,8 +74,9 @@ Vite em `http://localhost:3000`.
 
 O backend precisa ser publicado separadamente em um serviço que execute Node.js
 e tenha as variáveis `DB_*`, `JWT_SECRET` e as credenciais de acesso
-configuradas. A Vercel hospeda o frontend estático deste projeto; ela não
-inicia o comando `npm run backend` automaticamente.
+configuradas. Configure também `FRONTEND_URL` com a URL pública do frontend.
+A Vercel hospeda o frontend estático deste projeto; ela não inicia o comando
+`npm run backend` automaticamente.
 
 Rotas da API:
 

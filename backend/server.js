@@ -10,7 +10,25 @@ const questoesRoutes = require("./routes/questoesRoutes");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+const frontendUrl = (process.env.FRONTEND_URL || "").replace(/\/+$/, "");
+const corsOptions = frontendUrl
+  ? {
+      origin(origin, callback) {
+        if (
+          !origin ||
+          origin === frontendUrl ||
+          origin.endsWith(".vercel.app")
+        ) {
+          callback(null, true);
+          return;
+        }
+
+        callback(new Error("Origem nao autorizada pelo CORS."));
+      },
+    }
+  : undefined;
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -39,11 +57,15 @@ app.use((req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log("=".repeat(49));
-  console.log("Servidor rodando!");
-  console.log(`URL: http://localhost:${PORT}`);
-  console.log(`Banco: PostgreSQL (${process.env.DB_NAME})`);
-  console.log(`Ambiente: ${process.env.NODE_ENV || "development"}`);
-  console.log("=".repeat(49));
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log("=".repeat(49));
+    console.log("Servidor rodando!");
+    console.log(`URL: http://localhost:${PORT}`);
+    console.log(`Banco: PostgreSQL (${process.env.DB_NAME})`);
+    console.log(`Ambiente: ${process.env.NODE_ENV || "development"}`);
+    console.log("=".repeat(49));
+  });
+}
+
+module.exports = app;
