@@ -10,25 +10,14 @@ const questoesRoutes = require("./routes/questoesRoutes");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const frontendUrl = (process.env.FRONTEND_URL || "").replace(/\/+$/, "");
-const corsOptions = frontendUrl
-  ? {
-      origin(origin, callback) {
-        if (
-          !origin ||
-          origin === frontendUrl ||
-          origin.endsWith(".vercel.app")
-        ) {
-          callback(null, true);
-          return;
-        }
-
-        callback(new Error("Origem nao autorizada pelo CORS."));
-      },
-    }
-  : undefined;
+const corsOptions = {
+  origin: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "Accept"],
+};
 
 app.use(cors(corsOptions));
+app.options(/.*/, cors(corsOptions));
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -48,6 +37,7 @@ app.get("/api", (req, res) => {
   });
 });
 
+// A rota de login é POST /api/auth/login.
 app.use("/api/auth", authRoutes);
 app.use("/api/questoes", questoesRoutes);
 

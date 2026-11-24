@@ -72,17 +72,20 @@ VITE_API_URL=https://seu-backend.exemplo.com
 Em desenvolvimento, deixe essa variável ausente para usar o proxy local do
 Vite em `http://localhost:3000`.
 
-O backend precisa ser publicado separadamente em um serviço que execute Node.js
-e tenha as variáveis `DB_*`, `JWT_SECRET` e as credenciais de acesso
-configuradas. Configure também `FRONTEND_URL` com a URL pública do frontend.
-A Vercel hospeda o frontend estático deste projeto; ela não inicia o comando
-`npm run backend` automaticamente.
+O backend pode ser publicado separadamente na Vercel usando `backend` como
+diretório raiz do projeto; a configuração está em `backend/vercel.json`.
+Configure nesse projeto as variáveis `DB_*`, `JWT_SECRET` e as credenciais de
+acesso. O CORS reflete a origem da requisição, portanto `FRONTEND_URL` não é
+necessária. O frontend continua sendo publicado como projeto estático separado
+a partir da raiz do repositório.
 
 Rotas da API:
 
 ```
 GET /
 GET /api
+
+POST /api/auth/login
 
 GET /api/questoes
 GET /api/questoes/:id
@@ -110,6 +113,8 @@ POST /api/questoes
 PUT /api/questoes/:id
 DELETE /api/questoes/:id
 ```
+
+O login existe em `POST /api/auth/login` (e não em `POST /login`).
 
 Observacao: a rota `/api/pesquisa` foi removida. As buscas agora ficam na
 propria rota `/api/questoes`.
