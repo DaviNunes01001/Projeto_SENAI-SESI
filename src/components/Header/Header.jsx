@@ -29,6 +29,7 @@ export default function Header({ currentPath, isLoggedIn, onLogout, onNavigate }
             className={`${styles.navLink} ${
               currentPath === item.href ? styles.active : ""
             }`}
+            aria-current={currentPath === item.href ? "page" : undefined}
           >
             {item.label}
           </a>
@@ -40,6 +41,9 @@ export default function Header({ currentPath, isLoggedIn, onLogout, onNavigate }
           className={`${styles.navLink} ${styles.loginLink} ${
             currentPath === "/login" && !isLoggedIn ? styles.active : ""
           }`}
+          aria-current={
+            currentPath === "/login" && !isLoggedIn ? "page" : undefined
+          }
         >
           {authLabel}
         </a>
