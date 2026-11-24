@@ -259,9 +259,27 @@ function criarEscritorPdf(titulo) {
     pdf.setFontSize(11);
 
     const linhas = pdf.splitTextToSize(String(texto), LARGURA_TEXTO);
-    garantirEspaco(linhas.length * 7 + 5);
-    pdf.text(linhas, MARGEM, y);
-    y += linhas.length * 7 + 5;
+    let inicio = 0;
+
+    while (inicio < linhas.length) {
+      const linhasDisponiveis = Math.floor((LIMITE_PAGINA - y - 5) / 7);
+
+      if (linhasDisponiveis <= 0) {
+        pdf.addPage();
+        y = Y_INICIAL;
+        continue;
+      }
+
+      const trecho = linhas.slice(inicio, inicio + linhasDisponiveis);
+      pdf.text(trecho, MARGEM, y);
+      y += trecho.length * 7 + 5;
+      inicio += trecho.length;
+
+      if (inicio < linhas.length) {
+        pdf.addPage();
+        y = Y_INICIAL;
+      }
+    }
   }
 
   function escreverTituloQuestao(texto) {
