@@ -1,5 +1,6 @@
 const questaoModel = require("../models/questoesModels");
 
+// O JOIN de alternativas retorna uma linha por opção; a API mantém uma resposta por questão.
 function agruparAlternativas(linhas) {
   const questoes = new Map();
 
@@ -77,6 +78,7 @@ function temValor(valor) {
 
 async function listarTodas(req, res) {
   try {
+    // Normalize os filtros numéricos antes de consultar o modelo para rejeitar valores inválidos.
     const ano = obterAno(req.query.ano);
     const id = obterId(req.query.id);
     const vestibularId = obterId(req.query.vestibular_id);
@@ -210,6 +212,7 @@ async function buscarPorId(req, res) {
 }
 
 function montarDadosQuestao(body) {
+  // Somente os campos previstos para a questão seguem do corpo HTTP para o modelo.
   return {
     avaliacao_id: body.avaliacao_id,
     vestibular_id: body.vestibular_id,
