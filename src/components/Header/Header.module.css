@@ -1,32 +1,33 @@
 .header {
     position: sticky;
-    top: 13px;
+    top: 12px;
     z-index: 20;
     width: min(calc(100% - 32px), 1120px);
-    min-height: 72px;
-    margin: 16px auto;
-    padding: 0 32px;
+    min-height: 76px;
+    margin: 12px auto;
+    padding: 0 28px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(248, 250, 252, 0.92);
-    border: 1px solid rgba(229, 231, 235, 0.9);
-    border-radius: 20px;
-    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
-    backdrop-filter: blur(14px);
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid #e3e9e2;
+    border-radius: 22px;
+    box-shadow: 0 12px 32px rgba(29, 48, 34, 0.1);
+    backdrop-filter: blur(16px);
 }
 
 .logo {
-    color: #111827;
-    font-size: 18px;
+    color: #1d3022;
+    font-size: 19px;
     font-weight: 800;
     text-decoration: none;
+    letter-spacing: -0.04em;
 }
 
 .nav {
     display: flex;
     align-items: center;
-    gap: 28px;
+    gap: 8px;
 }
 
 .senai {
@@ -34,46 +35,70 @@
 }
 
 .navLink {
-    color: #374151;
-    font-size: 15px;
+    position: relative;
+    padding: 10px 14px;
+    border-radius: 999px;
+    color: #48564a;
+    font-size: 14px;
     font-weight: 700;
     text-decoration: none;
+    transition: color 180ms ease, background-color 180ms ease;
 }
 
 .navLink:hover,
 .active {
-    color: #006400;
+    color: #285d35;
+    background: #edf5ed;
+}
+
+.navLink:focus-visible,
+.logo:focus-visible {
+    outline: 3px solid #79a87d;
+    outline-offset: 3px;
 }
 
 .loginLink {
-    padding: 10px 18px;
-    border-radius: 999px;
     color: #ffffff;
-    background: #e10000;
+    background: #b94b3c;
 }
 
 .loginLink:hover,
 .loginLink.active {
     color: #ffffff;
-    background: #b40000;
+    background: #963c31;
 }
 
 @media (max-width: 720px) {
     .header {
-        height: auto;
-        top: 10px;
+        top: 8px;
         width: min(calc(100% - 20px), 1120px);
-        margin: 10px auto;
-        padding: 18px 20px;
-        border-radius: 24px;
+        margin: 8px auto;
+        padding: 16px 18px;
+        border-radius: 20px;
         flex-direction: column;
-        align-items: flex-start;
-        gap: 16px;
+        align-items: center;
+        gap: 12px;
     }
 
     .nav {
         width: 100%;
         flex-wrap: wrap;
-        gap: 16px;
+        justify-content: center;
+        gap: 4px;
+    }
+
+    .navLink {
+        padding: 9px 12px;
+    }
+}
+
+@media (max-width: 380px) {
+    .header {
+        padding: 14px 12px;
+    }
+
+    .navLink {
+        padding: 8px 10px;
+        font-size: 13px;
     }
 }
