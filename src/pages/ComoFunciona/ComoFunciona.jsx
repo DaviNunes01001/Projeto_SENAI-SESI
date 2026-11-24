@@ -56,6 +56,15 @@ function StepAccordion({ id, number, title, expanded, onToggle, children }) {
   );
 }
 
+function GuideScreenshot({ className, src, alt, caption }) {
+  return (
+    <figure className={styles.screenshot}>
+      <img className={className} src={src} alt={alt} />
+      <figcaption>{caption}</figcaption>
+    </figure>
+  );
+}
+
 export default function ComoFunciona() {
   const [aberto, setAberto] = useState(null);
 
@@ -126,16 +135,12 @@ export default function ComoFunciona() {
                 Assim, a página inicial funciona como um painel de acesso rápido
                 para começar a estudar.
               </p>
-              <figure className={styles.screenshot}>
-                <img
-                  className={styles.login}
-                  src={login}
-                  alt="Página inicial da plataforma com os atalhos de estudo."
-                />
-                <figcaption>
-                  A página inicial reúne os principais caminhos da plataforma.
-                </figcaption>
-              </figure>
+              <GuideScreenshot
+                className={styles.login}
+                src={login}
+                alt="Página inicial da plataforma com os atalhos de estudo."
+                caption="A página inicial reúne os principais caminhos da plataforma."
+              />
           </StepAccordion>
         </article>
 
@@ -162,16 +167,12 @@ export default function ComoFunciona() {
                     Digite palavras-chave no campo de busca para localizar
                     questões relacionadas rapidamente.
                   </p>
-                  <figure className={styles.screenshot}>
-                    <img
-                      className={styles.busca}
-                      src={busca}
-                      alt="Campo de busca de questões por palavra-chave."
-                    />
-                    <figcaption>
-                      Use termos do enunciado para encontrar uma questão.
-                    </figcaption>
-                  </figure>
+                  <GuideScreenshot
+                    className={styles.busca}
+                    src={busca}
+                    alt="Campo de busca de questões por palavra-chave."
+                    caption="Use termos do enunciado para encontrar uma questão."
+                  />
                 </section>
 
                 <section className={styles.instruction}>
@@ -185,17 +186,12 @@ export default function ComoFunciona() {
                     <li>Nível: Base, Intermediário ou Avançado</li>
                     <li>Ano da prova</li>
                   </ul>
-                  <figure className={styles.screenshot}>
-                    <img
-                      className={styles.filtro}
-                      src={filtro}
-                      alt="Filtros de busca por ID, nível e ano."
-                    />
-                    <figcaption>
-                      Os filtros ajudam a chegar ao conjunto de questões
-                      desejado.
-                    </figcaption>
-                  </figure>
+                  <GuideScreenshot
+                    className={styles.filtro}
+                    src={filtro}
+                    alt="Filtros de busca por ID, nível e ano."
+                    caption="Os filtros ajudam a chegar ao conjunto de questões desejado."
+                  />
                 </section>
 
                 <section className={styles.instruction}>
@@ -207,16 +203,12 @@ export default function ComoFunciona() {
                     Cada resultado apresenta vestibular, ano, nível, enunciado e
                     alternativas para você avaliar a questão antes de começar.
                   </p>
-                  <figure className={styles.screenshot}>
-                    <img
-                      className={styles.lk}
-                      src={lk}
-                      alt="Card com o resultado de uma questão e suas alternativas."
-                    />
-                    <figcaption>
-                      Confira os dados e as alternativas no card da questão.
-                    </figcaption>
-                  </figure>
+                  <GuideScreenshot
+                    className={styles.lk}
+                    src={lk}
+                    alt="Card com o resultado de uma questão e suas alternativas."
+                    caption="Confira os dados e as alternativas no card da questão."
+                  />
                 </section>
 
                 <section className={styles.instruction}>
@@ -229,22 +221,18 @@ export default function ComoFunciona() {
                     resposta correta e acompanhar a resolução.
                   </p>
                   <div className={styles.screenshotPair}>
-                    <figure className={styles.screenshot}>
-                      <img
-                        className={styles.antesr}
-                        src={antesr}
-                        alt="Questão antes de mostrar a resposta e a explicação."
-                      />
-                      <figcaption>Antes de abrir a explicação.</figcaption>
-                    </figure>
-                    <figure className={styles.screenshot}>
-                      <img
-                        className={styles.depoisr}
-                        src={depoisr}
-                        alt="Questão com a resposta correta e a explicação abertas."
-                      />
-                      <figcaption>Resposta e resolução exibidas.</figcaption>
-                    </figure>
+                    <GuideScreenshot
+                      className={styles.antesr}
+                      src={antesr}
+                      alt="Questão antes de mostrar a resposta e a explicação."
+                      caption="Antes de abrir a explicação."
+                    />
+                    <GuideScreenshot
+                      className={styles.depoisr}
+                      src={depoisr}
+                      alt="Questão com a resposta correta e a explicação abertas."
+                      caption="Resposta e resolução exibidas."
+                    />
                   </div>
                 </section>
 
@@ -258,22 +246,18 @@ export default function ComoFunciona() {
                     questões individualmente para montar uma lista.
                   </p>
                   <div className={styles.screenshotPair}>
-                    <figure className={styles.screenshot}>
-                      <img
-                        className={styles.pdf}
-                        src={pdf}
-                        alt="Opção para baixar uma questão em PDF."
-                      />
-                      <figcaption>Baixe a questão atual.</figcaption>
-                    </figure>
-                    <figure className={styles.screenshot}>
-                      <img
-                        className={styles.indi}
-                        src={indi}
-                        alt="Caixa para selecionar uma questão individual."
-                      />
-                      <figcaption>Ou selecione questões para uma lista.</figcaption>
-                    </figure>
+                    <GuideScreenshot
+                      className={styles.pdf}
+                      src={pdf}
+                      alt="Opção para baixar uma questão em PDF."
+                      caption="Baixe a questão atual."
+                    />
+                    <GuideScreenshot
+                      className={styles.indi}
+                      src={indi}
+                      alt="Caixa para selecionar uma questão individual."
+                      caption="Ou selecione questões para uma lista."
+                    />
                   </div>
                 </section>
 
@@ -288,33 +272,25 @@ export default function ComoFunciona() {
                     quiser começar de novo.
                   </p>
                   <div className={styles.screenshotPair}>
-                    <figure className={styles.screenshot}>
-                      <img
-                        className={styles.selet}
-                        src={selet}
-                        alt="Opção para selecionar todas as questões exibidas."
-                      />
-                      <figcaption>Marque todos os resultados exibidos.</figcaption>
-                    </figure>
-                    <figure className={styles.screenshot}>
-                      <img
-                        className={styles.pdf}
-                        src={pdf}
-                        alt="Opção para gerar um PDF com as questões selecionadas."
-                      />
-                      <figcaption>Salve a lista em um único PDF.</figcaption>
-                    </figure>
-                  </div>
-                  <figure className={styles.screenshot}>
-                    <img
-                      className={styles.limpa}
-                      src={limpa}
-                      alt="Opção para limpar a seleção de questões."
+                    <GuideScreenshot
+                      className={styles.selet}
+                      src={selet}
+                      alt="Opção para selecionar todas as questões exibidas."
+                      caption="Marque todos os resultados exibidos."
                     />
-                    <figcaption>
-                      Limpe a seleção sem alterar as questões cadastradas.
-                    </figcaption>
-                  </figure>
+                    <GuideScreenshot
+                      className={styles.pdf}
+                      src={pdf}
+                      alt="Opção para gerar um PDF com as questões selecionadas."
+                      caption="Salve a lista em um único PDF."
+                    />
+                  </div>
+                  <GuideScreenshot
+                    className={styles.limpa}
+                    src={limpa}
+                    alt="Opção para limpar a seleção de questões."
+                    caption="Limpe a seleção sem alterar as questões cadastradas."
+                  />
                 </section>
 
                 <section className={styles.instruction}>
@@ -326,16 +302,12 @@ export default function ComoFunciona() {
                     O botão “Limpar” remove os filtros aplicados e restaura a
                     listagem completa de questões.
                   </p>
-                  <figure className={styles.screenshot}>
-                    <img
-                      className={styles.limpa}
-                      src={limpa}
-                      alt="Botão que restaura a listagem completa de questões."
-                    />
-                    <figcaption>
-                      Restaure os resultados depois de pesquisar.
-                    </figcaption>
-                  </figure>
+                  <GuideScreenshot
+                    className={styles.limpa}
+                    src={limpa}
+                    alt="Botão que restaura a listagem completa de questões."
+                    caption="Restaure os resultados depois de pesquisar."
+                  />
                 </section>
               </div>
           </StepAccordion>
