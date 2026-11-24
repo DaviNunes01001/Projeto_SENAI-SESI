@@ -390,15 +390,38 @@ export default function ComoFunciona() {
             }`}
           >
             <div className={styles.conteudoInner}>
-            <p>
-              Os alunos podem visualizar as questões disponíveis, praticar os
-              conteúdos de matemática e utilizar a plataforma como apoio aos
-              estudos.
-              <br />
-              <br />
-              O sistema foi desenvolvido para facilitar a preparação para provas,
-              vestibulares e atividades escolares.
-            </p>
+              <p>
+                Use as questões e os recursos de revisão como apoio para estudar
+                matemática no seu próprio ritmo.
+              </p>
+              <h3 className={styles.contentHeading}>
+                Transforme a consulta em prática
+              </h3>
+              <ul className={styles.featureList}>
+                <li>
+                  <strong>Pratique</strong>
+                  <span>
+                    Explore questões de matemática disponíveis na plataforma.
+                  </span>
+                </li>
+                <li>
+                  <strong>Revise</strong>
+                  <span>
+                    Consulte respostas e explicações para acompanhar a resolução.
+                  </span>
+                </li>
+                <li>
+                  <strong>Prepare-se</strong>
+                  <span>
+                    Combine nível e ano para encontrar questões adequadas ao seu
+                    objetivo.
+                  </span>
+                </li>
+              </ul>
+              <p>
+                O material pode apoiar sua preparação para provas, vestibulares e
+                atividades escolares.
+              </p>
             </div>
           </div>
         </article>
