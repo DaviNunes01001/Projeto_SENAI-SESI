@@ -79,53 +79,47 @@ export default function ComoFunciona() {
             }`}
           >
             <div className={styles.conteudoInner}>
-            <p>
-  Ao acessar a plataforma, o usuário visualiza uma mensagem de boas-vindas
-  apresentando o sistema de estudos de matemática desenvolvido no projeto
-  SESI SENAI.
-
-  <br />
-  <br />
-
-  A página realiza automaticamente a verificação da conexão com o backend,
-  exibindo mensagens de carregamento, sucesso ou erro na comunicação com a API.
-
-  <br />
-  <br />
-
-  O usuário também encontra uma área com informações sobre os principais
-  recursos disponíveis na plataforma.
-
-  <br />
-  <br />
-
-  Tópicos permite visualizar os conteúdos matemáticos
-  cadastrados no banco de dados.
-
-  <br />
-  <br />
-
-  Questões possibilita consultar as questões de matemática
-  disponíveis através da API.
-
-  <br />
-  <br />
-
-  Pesquisa e Prova oferece ferramentas para filtrar questões
-  e criar listas de estudo personalizadas.
-
-  <br />
-  <br />
-
-  Dessa forma, a tela inicial funciona como um painel de acesso rápido às
-  principais funcionalidades do sistema.
-</p>
-
-            <img
-              className={styles.login}
-              src={login}
-              alt="Tela de login"
-            />
+              <p>
+                Ao acessar a plataforma, o usuário encontra uma mensagem de
+                boas-vindas e uma visão geral dos recursos de estudo de
+                matemática do projeto SESI SENAI.
+              </p>
+              <p>
+                A página também verifica a conexão com o backend e informa
+                quando a comunicação com a API está carregando, funcionando ou
+                apresenta um erro.
+              </p>
+              <h3 className={styles.contentHeading}>
+                Atalhos para os principais recursos
+              </h3>
+              <ul className={styles.featureList}>
+                <li>
+                  <strong>Tópicos</strong>
+                  <span>Consulte os conteúdos matemáticos cadastrados.</span>
+                </li>
+                <li>
+                  <strong>Questões</strong>
+                  <span>Encontre as questões disponíveis na plataforma.</span>
+                </li>
+                <li>
+                  <strong>Pesquisa e prova</strong>
+                  <span>Filtre questões e monte listas de estudo.</span>
+                </li>
+              </ul>
+              <p>
+                Assim, a página inicial funciona como um painel de acesso rápido
+                para começar a estudar.
+              </p>
+              <figure className={styles.screenshot}>
+                <img
+                  className={styles.login}
+                  src={login}
+                  alt="Página inicial da plataforma com os atalhos de estudo."
+                />
+                <figcaption>
+                  A página inicial reúne os principais caminhos da plataforma.
+                </figcaption>
+              </figure>
             </div>
           </div>
         </article>

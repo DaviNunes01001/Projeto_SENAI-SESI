@@ -210,6 +210,60 @@
     line-height: 1.85;
 }
 
+.conteudoInner > p + p {
+    margin-top: 16px;
+}
+
+.contentHeading {
+    max-width: 820px;
+    margin: 26px auto 12px;
+    color: #203328;
+    font-size: 1.15rem;
+}
+
+.featureList {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 12px;
+    max-width: 820px;
+    margin: 16px auto 24px;
+    padding: 0;
+    list-style: none;
+}
+
+.featureList li {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+    border: 1px solid #e1e9e1;
+    border-radius: 14px;
+    background: #f8fbf8;
+}
+
+.featureList strong {
+    color: #31653c;
+}
+
+.featureList span {
+    color: #536257;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.screenshot {
+    max-width: 820px;
+    margin: 24px auto;
+    text-align: center;
+}
+
+.screenshot figcaption {
+    margin-top: 12px;
+    color: #68776a;
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+
 .conteudo p strong {
     display: inline-flex;
     min-width: 34px;
