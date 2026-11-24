@@ -168,10 +168,15 @@ export default function Questoes() {
 
         <p>Pesquise questões cadastradas no banco de dados pelo enunciado, vestibular, ano ou nível.</p>
 
-        <form className={styles.searchForm} onSubmit={pesquisarQuestoes}>
+        <form
+          className={styles.searchForm}
+          onSubmit={pesquisarQuestoes}
+          aria-label="Filtros de questões"
+        >
           <input
             type="text"
             placeholder="Pesquisar por enunciado..."
+            aria-label="Pesquisar por enunciado"
             value={filtros.busca}
             onChange={(event) => atualizarFiltro("busca", event.target.value)}
           />
@@ -420,7 +425,7 @@ export default function Questoes() {
         <div className={styles.contentHeader}>
           <div className={styles.contentTitle}>
             <h2>Resultados</h2>
-            <p>{questoes.length} questão(ões)</p>
+            <p aria-live="polite">{questoes.length} questão(ões)</p>
           </div>
 
           {!loading && !error && questoes.length > 0 && (
@@ -461,12 +466,22 @@ export default function Questoes() {
           )}
         </div>
 
-        {loading && <p className={styles.status}>Carregando...</p>}
+        {loading && (
+          <p className={styles.status} role="status">
+            Carregando questões...
+          </p>
+        )}
 
-        {error && <p className={`${styles.status} ${styles.error}`}>{error}</p>}
+        {error && (
+          <p className={`${styles.status} ${styles.error}`} role="alert">
+            {error}
+          </p>
+        )}
 
         {!loading && !error && questoes.length === 0 && (
-          <p className={styles.status}>Nenhuma questão encontrada.</p>
+          <p className={styles.status} role="status">
+            Nenhuma questão encontrada.
+          </p>
         )}
 
         {!loading && !error && questoes.length > 0 && (
@@ -482,6 +497,7 @@ export default function Questoes() {
                     selecionada ? styles.selectedCard : ""
                   }`}
                   key={questao.id}
+                  aria-labelledby={`questao-${questao.id}`}
                 >
                   <div className={styles.vestibular}>
                     <label className={styles.cardCheckbox}>
@@ -502,7 +518,7 @@ export default function Questoes() {
 
                   <div className={styles.enunciado}>
                     <span>Enunciado</span>
-                    <h3>
+                    <h3 id={`questao-${questao.id}`}>
                       {getEnunciadoLimpo(questao) || "Enunciado não informado."}
                     </h3>
 
@@ -524,6 +540,7 @@ export default function Questoes() {
                       className={styles.answerButton}
                       onClick={() => alternarResposta(questao.id)}
                       aria-expanded={aberta}
+                      aria-controls={`resposta-${questao.id}`}
                     >
                       {aberta
                         ? "Ocultar resposta"
@@ -561,7 +578,10 @@ export default function Questoes() {
                   </div>
 
                   {aberta && (
-                    <div className={styles.answerBox}>
+                    <div
+                      className={styles.answerBox}
+                      id={`resposta-${questao.id}`}
+                    >
                       <div>
                         <span>Resposta</span>
                         <p>
