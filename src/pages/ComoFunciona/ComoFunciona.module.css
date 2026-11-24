@@ -184,16 +184,22 @@
 }
 
 .conteudo {
-    max-height: 0;
+    display: grid;
+    grid-template-rows: 0fr;
     overflow: hidden;
     opacity: 0;
-    transition: max-height 450ms ease, opacity 250ms ease, margin-top 250ms ease;
+    transition: grid-template-rows 350ms ease, opacity 250ms ease, margin-top 250ms ease;
 }
 
 .aberto {
-    max-height: 16000px;
+    grid-template-rows: 1fr;
     margin-top: 22px;
     opacity: 1;
+}
+
+.conteudoInner {
+    min-height: 0;
+    overflow: hidden;
 }
 
 .conteudo p {

@@ -78,6 +78,7 @@ export default function ComoFunciona() {
               aberto === 1 ? styles.aberto : ""
             }`}
           >
+            <div className={styles.conteudoInner}>
             <p>
   Ao acessar a plataforma, o usuário visualiza uma mensagem de boas-vindas
   apresentando o sistema de estudos de matemática desenvolvido no projeto
@@ -125,6 +126,7 @@ export default function ComoFunciona() {
               src={login}
               alt="Tela de login"
             />
+            </div>
           </div>
         </article>
 
@@ -162,6 +164,7 @@ export default function ComoFunciona() {
               aberto === 2 ? styles.aberto : ""
             }`}
           >
+            <div className={styles.conteudoInner}>
             <p>
               <strong>🤖</strong>
               <br />
@@ -322,6 +325,7 @@ O botão Limpar remove todos os filtros aplicados e restaura a listagem completa
   src={limpa}
   alt="Limpar filtros"
 />  </p>
+            </div>
           </div>
         </article>
 
@@ -360,6 +364,7 @@ O botão Limpar remove todos os filtros aplicados e restaura a listagem completa
               aberto === 3 ? styles.aberto : ""
             }`}
           >
+            <div className={styles.conteudoInner}>
             <p>
               Os alunos podem visualizar as questões disponíveis, praticar os
               conteúdos de matemática e utilizar a plataforma como apoio aos
@@ -369,6 +374,7 @@ O botão Limpar remove todos os filtros aplicados e restaura a listagem completa
               O sistema foi desenvolvido para facilitar a preparação para provas,
               vestibulares e atividades escolares.
             </p>
+            </div>
           </div>
         </article>
       </section>
