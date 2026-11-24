@@ -68,7 +68,7 @@ function obterId(valor) {
   }
 
   const id = Number(idTexto);
-  return id > 0 ? id : null;
+  return Number.isSafeInteger(id) && id > 0 ? id : null;
 }
 
 function temValor(valor) {
@@ -188,13 +188,14 @@ async function vw_questoes_com_topicos(req, res) {
 
 async function buscarPorId(req, res) {
   try {
-    const id = parseInt(req.params.id);
+    const id = obterId(req.params.id);
 
-    if (isNaN(id)) {
+    if (!id) {
       return res.status(400).json({ mensagem: "ID invalido" });
     }
 
-    const questao = await questaoModel.buscarPorId(id);
+    const linhas = await questaoModel.listarTodas({ id });
+    const [questao] = agruparAlternativas(linhas);
 
     if (questao) {
       res.status(200).json(questao);
@@ -253,10 +254,10 @@ async function criar(req, res) {
 
 async function atualizar(req, res) {
   try {
-    const id = parseInt(req.params.id);
+    const id = obterId(req.params.id);
     const dados = montarDadosQuestao(req.body);
 
-    if (isNaN(id)) {
+    if (!id) {
       return res.status(400).json({ mensagem: "ID invalido" });
     }
 
@@ -281,9 +282,9 @@ async function atualizar(req, res) {
 
 async function deletar(req, res) {
   try {
-    const id = parseInt(req.params.id);
+    const id = obterId(req.params.id);
 
-    if (isNaN(id)) {
+    if (!id) {
       return res.status(400).json({ mensagem: "ID invalido" });
     }
 
@@ -308,9 +309,9 @@ async function deletar(req, res) {
 
 async function buscarPorTopico(req, res) {
   try {
-    const topicoid = parseInt(req.params.topicoid);
+    const topicoid = obterId(req.params.topicoid);
 
-    if (isNaN(topicoid)) {
+    if (!topicoid) {
       return res.status(400).json({ mensagem: "ID do topico invalido" });
     }
 
