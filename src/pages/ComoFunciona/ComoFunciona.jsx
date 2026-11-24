@@ -159,166 +159,197 @@ export default function ComoFunciona() {
             }`}
           >
             <div className={styles.conteudoInner}>
-            <p>
-              <strong>🤖</strong>
-              <br />
-              O principal sistema da plataforma permite pesquisar questões por
-              palavras-chave e aplicar filtros específicos.
-             
-              <br />
-              <br />
+              <p>
+                Pesquise questões pelo enunciado, refine os resultados com
+                filtros e use as opções abaixo para revisar e guardar o que
+                selecionou.
+              </p>
+              <div className={styles.instructionList}>
+                <section className={styles.instruction}>
+                  <h3 className={styles.instructionHeading}>
+                    <span aria-hidden="true">🔎</span>
+                    Pesquisar pelo enunciado
+                  </h3>
+                  <p>
+                    Digite palavras-chave no campo de busca para localizar
+                    questões relacionadas rapidamente.
+                  </p>
+                  <figure className={styles.screenshot}>
+                    <img
+                      className={styles.busca}
+                      src={busca}
+                      alt="Campo de busca de questões por palavra-chave."
+                    />
+                    <figcaption>
+                      Use termos do enunciado para encontrar uma questão.
+                    </figcaption>
+                  </figure>
+                </section>
 
-              <strong>🔎</strong>
-              <br />
-              Digite palavras-chave do enunciado no campo de pesquisa para
-              encontrar questões específicas rapidamente.
+                <section className={styles.instruction}>
+                  <h3 className={styles.instructionHeading}>
+                    <span aria-hidden="true">🎯</span>
+                    Aplicar filtros
+                  </h3>
+                  <p>Combine os filtros disponíveis para refinar a busca:</p>
+                  <ul className={styles.detailList}>
+                    <li>ID da questão</li>
+                    <li>Nível: Base, Intermediário ou Avançado</li>
+                    <li>Ano da prova</li>
+                  </ul>
+                  <figure className={styles.screenshot}>
+                    <img
+                      className={styles.filtro}
+                      src={filtro}
+                      alt="Filtros de busca por ID, nível e ano."
+                    />
+                    <figcaption>
+                      Os filtros ajudam a chegar ao conjunto de questões
+                      desejado.
+                    </figcaption>
+                  </figure>
+                </section>
 
-              <img
-              className={styles.busca}
-              src={busca}
-              alt="Tela de busca"
-            />
-              <br />
-              <br />
+                <section className={styles.instruction}>
+                  <h3 className={styles.instructionHeading}>
+                    <span aria-hidden="true">📚</span>
+                    Conferir resultados
+                  </h3>
+                  <p>
+                    Cada resultado apresenta vestibular, ano, nível, enunciado e
+                    alternativas para você avaliar a questão antes de começar.
+                  </p>
+                  <figure className={styles.screenshot}>
+                    <img
+                      className={styles.lk}
+                      src={lk}
+                      alt="Card com o resultado de uma questão e suas alternativas."
+                    />
+                    <figcaption>
+                      Confira os dados e as alternativas no card da questão.
+                    </figcaption>
+                  </figure>
+                </section>
 
-              <strong>🎯</strong>
-              <br />
-              Filtre os resultados por:
-              <br />
-              • ID da questão
-              <br />
-              • Nível (Base, Intermediário ou Avançado)
-              <br />
-              • Ano da prova
-              <br />
-              <br />
-              Isso ajuda a localizar exatamente o conteúdo desejado.
+                <section className={styles.instruction}>
+                  <h3 className={styles.instructionHeading}>
+                    <span aria-hidden="true">💡</span>
+                    Revisar a resolução
+                  </h3>
+                  <p>
+                    Selecione “Mostrar resposta e explicação” para conferir a
+                    resposta correta e acompanhar a resolução.
+                  </p>
+                  <div className={styles.screenshotPair}>
+                    <figure className={styles.screenshot}>
+                      <img
+                        className={styles.antesr}
+                        src={antesr}
+                        alt="Questão antes de mostrar a resposta e a explicação."
+                      />
+                      <figcaption>Antes de abrir a explicação.</figcaption>
+                    </figure>
+                    <figure className={styles.screenshot}>
+                      <img
+                        className={styles.depoisr}
+                        src={depoisr}
+                        alt="Questão com a resposta correta e a explicação abertas."
+                      />
+                      <figcaption>Resposta e resolução exibidas.</figcaption>
+                    </figure>
+                  </div>
+                </section>
 
-              <img
-              className={styles.filtro}
-              src={filtro}
-              alt="Tela de filtro"
-            />
-              <br />
-              <br />
+                <section className={styles.instruction}>
+                  <h3 className={styles.instructionHeading}>
+                    <span aria-hidden="true">📄</span>
+                    Baixar e selecionar questões
+                  </h3>
+                  <p>
+                    Baixe uma questão em PDF para estudar offline ou marque
+                    questões individualmente para montar uma lista.
+                  </p>
+                  <div className={styles.screenshotPair}>
+                    <figure className={styles.screenshot}>
+                      <img
+                        className={styles.pdf}
+                        src={pdf}
+                        alt="Opção para baixar uma questão em PDF."
+                      />
+                      <figcaption>Baixe a questão atual.</figcaption>
+                    </figure>
+                    <figure className={styles.screenshot}>
+                      <img
+                        className={styles.indi}
+                        src={indi}
+                        alt="Caixa para selecionar uma questão individual."
+                      />
+                      <figcaption>Ou selecione questões para uma lista.</figcaption>
+                    </figure>
+                  </div>
+                </section>
 
-              <strong>📚</strong>
-              <br />
-              Após clicar em Buscar, as questões encontradas serão exibidas com:
-              <br />
-              • Vestibular
-              <br />
-              • Ano
-              <br />
-              • Nível
-              <br />
-              • Enunciado
-              <br />
-              • Alternativas
+                <section className={styles.instruction}>
+                  <h3 className={styles.instructionHeading}>
+                    <span aria-hidden="true">☑️</span>
+                    Gerenciar a lista selecionada
+                  </h3>
+                  <p>
+                    Use “Selecionar Todas” para marcar os resultados visíveis,
+                    gere um único PDF com a lista ou limpe a seleção quando
+                    quiser começar de novo.
+                  </p>
+                  <div className={styles.screenshotPair}>
+                    <figure className={styles.screenshot}>
+                      <img
+                        className={styles.selet}
+                        src={selet}
+                        alt="Opção para selecionar todas as questões exibidas."
+                      />
+                      <figcaption>Marque todos os resultados exibidos.</figcaption>
+                    </figure>
+                    <figure className={styles.screenshot}>
+                      <img
+                        className={styles.pdf}
+                        src={pdf}
+                        alt="Opção para gerar um PDF com as questões selecionadas."
+                      />
+                      <figcaption>Salve a lista em um único PDF.</figcaption>
+                    </figure>
+                  </div>
+                  <figure className={styles.screenshot}>
+                    <img
+                      className={styles.limpa}
+                      src={limpa}
+                      alt="Opção para limpar a seleção de questões."
+                    />
+                    <figcaption>
+                      Limpe a seleção sem alterar as questões cadastradas.
+                    </figcaption>
+                  </figure>
+                </section>
 
-              <img
-              className={styles.lk}
-              src={lk}
-              alt="Tela de ok"
-            />
-              <br />
-              <br />
-
-              <strong>💡</strong>
-              <br />
-              Clique em Mostrar resposta e explicação para visualizar a resposta
-              correta e entender a resolução da questão.
-              <img
-              className={styles.antesr}
-              src={antesr}
-              alt="Tela de antes da resposta"
-            />
-
-            e depois de clicar:
-            <img
-              className={styles.depoisr}
-              src={depoisr}
-              alt="Tela de depois da resposta"
-            />
-              
-              <br />
-              <br />
-
-              <strong>📄</strong>
-              <br />
-              Use o botão Baixar PDF para salvar a questão e estudá-la offline
-              quando desejar.
-
-              <img
-              className={styles.pdf}
-              src={pdf}
-              alt="Tela de pdf"
-            />
-
-            <br />
-<br />
-
-<strong>✅</strong>
-<br />
-O usuário pode selecionar individualmente as questões através das caixas de seleção presentes em cada card.
-
-<img
-  className={styles.indi}
-  src={indi}
-  alt="Selecionar questão individual"
-/>
-
-<br />
-<br />
-
-<strong>☑️</strong>
-<br />
-Também é possível utilizar a opção Selecionar Todas para marcar automaticamente todas as questões exibidas nos resultados da pesquisa.
-
-<img
-  className={styles.selet}
-  src={selet}
-  alt="Selecionar todas as questões"
-/>
-
-<br />
-<br />
-
-<strong>📑</strong>
-<br />
-Após selecionar uma ou mais questões, o sistema permite gerar um único arquivo PDF contendo todas as questões escolhidas.
-
-<img
-  className={styles.pdf}
-  src={pdf}
-  alt="Baixar questões selecionadas"
-/>
-
-<br />
-<br />
-
-<strong>🗑️</strong>
-<br />
-Caso necessário, o usuário pode utilizar a opção Limpar Seleção para desmarcar rapidamente todas as questões selecionadas.
-
-<img
-  className={styles.limpa}
-  src={limpa}
-  alt="Limpar seleção"
-/>
-
-<br />
-<br />
-
-<strong>🔄</strong>
-<br />
-O botão Limpar remove todos os filtros aplicados e restaura a listagem completa de questões cadastradas na plataforma.
-
-<img
-  className={styles.limpa}
-  src={limpa}
-  alt="Limpar filtros"
-/>  </p>
+                <section className={styles.instruction}>
+                  <h3 className={styles.instructionHeading}>
+                    <span aria-hidden="true">🔄</span>
+                    Limpar os filtros
+                  </h3>
+                  <p>
+                    O botão “Limpar” remove os filtros aplicados e restaura a
+                    listagem completa de questões.
+                  </p>
+                  <figure className={styles.screenshot}>
+                    <img
+                      className={styles.limpa}
+                      src={limpa}
+                      alt="Botão que restaura a listagem completa de questões."
+                    />
+                    <figcaption>
+                      Restaure os resultados depois de pesquisar.
+                    </figcaption>
+                  </figure>
+                </section>
+              </div>
             </div>
           </div>
         </article>
