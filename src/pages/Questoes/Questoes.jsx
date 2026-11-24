@@ -275,7 +275,11 @@ export default function Questoes() {
                 <h2>Gerenciar questões</h2>
               </div>
 
-              <button type="button" onClick={abrirFormularioAdicionar}>
+              <button
+                type="button"
+                onClick={abrirFormularioAdicionar}
+                disabled={salvandoQuestao}
+              >
                 Adicionar questão
               </button>
             </div>
@@ -296,6 +300,7 @@ export default function Questoes() {
                     type="button"
                     className={styles.secondaryButton}
                     onClick={fecharFormularioQuestao}
+                    disabled={salvandoQuestao}
                   >
                     Fechar
                   </button>
@@ -316,6 +321,7 @@ export default function Questoes() {
                       atualizarCampoQuestao("enunciado", event.target.value)
                     }
                     required={modoFormulario === "adicionar"}
+                    disabled={salvandoQuestao}
                   />
                 </label>
 
@@ -326,6 +332,7 @@ export default function Questoes() {
                     onChange={(event) =>
                       atualizarCampoQuestao("explicacao", event.target.value)
                     }
+                    disabled={salvandoQuestao}
                   />
                 </label>
 
@@ -340,6 +347,7 @@ export default function Questoes() {
                         atualizarCampoQuestao("subtopico_id", event.target.value)
                       }
                       required={modoFormulario === "adicionar"}
+                      disabled={salvandoQuestao}
                     />
                   </label>
 
@@ -350,6 +358,7 @@ export default function Questoes() {
                       onChange={(event) =>
                         atualizarCampoQuestao("vestibular_id", event.target.value)
                       }
+                      disabled={salvandoQuestao}
                     >
                       <option value="">Não informado</option>
                       {vestibularesDisponiveis.map((vestibular) => (
@@ -367,6 +376,7 @@ export default function Questoes() {
                       onChange={(event) =>
                         atualizarCampoQuestao("ano", event.target.value)
                       }
+                      disabled={salvandoQuestao}
                     >
                       <option value="">Não informado</option>
                       {anosDisponiveis.map((anoDisponivel) => (
@@ -386,6 +396,7 @@ export default function Questoes() {
                       onChange={(event) =>
                         atualizarCampoQuestao("avaliacao_id", event.target.value)
                       }
+                      disabled={salvandoQuestao}
                     />
                   </label>
 
@@ -396,6 +407,7 @@ export default function Questoes() {
                       onChange={(event) =>
                         atualizarCampoQuestao("tipo", event.target.value)
                       }
+                      disabled={salvandoQuestao}
                     >
                       <option value="base">Base</option>
                       <option value="vestibular">Vestibular</option>
@@ -412,6 +424,7 @@ export default function Questoes() {
                       atualizarCampoQuestao("conteudo", event.target.value)
                     }
                     placeholder="Opcional"
+                    disabled={salvandoQuestao}
                   />
                 </label>
 
@@ -424,6 +437,7 @@ export default function Questoes() {
                     type="button"
                     className={styles.secondaryButton}
                     onClick={fecharFormularioQuestao}
+                    disabled={salvandoQuestao}
                   >
                     Cancelar
                   </button>
