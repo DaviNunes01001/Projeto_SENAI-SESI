@@ -303,11 +303,6 @@ async function vw_questoes_com_topicos() {
   return result.rows;
 }
 
-async function buscarPorId(id) {
-  const result = await pool.query(`${questaoSelect} WHERE q.id = $1`, [id]);
-  return result.rows[0];
-}
-
 async function buscarPorTopico(topicoid) {
   const result = await pool.query(
     `${questaoSelect} WHERE q.subtopico_id = $1 ORDER BY q.id`,
@@ -491,7 +486,6 @@ module.exports = {
   listarAnos,
   listarIds,
   listarVestibulares,
-  buscarPorId,
   criar,
   atualizar,
   deletar,

@@ -194,7 +194,8 @@ async function buscarPorId(req, res) {
       return res.status(400).json({ mensagem: "ID invalido" });
     }
 
-    const questao = await questaoModel.buscarPorId(id);
+    const linhas = await questaoModel.listarTodas({ id });
+    const [questao] = agruparAlternativas(linhas);
 
     if (questao) {
       res.status(200).json(questao);
