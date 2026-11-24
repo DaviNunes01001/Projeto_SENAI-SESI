@@ -383,7 +383,9 @@ async function atualizar(id, dados) {
   const {
     avaliacao_id,
     vestibular_id,
+    vestibular_id_informado,
     ano,
+    ano_informado,
     subtopico_id,
     topicoid,
     enunciado,
@@ -391,6 +393,7 @@ async function atualizar(id, dados) {
     conteudo,
     bloco,
     explicacao,
+    explicacao_informada,
     comentario_especialista,
     link_explicacao,
     link_bib,
@@ -401,7 +404,8 @@ async function atualizar(id, dados) {
   try {
     await client.query("BEGIN");
 
-    const deveAtualizarVestibular = Boolean(vestibular_id || ano);
+    const deveAtualizarVestibular =
+      vestibular_id_informado || ano_informado;
     const questaoAtual = await client.query(
       `
       SELECT vestibular_id
@@ -417,7 +421,11 @@ async function atualizar(id, dados) {
     }
 
     const vestibularBase =
-      vestibular_id || (ano ? questaoAtual.rows[0].vestibular_id : null);
+      vestibular_id_informado
+        ? vestibular_id
+        : ano
+          ? questaoAtual.rows[0].vestibular_id
+          : null;
     const vestibularId = deveAtualizarVestibular
       ? await resolverVestibularId({ vestibular_id: vestibularBase, ano }, client)
       : null;
@@ -425,13 +433,13 @@ async function atualizar(id, dados) {
       `
       UPDATE questao
       SET avaliacao_id = COALESCE($1, avaliacao_id),
-          vestibular_id = COALESCE($2, vestibular_id),
+          vestibular_id = CASE WHEN $12 THEN $2 ELSE vestibular_id END,
           subtopico_id = COALESCE($3, subtopico_id),
           enunciado = COALESCE($4, enunciado),
           tipo = COALESCE($5, tipo),
           conteudo = COALESCE($6, conteudo),
           bloco = COALESCE($7, bloco),
-          explicacao = COALESCE($8, explicacao),
+          explicacao = CASE WHEN $13 THEN NULLIF($8, '') ELSE explicacao END,
           comentario_especialista = COALESCE($9, comentario_especialista),
           link_explicacao = COALESCE($10, link_explicacao)
       WHERE id = $11
@@ -449,6 +457,8 @@ async function atualizar(id, dados) {
         comentario_especialista || null,
         link_explicacao || link_bib || null,
         id,
+        deveAtualizarVestibular,
+        explicacao_informada,
       ]
     );
 

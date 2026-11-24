@@ -159,15 +159,21 @@ function limparNumero(valor) {
   return Number.isInteger(numero) && numero > 0 ? numero : undefined;
 }
 
-function montarDadosFormularioQuestao(formulario) {
+function montarDadosFormularioQuestao(formulario, editando) {
   const enunciado = limparTexto(formulario.enunciado);
 
   return {
     enunciado,
-    explicacao: limparTexto(formulario.explicacao),
+    explicacao: editando
+      ? String(formulario.explicacao || "").trim()
+      : limparTexto(formulario.explicacao),
     subtopico_id: limparNumero(formulario.subtopico_id),
-    vestibular_id: limparNumero(formulario.vestibular_id),
-    ano: limparNumero(formulario.ano),
+    vestibular_id: editando
+      ? limparNumero(formulario.vestibular_id) || null
+      : limparNumero(formulario.vestibular_id),
+    ano: editando
+      ? limparNumero(formulario.ano) || null
+      : limparNumero(formulario.ano),
     avaliacao_id: limparNumero(formulario.avaliacao_id),
     tipo: limparTexto(formulario.tipo),
     conteudo: limparTexto(formulario.conteudo) || enunciado,
@@ -185,7 +191,7 @@ async function lerResposta(response) {
 export async function salvarQuestaoProfessor(modo, formulario) {
   const editando = modo === "atualizar";
   const id = limparNumero(formulario.id);
-  const dados = montarDadosFormularioQuestao(formulario);
+  const dados = montarDadosFormularioQuestao(formulario, editando);
 
   if (editando && !id) {
     throw new Error("ID da questão inválido.");

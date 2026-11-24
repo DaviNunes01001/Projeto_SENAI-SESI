@@ -214,7 +214,12 @@ function montarDadosQuestao(body) {
   return {
     avaliacao_id: body.avaliacao_id,
     vestibular_id: body.vestibular_id,
+    vestibular_id_informado: Object.prototype.hasOwnProperty.call(
+      body,
+      "vestibular_id",
+    ),
     ano: obterAno(body.ano),
+    ano_informado: Object.prototype.hasOwnProperty.call(body, "ano"),
     subtopico_id: body.subtopico_id,
     topicoid: body.topicoid,
     enunciado: body.enunciado,
@@ -222,6 +227,10 @@ function montarDadosQuestao(body) {
     conteudo: body.conteudo,
     bloco: body.bloco,
     explicacao: body.explicacao,
+    explicacao_informada: Object.prototype.hasOwnProperty.call(
+      body,
+      "explicacao",
+    ),
     comentario_especialista: body.comentario_especialista,
     link_explicacao: body.link_explicacao,
     link_bib: body.link_bib,

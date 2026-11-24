@@ -92,7 +92,20 @@ export default function Questoes() {
   }
 
   function atualizarCampoQuestao(nome, valor) {
-    setFormularioQuestao((atual) => ({ ...atual, [nome]: valor }));
+    setFormularioQuestao((atual) => {
+      const atualizado = { ...atual, [nome]: valor };
+
+      if (
+        modoFormulario === "atualizar" &&
+        !valor &&
+        (nome === "vestibular_id" || nome === "ano")
+      ) {
+        atualizado.vestibular_id = "";
+        atualizado.ano = "";
+      }
+
+      return atualizado;
+    });
   }
 
   function abrirFormularioAdicionar() {
