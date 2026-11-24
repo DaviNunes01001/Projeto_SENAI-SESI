@@ -23,17 +23,28 @@ export default function ComoFunciona() {
   return (
     <main className={styles.page}>
       <section className={styles.hero}>
-        <span>Como funciona</span>
-        <h1>O projeto conecta React com uma API de questões.</h1>
-        <p>
-          O frontend usa as rotas do backend para listar e pesquisar questões de
-          matemática cadastradas no PostgreSQL.
-        </p>
+        <div className={styles.heroContent}>
+          <span className={styles.eyebrow}>Guia da plataforma</span>
+          <h1>Seu caminho para estudar começa aqui.</h1>
+          <p>
+            Conheça os recursos da plataforma e veja como encontrar questões,
+            organizar sua prática e revisar cada resposta.
+          </p>
+          <div className={styles.heroNotes} aria-label="Resumo do guia">
+            <span>03 etapas</span>
+            <span>Busca, prática e revisão</span>
+          </div>
+        </div>
       </section>
 
-      <section className={styles.steps}>
+      <section className={styles.steps} aria-label="Etapas para usar a plataforma">
+        <header className={styles.stepsIntro}>
+          <span>Por onde começar</span>
+          <h2>Explore cada etapa</h2>
+          <p>Selecione uma etapa para ver como usar os recursos.</p>
+        </header>
 
-        <article className={styles.step}>
+        <article className={`${styles.step} ${aberto === 1 ? styles.stepOpen : ""}`}>
           <div className={styles.header}>
             <h2>
               <button
@@ -117,7 +128,7 @@ export default function ComoFunciona() {
           </div>
         </article>
 
-        <article className={styles.step}>
+        <article className={`${styles.step} ${aberto === 2 ? styles.stepOpen : ""}`}>
           <div className={styles.header}>
             <h2>
               <button
@@ -315,7 +326,7 @@ O botão Limpar remove todos os filtros aplicados e restaura a listagem completa
         </article>
 
 
-        <article className={styles.step}>
+        <article className={`${styles.step} ${aberto === 3 ? styles.stepOpen : ""}`}>
           <div className={styles.header}>
             <h2>
               <button
