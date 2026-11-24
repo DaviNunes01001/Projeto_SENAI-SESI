@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const router = express.Router();
 
+// Cada perfil só fica disponível quando e-mail, senha e perfil estão definidos no ambiente.
 function criarUsuarioPorEnv(prefixo, id) {
   const email = process.env[`${prefixo}_EMAIL`];
   const senha = process.env[`${prefixo}_SENHA`];
@@ -50,6 +51,7 @@ router.post("/login", (req, res) => {
     });
   }
 
+  // O token contém apenas os dados de identidade e perfil usados pela aplicação.
   const token = jwt.sign(
     {
       id: usuario.id,
