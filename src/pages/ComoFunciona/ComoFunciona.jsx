@@ -17,7 +17,7 @@ export default function ComoFunciona() {
   const [aberto, setAberto] = useState(null);
 
   const toggle = (id) => {
-    setAberto(aberto === id ? null : id);
+    setAberto((atual) => (atual === id ? null : id));
   };
 
   return (
@@ -33,21 +33,36 @@ export default function ComoFunciona() {
 
       <section className={styles.steps}>
 
-        <article onClick={() => toggle(1)}>
+        <article className={styles.step}>
           <div className={styles.header}>
-            <strong>01</strong>
-            <h2>Home</h2>
-
-            <img
-              className={`${styles.seta} ${
-                aberto === 1 ? styles.setaAberta : ""
-              }`}
-              src={seta}
-              alt="Seta"
-            />
+            <h2>
+              <button
+                className={styles.stepToggle}
+                type="button"
+                aria-expanded={aberto === 1}
+                aria-controls="step-content-1"
+                id="step-toggle-1"
+                onClick={() => toggle(1)}
+              >
+                <strong>01</strong>
+                <span>Home</span>
+                <img
+                  className={`${styles.seta} ${
+                    aberto === 1 ? styles.setaAberta : ""
+                  }`}
+                  src={seta}
+                  alt=""
+                  aria-hidden="true"
+                />
+              </button>
+            </h2>
           </div>
 
           <div
+            id="step-content-1"
+            role="region"
+            aria-labelledby="step-toggle-1"
+            aria-hidden={aberto !== 1}
             className={`${styles.conteudo} ${
               aberto === 1 ? styles.aberto : ""
             }`}
@@ -102,21 +117,36 @@ export default function ComoFunciona() {
           </div>
         </article>
 
-        <article onClick={() => toggle(2)}>
+        <article className={styles.step}>
           <div className={styles.header}>
-            <strong>02</strong>
-            <h2>Questões</h2>
-
-            <img
-              className={`${styles.seta} ${
-                aberto === 2 ? styles.setaAberta : ""
-              }`}
-              src={seta}
-              alt="Seta"
-            />
+            <h2>
+              <button
+                className={styles.stepToggle}
+                type="button"
+                aria-expanded={aberto === 2}
+                aria-controls="step-content-2"
+                id="step-toggle-2"
+                onClick={() => toggle(2)}
+              >
+                <strong>02</strong>
+                <span>Questões</span>
+                <img
+                  className={`${styles.seta} ${
+                    aberto === 2 ? styles.setaAberta : ""
+                  }`}
+                  src={seta}
+                  alt=""
+                  aria-hidden="true"
+                />
+              </button>
+            </h2>
           </div>
 
           <div
+            id="step-content-2"
+            role="region"
+            aria-labelledby="step-toggle-2"
+            aria-hidden={aberto !== 2}
             className={`${styles.conteudo} ${
               aberto === 2 ? styles.aberto : ""
             }`}
@@ -285,21 +315,36 @@ O botão Limpar remove todos os filtros aplicados e restaura a listagem completa
         </article>
 
 
-        <article onClick={() => toggle(3)}>
+        <article className={styles.step}>
           <div className={styles.header}>
-            <strong>03</strong>
-            <h2>Estudo</h2>
-
-            <img
-              className={`${styles.seta} ${
-                aberto === 3 ? styles.setaAberta : ""
-              }`}
-              src={seta}
-              alt="Seta"
-            />
+            <h2>
+              <button
+                className={styles.stepToggle}
+                type="button"
+                aria-expanded={aberto === 3}
+                aria-controls="step-content-3"
+                id="step-toggle-3"
+                onClick={() => toggle(3)}
+              >
+                <strong>03</strong>
+                <span>Estudo</span>
+                <img
+                  className={`${styles.seta} ${
+                    aberto === 3 ? styles.setaAberta : ""
+                  }`}
+                  src={seta}
+                  alt=""
+                  aria-hidden="true"
+                />
+              </button>
+            </h2>
           </div>
 
           <div
+            id="step-content-3"
+            role="region"
+            aria-labelledby="step-toggle-3"
+            aria-hidden={aberto !== 3}
             className={`${styles.conteudo} ${
               aberto === 3 ? styles.aberto : ""
             }`}

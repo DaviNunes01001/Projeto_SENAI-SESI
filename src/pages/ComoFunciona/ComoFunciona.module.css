@@ -58,7 +58,6 @@
     background: #ffffff;
     border-radius: 20px;
     padding: 24px;
-    cursor: pointer;
     box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
     transition: all 0.3s ease;
 }
@@ -75,7 +74,25 @@
 .header {
     display: flex;
     align-items: center;
+}
+
+.stepToggle {
+    display: flex;
+    width: 100%;
+    align-items: center;
     gap: 16px;
+    padding: 0;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.stepToggle:focus-visible {
+    outline: 3px solid #79a87d;
+    outline-offset: 6px;
 }
 
 .header h2 {
