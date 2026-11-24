@@ -57,6 +57,13 @@ export default function Questoes() {
     String(valor).trim(),
   );
   const professor = isProfessor();
+  const textoResultados = loading
+    ? "Carregando resultados..."
+    : error
+      ? "Resultados indisponíveis"
+      : `${questoes.length} ${
+          questoes.length === 1 ? "questão" : "questões"
+        }`;
 
   function atualizarFiltro(nome, valor) {
     setFiltros((atuais) => ({ ...atuais, [nome]: valor }));
@@ -454,7 +461,7 @@ export default function Questoes() {
         <div className={styles.contentHeader}>
           <div className={styles.contentTitle}>
             <h2>Resultados</h2>
-            <p aria-live="polite">{questoes.length} questão(ões)</p>
+            <p aria-live="polite">{textoResultados}</p>
           </div>
 
           {!loading && !error && questoes.length > 0 && (
