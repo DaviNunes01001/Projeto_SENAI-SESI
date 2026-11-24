@@ -12,6 +12,49 @@ import indi from "../../assets/ComoFuncionaImgs/selecionar.png";
 import selet from "../../assets/ComoFuncionaImgs/selecrionar_td.png";
 import limpa from "../../assets/ComoFuncionaImgs/limpa.png";
 
+function StepAccordion({ id, number, title, expanded, onToggle, children }) {
+  const toggleId = `step-toggle-${id}`;
+  const contentId = `step-content-${id}`;
+
+  return (
+    <>
+      <div className={styles.header}>
+        <h2>
+          <button
+            className={styles.stepToggle}
+            type="button"
+            aria-expanded={expanded}
+            aria-controls={contentId}
+            id={toggleId}
+            onClick={onToggle}
+          >
+            <strong>{number}</strong>
+            <span>{title}</span>
+            <img
+              className={`${styles.seta} ${
+                expanded ? styles.setaAberta : ""
+              }`}
+              src={seta}
+              alt=""
+              aria-hidden="true"
+            />
+          </button>
+        </h2>
+      </div>
+      <div
+        id={contentId}
+        role="region"
+        aria-labelledby={toggleId}
+        aria-hidden={!expanded}
+        className={`${styles.conteudo} ${
+          expanded ? styles.aberto : ""
+        }`}
+      >
+        <div className={styles.conteudoInner}>{children}</div>
+      </div>
+    </>
+  );
+}
 
 export default function ComoFunciona() {
   const [aberto, setAberto] = useState(null);
@@ -45,40 +88,13 @@ export default function ComoFunciona() {
         </header>
 
         <article className={`${styles.step} ${aberto === 1 ? styles.stepOpen : ""}`}>
-          <div className={styles.header}>
-            <h2>
-              <button
-                className={styles.stepToggle}
-                type="button"
-                aria-expanded={aberto === 1}
-                aria-controls="step-content-1"
-                id="step-toggle-1"
-                onClick={() => toggle(1)}
-              >
-                <strong>01</strong>
-                <span>Home</span>
-                <img
-                  className={`${styles.seta} ${
-                    aberto === 1 ? styles.setaAberta : ""
-                  }`}
-                  src={seta}
-                  alt=""
-                  aria-hidden="true"
-                />
-              </button>
-            </h2>
-          </div>
-
-          <div
-            id="step-content-1"
-            role="region"
-            aria-labelledby="step-toggle-1"
-            aria-hidden={aberto !== 1}
-            className={`${styles.conteudo} ${
-              aberto === 1 ? styles.aberto : ""
-            }`}
+          <StepAccordion
+            id={1}
+            number="01"
+            title="Home"
+            expanded={aberto === 1}
+            onToggle={() => toggle(1)}
           >
-            <div className={styles.conteudoInner}>
               <p>
                 Ao acessar a plataforma, o usuário encontra uma mensagem de
                 boas-vindas e uma visão geral dos recursos de estudo de
@@ -120,45 +136,17 @@ export default function ComoFunciona() {
                   A página inicial reúne os principais caminhos da plataforma.
                 </figcaption>
               </figure>
-            </div>
-          </div>
+          </StepAccordion>
         </article>
 
         <article className={`${styles.step} ${aberto === 2 ? styles.stepOpen : ""}`}>
-          <div className={styles.header}>
-            <h2>
-              <button
-                className={styles.stepToggle}
-                type="button"
-                aria-expanded={aberto === 2}
-                aria-controls="step-content-2"
-                id="step-toggle-2"
-                onClick={() => toggle(2)}
-              >
-                <strong>02</strong>
-                <span>Questões</span>
-                <img
-                  className={`${styles.seta} ${
-                    aberto === 2 ? styles.setaAberta : ""
-                  }`}
-                  src={seta}
-                  alt=""
-                  aria-hidden="true"
-                />
-              </button>
-            </h2>
-          </div>
-
-          <div
-            id="step-content-2"
-            role="region"
-            aria-labelledby="step-toggle-2"
-            aria-hidden={aberto !== 2}
-            className={`${styles.conteudo} ${
-              aberto === 2 ? styles.aberto : ""
-            }`}
+          <StepAccordion
+            id={2}
+            number="02"
+            title="Questões"
+            expanded={aberto === 2}
+            onToggle={() => toggle(2)}
           >
-            <div className={styles.conteudoInner}>
               <p>
                 Pesquise questões pelo enunciado, refine os resultados com
                 filtros e use as opções abaixo para revisar e guardar o que
@@ -350,46 +338,18 @@ export default function ComoFunciona() {
                   </figure>
                 </section>
               </div>
-            </div>
-          </div>
+          </StepAccordion>
         </article>
 
 
         <article className={`${styles.step} ${aberto === 3 ? styles.stepOpen : ""}`}>
-          <div className={styles.header}>
-            <h2>
-              <button
-                className={styles.stepToggle}
-                type="button"
-                aria-expanded={aberto === 3}
-                aria-controls="step-content-3"
-                id="step-toggle-3"
-                onClick={() => toggle(3)}
-              >
-                <strong>03</strong>
-                <span>Estudo</span>
-                <img
-                  className={`${styles.seta} ${
-                    aberto === 3 ? styles.setaAberta : ""
-                  }`}
-                  src={seta}
-                  alt=""
-                  aria-hidden="true"
-                />
-              </button>
-            </h2>
-          </div>
-
-          <div
-            id="step-content-3"
-            role="region"
-            aria-labelledby="step-toggle-3"
-            aria-hidden={aberto !== 3}
-            className={`${styles.conteudo} ${
-              aberto === 3 ? styles.aberto : ""
-            }`}
+          <StepAccordion
+            id={3}
+            number="03"
+            title="Estudo"
+            expanded={aberto === 3}
+            onToggle={() => toggle(3)}
           >
-            <div className={styles.conteudoInner}>
               <p>
                 Use as questões e os recursos de revisão como apoio para estudar
                 matemática no seu próprio ritmo.
@@ -422,8 +382,7 @@ export default function ComoFunciona() {
                 O material pode apoiar sua preparação para provas, vestibulares e
                 atividades escolares.
               </p>
-            </div>
-          </div>
+          </StepAccordion>
         </article>
       </section>
     </main>
