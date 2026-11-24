@@ -53,7 +53,9 @@ export default function Questoes() {
   );
   const todasQuestoesSelecionadas =
     questoes.length > 0 && questoesSelecionadasVisiveis.length === questoes.length;
-  const temFiltroAtivo = Object.values(filtros).some(Boolean);
+  const temFiltroAtivo = Object.values(filtros).some((valor) =>
+    String(valor).trim(),
+  );
   const professor = isProfessor();
 
   function atualizarFiltro(nome, valor) {
