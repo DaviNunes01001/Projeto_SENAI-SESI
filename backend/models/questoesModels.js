@@ -109,6 +109,7 @@ async function listarTodas(filtros = {}) {
 
   sql += " ORDER BY q.id, alternativa.letra";
 
+  // Os valores dos filtros são enviados como parâmetros; apenas condições conhecidas formam o SQL.
   const result = await pool.query(sql, params);
   return result.rows;
 }
