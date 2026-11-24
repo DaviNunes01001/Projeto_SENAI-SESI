@@ -59,7 +59,13 @@ function StepAccordion({ id, number, title, expanded, onToggle, children }) {
 function GuideScreenshot({ className, src, alt, caption }) {
   return (
     <figure className={styles.screenshot}>
-      <img className={className} src={src} alt={alt} />
+      <img
+        className={className}
+        src={src}
+        alt={alt}
+        loading="lazy"
+        decoding="async"
+      />
       <figcaption>{caption}</figcaption>
     </figure>
   );
